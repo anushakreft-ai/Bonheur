@@ -550,9 +550,15 @@ nav.tabs button[aria-selected="true"] { color: var(--ink); background: var(--och
 <nav class="tabs" role="tablist" aria-label="Sections">
   <div class="in">
     <button role="tab" id="t-jour" data-view="jour" aria-selected="true" type="button">
-      <svg viewBox="0 0 100 100" aria-hidden="true"><path id="nav-sun" fill="currentColor"/></svg>Jour</button>
+      <svg viewBox="0 0 100 100" aria-hidden="true"><g id="nav-sun" fill="currentColor"></g></svg>Jour</button>
     <button role="tab" id="t-reves" data-view="reves" aria-selected="false" type="button">
-      <svg viewBox="0 0 100 100" aria-hidden="true"><path fill="currentColor" d="M78 14A40 40 0 1 0 86 70A32 32 0 1 1 78 14Z"/></svg>Rêves</button>
+      <svg viewBox="0 0 100 100" aria-hidden="true"><g fill="currentColor">
+        <path d="M49 22C50 26 52 28 52 31H46C46 28 48 26 49 22Z"/>
+        <path d="M43 34H55V37H43ZM45 39H53C55 42 56 45 57 48H41C42 45 43 42 45 39Z"/>
+        <path d="M22 52C36 49 50 49 62 51C74 52 86 44 98 38C94 46 86 56 74 63C62 70 46 72 34 68C26 65 22 60 22 52Z"/>
+        <path d="M44 70H56C55 75 56 79 60 82H40C44 79 45 75 44 70Z"/>
+        <path d="M32 83H68V88H32Z"/></g>
+        <path d="M24 56C12 58 6 50 9 42C12 34 22 34 24 40C26 46 18 48 16 44" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round"/></svg>Rêves</button>
     <button role="tab" id="t-ancrage" data-view="ancrage" aria-selected="false" type="button">
       <svg viewBox="0 0 100 100" aria-hidden="true"><path fill="currentColor" d="M50 98C46 78 30 74 36 58C41 44 24 38 33 22C44 30 52 24 49 4C66 16 61 32 67 44C74 57 60 70 62 98Z"/></svg>Ancrage</button>
     <button role="tab" id="t-musique" data-view="musique" aria-selected="false" type="button">
@@ -582,7 +588,19 @@ nav.tabs button[aria-selected="true"] { color: var(--ink); background: var(--och
   $("star-d").setAttribute("d", star(8, 48, 20));
   $("dots").innerHTML = [...Array(34)].map((_, i) => { const a = i * 2.4, r = 6 + i * 1.6; return `<circle cx="${(60 + r * Math.cos(a)).toFixed(1)}" cy="${(60 + r * Math.sin(a)).toFixed(1)}" r="${(2.6 + (i % 3)).toFixed(1)}" fill="currentColor"/>`; }).join("");
   $("rays-path").setAttribute("d", star(16, 50, 40));
-  $("nav-sun").setAttribute("d", star(10, 48, 32));
+  // soleil à visage : 8 rayons droits, 8 rayons ondulés, yeux et sourire découpés
+  (() => {
+    const pt = (r, a) => [(50 + r * Math.sin(a)).toFixed(1), (50 - r * Math.cos(a)).toFixed(1)].join(" ");
+    let d = "";
+    for (let i = 0; i < 8; i++) {
+      const a = (Math.PI / 4) * i;
+      d += `M${pt(24, a - 0.2)}L${pt(49, a)}L${pt(24, a + 0.2)}Z`;
+      const b = a + Math.PI / 8;
+      d += `M${pt(24, b - 0.13)}C${pt(32, b + 0.12)} ${pt(36, b - 0.16)} ${pt(45, b + 0.02)}C${pt(38, b + 0.08)} ${pt(33, b + 0.26)} ${pt(24, b + 0.13)}Z`;
+    }
+    const face = "M50 24A26 26 0 1 1 49.9 24ZM38.5 44A4.2 3.2 0 1 0 47 44A4.2 3.2 0 1 0 38.5 44ZM53 44A4.2 3.2 0 1 0 61.5 44A4.2 3.2 0 1 0 53 44ZM39 58C44 64 56 64 61 58C56 61 44 61 39 58Z";
+    $("nav-sun").innerHTML = `<path d="${d}"/><path fill-rule="evenodd" d="${face}"/>`;
+  })();
 
   const SHAPES = {
     marche: '<ellipse cx="34" cy="62" rx="13" ry="22" fill="currentColor"/><ellipse cx="64" cy="38" rx="13" ry="22" fill="currentColor"/>',
