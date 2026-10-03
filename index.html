@@ -1,0 +1,1401 @@
+<!doctype html>
+<html lang="fr-CH">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Atelier Bonheur</title>
+<meta name="description" content="Petits gestes, gratitude, rêves, ancrage et musique pour être et rester heureuse.">
+<meta name="theme-color" content="#efe3cc" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#16233a" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Bonheur">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<style>
+  :root { color-scheme: light; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+  body { margin: 0; -webkit-text-size-adjust: 100%; }
+  img { max-width: 100%; }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Figtree:wght@400;500;600;700&family=Fraunces:opsz,wght,SOFT@9..144,300..600,0..100&display=swap">
+<style>
+/* Layout : une colonne façon carnet de papiers découpés (Matisse), cinq onglets en bas.
+   Palette tirée de la fresque aux arches : bleu profond, or, terracotta, sable, bleu ciel, pêche, trèfle */
+:root {
+  --paper: #efe3cc;
+  --card: #f8f0e1;
+  --ink: #1c2e4a;
+  --ink-soft: #50607a;
+  --cobalt: #24476b;
+  --ochre: #d6a137;
+  --orange: #c4592b;
+  --turq: #4f9fd0;
+  --pink: #f0b884;
+  --leaf: #2f7a3e;
+  --sage: #a9bcbc;
+  --night: #1c2e4a;
+  --line: rgba(28,46,74,.15);
+  --on-color: #f8f0e1;
+  --f-display: "Bagel Fat One", "Arial Rounded MT Bold", system-ui, sans-serif;
+  --f-body: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-poem: "Fraunces", Georgia, "Times New Roman", serif;
+  --poem-axes: "SOFT" 100, "opsz" 24;
+  --nav-h: 68px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #16233a; --card: #1f304d; --ink: #efe3cc; --ink-soft: #b8c0cc;
+    --cobalt: #5b8cc0; --ochre: #e0b04e; --orange: #d9774a; --turq: #6bb3dd;
+    --pink: #f0bf94; --leaf: #4f9a5e; --sage: #a9bcbc; --night: #101a2c; --line: rgba(239,227,204,.16);
+    --on-color: #16233a; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #16233a; --card: #1f304d; --ink: #efe3cc; --ink-soft: #b8c0cc;
+  --cobalt: #5b8cc0; --ochre: #e0b04e; --orange: #d9774a; --turq: #6bb3dd;
+  --pink: #f0bf94; --leaf: #4f9a5e; --sage: #a9bcbc; --night: #101a2c; --line: rgba(239,227,204,.16);
+  --on-color: #16233a; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html, body { min-height: 100%; }
+body {
+  font-variation-settings: var(--poem-axes);
+  background: var(--paper); color: var(--ink);
+  font: 16px/1.5 var(--f-body);
+  padding: 0 16px calc(var(--nav-h) + 28px + env(safe-area-inset-bottom, 0px));
+  overflow-x: hidden;
+}
+.wrap { max-width: 640px; margin: 0 auto; position: relative; }
+h1, h2, h3 { font-family: var(--f-display); font-weight: 400; line-height: 1.05; margin: 0; text-wrap: balance; letter-spacing: .01em; }
+h2 { font-size: 26px; }
+h3 { font-size: 20px; }
+button, input, textarea, select { font: inherit; color: inherit; }
+button { cursor: pointer; }
+button:disabled { opacity: .5; cursor: default; }
+:focus-visible { outline: 3px solid var(--ochre); outline-offset: 3px; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+a { color: var(--cobalt); }
+
+/* ---- décor découpé ---- */
+.decor { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+.decor svg { position: absolute; opacity: .9; }
+.decor .d1 { width: 180px; top: -40px; right: -50px; color: var(--turq); transform: rotate(18deg); }
+.decor .d2 { width: 120px; bottom: 120px; left: -46px; color: var(--orange); transform: rotate(-24deg); }
+.decor .d3 { width: 70px; top: 260px; right: -20px; color: var(--ochre); }
+main, header { position: relative; z-index: 1; }
+
+/* ---- en-tête ---- */
+header { padding-block: 28px 8px; }
+.eyebrow { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-soft); font-weight: 600; }
+.brand { font-size: clamp(40px, 11vw, 64px); color: var(--cobalt); margin-top: 6px; }
+.brand span { color: var(--orange); }
+.greeting { font-family: var(--f-poem); font-size: 19px; margin: 6px 0 0; color: var(--ink-soft); }
+.save-state { font-size: 12px; color: var(--ink-soft); margin-top: 8px; display: flex; gap: 6px; align-items: center; }
+.save-state i { width: 8px; height: 8px; border-radius: 50%; background: var(--turq); display: inline-block; }
+
+/* ---- structure ---- */
+section.view { display: grid; gap: 22px; padding-block: 14px 8px; }
+.panel { background: var(--card); border-radius: 26px; padding: 20px; border: 1px solid var(--line); display: grid; gap: 12px; min-width: 0; }
+.lead { font-family: var(--f-poem); font-size: 18px; line-height: 1.3; margin: 0; color: var(--ink-soft); }
+.hint { font-size: 14px; color: var(--ink-soft); margin: 0; }
+.row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.between { justify-content: space-between; }
+.title-block { display: grid; gap: 6px; }
+
+/* ---- boutons, champs ---- */
+.btn { border: 0; border-radius: 99px; padding: 11px 18px; font-weight: 700; background: var(--cobalt); color: #f8f0e1; }
+.btn.alt { background: transparent; color: var(--ink); box-shadow: inset 0 0 0 2px var(--ink); }
+.btn.orange { background: var(--orange); }
+.btn.small { padding: 7px 13px; font-size: 14px; }
+.field { width: 100%; min-width: 0; border: 2px solid var(--line); background: var(--paper); border-radius: 16px; padding: 11px 14px; }
+.field:focus { border-color: var(--cobalt); outline: none; }
+textarea.field { min-height: 110px; resize: vertical; font-family: var(--f-poem); font-size: 18px; line-height: 1.35; }
+.inline-form { display: grid; grid-template-columns: 1fr auto; gap: 8px; }
+.linkbtn { border: 0; background: none; color: var(--ink-soft); font-size: 13px; text-decoration: underline; padding: 4px; }
+.linkbtn.danger { color: var(--orange); font-weight: 700; }
+.seg { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip {
+  border: 0; border-radius: 99px; padding: 8px 14px; font-weight: 600; font-size: 15px;
+  background: transparent; box-shadow: inset 0 0 0 2px var(--c, var(--ink)); color: var(--ink);
+}
+.chip[aria-pressed="true"] { background: var(--c, var(--ink)); color: var(--t, var(--on-color)); }
+.toggle { display: flex; gap: 12px; align-items: flex-start; }
+.toggle input { width: 22px; height: 22px; accent-color: var(--cobalt); margin-top: 2px; flex: none; }
+
+/* ---- humeur ---- */
+.moods { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+.mood { border: 0; background: none; display: grid; justify-items: center; gap: 4px; padding: 6px 2px; border-radius: 18px; color: var(--ink-soft); font-size: 12px; font-weight: 600; }
+.mood svg { width: 100%; max-width: 54px; aspect-ratio: 1; color: var(--c); opacity: .45; transition: transform .2s, opacity .2s; }
+.mood[aria-pressed="true"] { color: var(--ink); }
+.mood[aria-pressed="true"] svg { opacity: 1; transform: scale(1.12) rotate(-6deg); }
+
+/* ---- SOS ---- */
+.sos {
+  display: grid; grid-template-columns: auto 1fr; gap: 14px; align-items: center; text-align: left;
+  background: var(--night); color: #efe3cc; border: 2px solid var(--ochre); border-radius: 30px 30px 30px 8px; padding: 16px 20px;
+}
+.sos svg { width: 46px; height: 46px; color: var(--ochre); }
+.sos strong { font-family: var(--f-display); font-weight: 400; font-size: 21px; display: block; }
+.sos small { font-size: 14px; opacity: .85; }
+
+/* ---- gratitude ---- */
+.grat { display: grid; gap: 8px; }
+.grat-line { display: grid; grid-template-columns: 34px 1fr; gap: 8px; align-items: center; }
+.grat-line b { font-family: var(--f-display); font-weight: 400; font-size: 24px; color: var(--c); text-align: center; }
+.grat-line input { font-family: var(--f-poem); font-size: 17px; }
+
+/* ---- pas vers le rêve ---- */
+.nextstep { background: #24476b; color: #f8f0e1; border-radius: 26px 26px 6px 26px; padding: 18px 20px; display: grid; gap: 10px; }
+.nextstep .eyebrow { color: #efe3cc; opacity: .8; }
+.nextstep p { margin: 0; font-family: var(--f-poem); font-size: 21px; line-height: 1.2; }
+.nextstep small { opacity: .85; }
+.nextstep .btn { background: var(--ochre); color: #1c2e4a; }
+.nextstep .btn.alt { background: transparent; color: #f8f0e1; box-shadow: inset 0 0 0 2px #f8f0e1; }
+
+/* ---- jardin + gestes ---- */
+.garden-art { background: var(--night); border-radius: 160px 160px 24px 24px; overflow: hidden; aspect-ratio: 16/10; max-width: 100%; }
+.garden-art svg { width: 100%; height: 100%; display: block; }
+.garden-art .leafg { transform-box: fill-box; transform-origin: 50% 100%; animation: pousse .7s cubic-bezier(.3,1.5,.5,1) both; }
+@keyframes pousse { from { transform: scale(0) rotate(-20deg); } to { transform: scale(1); } }
+.count { font-variant-numeric: tabular-nums; font-family: var(--f-poem); font-size: 17px; color: var(--ink-soft); }
+.count b { font-family: var(--f-display); font-weight: 400; color: var(--orange); font-size: 26px; }
+.gestes { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
+.geste {
+  position: relative; border: 0; padding: 14px 12px 12px; min-height: 128px;
+  display: grid; grid-template-rows: 1fr auto; justify-items: center; gap: 6px;
+  background: var(--c); color: var(--t, var(--on-color));
+  border-radius: var(--r, 46% 54% 42% 58% / 52% 44% 56% 48%);
+  transition: transform .2s;
+}
+.geste:hover { transform: rotate(-2deg) scale(1.02); }
+.geste svg { width: 50px; height: 50px; }
+.geste span { font-weight: 700; font-size: 15px; line-height: 1.15; text-align: center; }
+.geste.done { background: transparent; color: var(--ink); box-shadow: inset 0 0 0 3px var(--c); }
+.geste.done::after {
+  content: "fait"; position: absolute; top: 8px; right: 12px; font-size: 11px; font-weight: 700; letter-spacing: .1em;
+  text-transform: uppercase; background: var(--c); color: var(--t, var(--on-color)); padding: 2px 8px; border-radius: 99px;
+}
+.geste .del { position: absolute; top: 6px; left: 8px; width: 26px; height: 26px; border-radius: 50%; background: var(--card); color: var(--ink); font-weight: 700; line-height: 26px; }
+
+/* ---- toast ---- */
+.toast {
+  position: fixed; left: 16px; right: 16px; bottom: calc(var(--nav-h) + 16px + env(safe-area-inset-bottom, 0px)); z-index: 30;
+  max-width: 560px; margin: 0 auto; background: var(--ochre); color: #1c2e4a; border-radius: 28px 28px 28px 6px; padding: 16px 18px;
+  display: grid; gap: 10px; box-shadow: 0 12px 30px rgba(0,0,0,.18); animation: monte .4s ease both;
+}
+.toast p { margin: 0; font-family: var(--f-poem); font-size: 19px; line-height: 1.2; }
+.toast .btn { background: #1c2e4a; }
+.toast .btn.alt { background: transparent; color: #1c2e4a; box-shadow: inset 0 0 0 2px #1c2e4a; }
+@keyframes monte { from { transform: translateY(20px); opacity: 0; } }
+
+/* ---- rêves / projets ---- */
+.dream { background: var(--card); border-radius: 28px; border: 1px solid var(--line); overflow: hidden; display: grid; min-width: 0; }
+.dream-head { background: var(--c); color: var(--t, var(--on-color)); padding: 18px 20px 16px; display: grid; gap: 6px; position: relative; }
+.dream-head h3 { font-size: 24px; padding-right: 50px; overflow-wrap: anywhere; }
+.dream-head p { margin: 0; font-family: var(--f-poem); font-size: 17px; line-height: 1.3; opacity: .92; overflow-wrap: anywhere; }
+.dream-head .pct { position: absolute; top: 16px; right: 18px; font-family: var(--f-display); font-size: 22px; font-variant-numeric: tabular-nums; }
+.bar { height: 10px; border-radius: 99px; background: rgba(255,255,255,.35); overflow: hidden; }
+.bar i { display: block; height: 100%; background: currentColor; border-radius: 99px; transition: width .4s; }
+.dream-body { padding: 16px 20px 18px; display: grid; gap: 14px; }
+.woop { display: grid; gap: 10px; }
+.woop label { display: grid; gap: 4px; font-size: 13px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-soft); }
+.woop label span { text-transform: none; letter-spacing: 0; font-weight: 400; font-size: 13px; }
+.woop textarea.field { min-height: 64px; font-size: 16px; }
+.steps-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.steps-list li { display: grid; grid-template-columns: 28px 1fr auto; gap: 10px; align-items: start; padding: 6px 0; border-bottom: 1px dashed var(--line); }
+.steps-list input { width: 22px; height: 22px; accent-color: var(--leaf); margin: 2px 0 0; }
+.steps-list li.ok span { text-decoration: line-through; color: var(--ink-soft); }
+.steps-list span { overflow-wrap: anywhere; }
+details summary { cursor: pointer; font-weight: 700; color: var(--cobalt); }
+details[open] summary { margin-bottom: 10px; }
+.suggest { background: var(--paper); border-radius: 18px; padding: 14px; display: grid; gap: 8px; }
+.suggest ol { margin: 0; padding-left: 20px; display: grid; gap: 4px; }
+.done-badge { font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+
+/* ---- respirer ---- */
+.breath { justify-items: center; }
+.blob-wrap { width: min(240px, 66vw); aspect-ratio: 1; display: grid; place-items: center; position: relative; }
+.blob { width: 46%; aspect-ratio: 1; background: var(--turq); border-radius: 58% 42% 51% 49% / 46% 57% 43% 54%; transition: transform 4s ease-in-out, border-radius 4s ease-in-out; }
+.blob.in { transform: scale(2); border-radius: 44% 56% 38% 62% / 58% 41% 59% 42%; }
+.blob.out { transition-duration: 6s; }
+.blob-wrap .rays { position: absolute; inset: 0; color: var(--ochre); opacity: .5; }
+.breath-label { font-family: var(--f-display); font-size: 30px; color: var(--cobalt); min-height: 1.1em; }
+.thought { font-family: var(--f-poem); font-size: clamp(21px, 5.4vw, 26px); line-height: 1.2; margin: 0; text-wrap: balance; }
+.steps { display: grid; gap: 6px; }
+.step { display: grid; grid-template-columns: 54px 1fr; gap: 12px; align-items: center; background: none; border: 0; text-align: left; padding: 4px 0; }
+.step b { font-family: var(--f-display); font-weight: 400; font-size: 30px; color: var(--c); text-align: center; }
+.step.off { opacity: .35; }
+.answer { background: var(--c); color: var(--t, var(--on-color)); border-radius: 24px 24px 24px 6px; padding: 16px 18px; }
+.answer p { margin: 0; font-family: var(--f-poem); font-size: 18px; line-height: 1.3; white-space: pre-wrap; }
+.history { display: grid; gap: 6px; font-size: 14px; color: var(--ink-soft); }
+.history div { display: flex; gap: 8px; align-items: baseline; }
+.history i { width: 10px; height: 10px; border-radius: 50%; background: var(--c); flex: none; display: inline-block; }
+.people { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 460px) { .people { grid-template-columns: 1fr; } }
+.people ul { list-style: none; padding: 0; margin: 8px 0 0; display: grid; gap: 6px; }
+.people li { display: flex; justify-content: space-between; gap: 8px; align-items: center; background: var(--paper); border-radius: 14px; padding: 8px 12px; overflow-wrap: anywhere; }
+.people h3 { font-size: 19px; color: var(--c); }
+
+/* ---- carnet ---- */
+.entries { display: grid; gap: 12px; }
+.entry { background: var(--card); border-radius: 22px; padding: 16px 18px; border: 1px solid var(--line); display: grid; gap: 6px; min-width: 0; }
+.entry .meta { display: flex; justify-content: space-between; gap: 8px; align-items: center; font-size: 13px; color: var(--ink-soft); }
+.tag { font-weight: 700; letter-spacing: .08em; text-transform: uppercase; font-size: 11px; padding: 3px 10px; border-radius: 99px; background: var(--c); color: var(--t, var(--on-color)); }
+.entry p { margin: 0; font-family: var(--f-poem); font-size: 18px; line-height: 1.3; white-space: pre-wrap; overflow-wrap: anywhere; }
+.empty { text-align: center; padding: 22px 10px; display: grid; justify-items: center; gap: 8px; color: var(--ink-soft); }
+.empty svg { width: 60px; color: var(--pink); }
+.empty p { margin: 0; font-family: var(--f-poem); font-size: 19px; }
+
+/* ---- musique ---- */
+.moodmusic { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+.mm { border: 0; border-radius: var(--r); background: var(--c); color: var(--t, var(--on-color)); padding: 16px 14px; text-align: left; display: grid; gap: 2px; min-height: 86px; align-content: end; }
+.mm b { font-family: var(--f-display); font-weight: 400; font-size: 19px; line-height: 1.05; }
+.mm small { font-size: 13px; opacity: .9; }
+.results { display: grid; gap: 8px; }
+.track { display: grid; grid-template-columns: 46px 1fr auto; gap: 12px; align-items: center; background: var(--paper); border-radius: 18px; padding: 10px 12px; min-width: 0; }
+.track .disc { width: 46px; height: 46px; border-radius: 50%; background: var(--c); display: grid; place-items: center; }
+.track .disc::after { content: ""; width: 12px; height: 12px; border-radius: 50%; background: var(--paper); }
+.track div { min-width: 0; }
+.track strong { display: block; overflow-wrap: anywhere; line-height: 1.2; }
+.track small { color: var(--ink-soft); overflow-wrap: anywhere; }
+.track .acts { display: grid; gap: 4px; justify-items: end; }
+.track a { font-weight: 700; font-size: 14px; white-space: nowrap; }
+
+/* ---- bilan ---- */
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+@media (max-width: 460px) { .stats { grid-template-columns: repeat(2, 1fr); } }
+.stat { background: var(--c); color: var(--t, var(--on-color)); border-radius: var(--r); padding: 14px 10px; text-align: center; display: grid; gap: 2px; }
+.stat b { font-family: var(--f-display); font-weight: 400; font-size: 30px; line-height: 1; font-variant-numeric: tabular-nums; }
+.stat small { font-size: 12px; font-weight: 600; line-height: 1.2; }
+.chart { overflow-x: auto; }
+.chart svg { width: 100%; min-width: 320px; height: auto; display: block; }
+.chart text { fill: var(--ink-soft); font: 15px var(--f-body); }
+.insights { display: grid; gap: 8px; }
+.insight { display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: center; background: var(--paper); border-radius: 18px; padding: 12px 14px; }
+.insight b { font-family: var(--f-display); font-weight: 400; font-size: 22px; color: var(--c); font-variant-numeric: tabular-nums; }
+.jar { background: var(--night); color: #efe3cc; border-radius: 40px 40px 26px 26px; padding: 22px 20px; display: grid; gap: 10px; text-align: center; }
+.jar p { margin: 0; font-family: var(--f-poem); font-size: 21px; line-height: 1.25; overflow-wrap: anywhere; }
+.jar small { opacity: .75; }
+.jar .btn { justify-self: center; background: var(--ochre); color: #1c2e4a; }
+
+/* ---- navigation ---- */
+nav.tabs {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 20;
+  padding: 8px 8px calc(8px + env(safe-area-inset-bottom, 0px));
+  background: var(--night); display: flex; justify-content: center;
+}
+nav.tabs .in { display: grid; grid-template-columns: repeat(5, 1fr); gap: 2px; width: 100%; max-width: 560px; }
+nav.tabs button { border: 0; background: transparent; color: #c9cde0; display: grid; justify-items: center; gap: 2px; font-size: 11.5px; font-weight: 600; padding: 6px 2px; border-radius: 16px; }
+nav.tabs svg { width: 24px; height: 24px; }
+nav.tabs button[aria-selected="true"] { color: #1c2e4a; background: var(--ochre); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+</style>
+
+<div class="decor" aria-hidden="true">
+  <svg class="d1" viewBox="0 0 100 100"><path fill="currentColor" d="M50 98C46 78 30 74 36 58C41 44 24 38 33 22C44 30 52 24 49 4C66 16 61 32 67 44C74 57 60 70 62 98Z"/></svg>
+  <svg class="d2" viewBox="0 0 100 100"><path fill="currentColor" d="M50 5C80 30 88 70 50 95C12 70 20 30 50 5Z"/></svg>
+  <svg class="d3" viewBox="0 0 100 100"><path id="star-d" fill="currentColor"/></svg>
+</div>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow" id="today-label">Aujourd'hui</div>
+    <h1 class="brand">Atelier <span>Bonheur</span></h1>
+    <p class="greeting" id="greeting">Une chose simple à la fois.</p>
+    <div class="save-state" id="save-state"><i></i><span>Enregistré sur cet appareil</span></div>
+  </header>
+
+  <main>
+    <!-- ================= AUJOURD'HUI ================= -->
+    <section class="view" id="v-jour" role="tabpanel" aria-labelledby="t-jour">
+      <div class="panel">
+        <h2>Ta météo intérieure</h2>
+        <div class="moods" id="moods" role="group" aria-label="Humeur du jour"></div>
+        <p class="hint" id="mood-hint">Un geste par jour. Ça nourrit ton bilan.</p>
+      </div>
+
+      <button class="sos" id="sos" type="button">
+        <svg viewBox="0 0 100 100" aria-hidden="true"><path fill="currentColor" d="M50 8C70 40 82 55 82 70A32 32 0 0 1 18 70C18 55 30 40 50 8Z"/></svg>
+        <span><strong>Ça ne va pas trop</strong><small>Respirer, revenir ici, une pensée simple</small></span>
+      </button>
+
+      <div class="panel">
+        <div class="title-block">
+          <h2>Trois bonnes choses</h2>
+          <p class="lead">Même minuscules. Le café chaud, un sourire, la lumière sur le lac.</p>
+        </div>
+        <div class="grat" id="grat"></div>
+        <div class="row"><button class="btn" id="grat-save" type="button">Mettre dans le bocal</button><span class="hint" id="grat-msg" aria-live="polite"></span></div>
+      </div>
+
+      <div id="nextstep-host"></div>
+
+      <div class="panel">
+        <div class="garden-art" id="garden"></div>
+        <div class="row between">
+          <div class="count" id="count"></div>
+          <button class="btn orange small" id="random" type="button">Un geste au hasard</button>
+        </div>
+      </div>
+
+      <div class="title-block">
+        <h2 style="font-size:28px">Les petits gestes</h2>
+        <p class="lead">Touche un geste quand tu l'as fait. Une feuille pousse dans ton jardin.</p>
+      </div>
+      <div class="gestes" id="gestes"></div>
+
+      <div class="panel">
+        <h3>Ajouter un geste</h3>
+        <form class="inline-form" id="f-geste">
+          <label class="sr" for="geste-new">Nouveau geste</label>
+          <input class="field" id="geste-new" maxlength="40" placeholder="Ex. ouvrir la fenêtre">
+          <button class="btn" type="submit">Ajouter</button>
+        </form>
+        <div class="row"><button class="linkbtn" id="edit-gestes" type="button">Retirer des gestes</button></div>
+        <div class="toggle">
+          <input type="checkbox" id="rappel-on">
+          <label for="rappel-on">Me souffler un geste toutes les
+            <select id="rappel-min" class="field" style="width:auto;display:inline-block;padding:4px 8px">
+              <option value="20">20</option><option value="45">45</option><option value="60">60</option><option value="90">90</option>
+            </select> minutes</label>
+        </div>
+        <p class="hint">Les rappels apparaissent tant que l'app est ouverte.</p>
+      </div>
+    </section>
+
+    <!-- ================= RÊVES ================= -->
+    <section class="view" id="v-reves" role="tabpanel" aria-labelledby="t-reves" hidden>
+      <div class="title-block">
+        <h2 style="font-size:30px">Mes rêves</h2>
+        <p class="lead">Un rêve devient réel par petits pas. Pour chacun : ce que tu souhaites, le plus beau résultat, l'obstacle en toi, et ton plan « si…, alors… ».</p>
+      </div>
+
+      <div class="panel">
+        <h3>Nouveau rêve</h3>
+        <label class="sr" for="dream-title">Mon rêve</label>
+        <input class="field" id="dream-title" maxlength="80" placeholder="Ex. Partir un mois au Japon, apprendre la céramique…">
+        <label class="sr" for="dream-why">Pourquoi ça compte</label>
+        <input class="field" id="dream-why" maxlength="160" placeholder="Pourquoi ça compte pour moi ?">
+        <div class="row"><button class="btn" id="dream-add" type="button">Planter ce rêve</button><span class="hint" id="dream-msg" aria-live="polite"></span></div>
+      </div>
+
+      <div id="dreams" style="display:grid;gap:18px"></div>
+
+      <div class="panel">
+        <div class="title-block">
+          <h2>Carnet</h2>
+          <p class="lead">Rêves de la nuit, envies, pensées. Ce que tu écris reste à toi.</p>
+        </div>
+        <div class="seg" id="type-pick" role="group" aria-label="Type de note"></div>
+        <label class="sr" for="note-text">Texte</label>
+        <textarea class="field" id="note-text"></textarea>
+        <div class="row"><button class="btn" id="note-save" type="button">Garder</button><span class="hint" id="note-msg" aria-live="polite"></span></div>
+      </div>
+      <div class="row between">
+        <h3>Mes notes</h3>
+        <div class="seg" id="filter" role="group" aria-label="Filtrer"></div>
+      </div>
+      <div class="entries" id="entries"></div>
+    </section>
+
+    <!-- ================= ANCRAGE ================= -->
+    <section class="view" id="v-ancrage" role="tabpanel" aria-labelledby="t-ancrage" hidden>
+      <div class="panel breath">
+        <div class="blob-wrap">
+          <svg class="rays" viewBox="0 0 100 100" aria-hidden="true"><path id="rays-path" fill="currentColor"/></svg>
+          <div class="blob" id="blob"></div>
+        </div>
+        <div class="breath-label" id="breath-label" aria-live="polite">Prête ?</div>
+        <button class="btn" id="breath-go" type="button">Respirer 1 minute</button>
+        <p class="hint">Inspire 4 secondes, garde 2, expire 6.</p>
+      </div>
+
+      <div class="panel">
+        <h2>5 · 4 · 3 · 2 · 1</h2>
+        <p class="lead">Pour revenir ici, maintenant. Touche chaque ligne quand c'est fait.</p>
+        <div class="steps" id="steps"></div>
+      </div>
+
+      <div class="panel">
+        <div class="eyebrow">Une pensée simple</div>
+        <p class="thought" id="thought"></p>
+        <div class="row"><button class="btn alt small" id="thought-next" type="button">Une autre</button></div>
+        <label class="sr" for="thought-answer">Ta réponse</label>
+        <textarea class="field" id="thought-answer" placeholder="Si tu veux, écris ta réponse ici…"></textarea>
+        <div class="row"><button class="btn" id="thought-save" type="button">Garder dans le carnet</button><span class="hint" id="thought-msg" aria-live="polite"></span></div>
+      </div>
+
+      <div class="panel" id="reframe-panel" hidden>
+        <div class="title-block">
+          <h2>Regarder autrement</h2>
+          <p class="lead">Écris une pensée qui te pèse. Tu reçois une façon plus douce et plus juste de la voir.</p>
+        </div>
+        <label class="sr" for="reframe-in">Pensée qui pèse</label>
+        <textarea class="field" id="reframe-in" placeholder="Ex. Je n'y arriverai jamais."></textarea>
+        <div class="row"><button class="btn" id="reframe-go" type="button">Regarder autrement</button><span class="hint" id="reframe-msg" aria-live="polite"></span></div>
+        <div class="answer" id="reframe-out" style="--c:var(--turq);--t:#1c2e4a" hidden><p></p></div>
+        <div class="row" id="reframe-keep" hidden><button class="btn alt small" type="button">Garder dans le carnet</button></div>
+      </div>
+
+      <div class="panel">
+        <h2>Là, maintenant, j'écoute…</h2>
+        <div class="seg" id="voices" role="group" aria-label="Quelle voix"></div>
+        <label class="sr" for="voice-who">Qui ou quoi exactement</label>
+        <input class="field" id="voice-who" maxlength="80" placeholder="Qui ou quoi ? (facultatif)">
+        <div class="answer" id="voice-answer" hidden><p></p></div>
+        <div class="row"><button class="btn" id="voice-save" type="button">Noter</button><span class="hint" id="voice-msg" aria-live="polite"></span></div>
+        <div class="history" id="voice-history"></div>
+      </div>
+
+      <div class="panel">
+        <div class="title-block">
+          <h2>Les voix autour de moi</h2>
+          <p class="lead">Personnes, podcasts, comptes… Qui te nourrit, qui t'épuise ?</p>
+        </div>
+        <div class="people">
+          <div style="--c:var(--leaf)"><h3>Me nourrissent</h3><ul id="list-nourrit"></ul></div>
+          <div style="--c:var(--orange)"><h3>M'épuisent</h3><ul id="list-epuise"></ul></div>
+        </div>
+        <form id="f-person" style="display:grid;gap:8px">
+          <label class="sr" for="person-name">Nom</label>
+          <input class="field" id="person-name" maxlength="60" placeholder="Ex. Mamie, un podcast, une amie…">
+          <div class="row">
+            <button class="chip" type="submit" data-effet="nourrit" style="--c:var(--leaf)">Me nourrit</button>
+            <button class="chip" type="submit" data-effet="epuise" style="--c:var(--orange)">M'épuise</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- ================= MUSIQUE ================= -->
+    <section class="view" id="v-musique" role="tabpanel" aria-labelledby="t-musique" hidden>
+      <div class="title-block">
+        <h2 style="font-size:30px">Musique</h2>
+        <p class="lead">La musique change l'humeur en trois minutes. Choisis ce dont tu as besoin.</p>
+      </div>
+      <div class="moodmusic" id="moodmusic"></div>
+      <form class="inline-form" id="f-music">
+        <label class="sr" for="music-q">Chercher</label>
+        <input class="field" id="music-q" maxlength="120" placeholder="Ou décris : « du jazz doux pour un dimanche »">
+        <button class="btn" type="submit">Chercher</button>
+      </form>
+      <div class="panel" id="music-panel" hidden>
+        <div class="row between"><h3 id="music-title">Pour toi</h3><span class="hint" id="music-msg" aria-live="polite"></span></div>
+        <div class="results" id="music-results"></div>
+        <div class="row" id="playlist-row" hidden>
+          <button class="btn orange small" id="playlist-go" type="button">Créer une playlist Spotify</button>
+          <span class="hint">Spotify Premium requis</span>
+        </div>
+        <div class="answer" id="playlist-out" style="--c:var(--ochre);--t:#1c2e4a" hidden><p></p></div>
+      </div>
+      <div class="panel">
+        <div class="title-block">
+          <h2>Mes chansons refuge</h2>
+          <p class="lead">Celles qui te ramènent à toi. Garde-les ici pour les retrouver vite.</p>
+        </div>
+        <div class="results" id="refuges"></div>
+        <form id="f-refuge" style="display:grid;gap:8px">
+          <label class="sr" for="refuge-name">Titre et artiste</label>
+          <input class="field" id="refuge-name" maxlength="100" placeholder="Titre – artiste">
+          <button class="btn alt small" type="submit" style="justify-self:start">Ajouter à mes refuges</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- ================= BILAN ================= -->
+    <section class="view" id="v-bilan" role="tabpanel" aria-labelledby="t-bilan" hidden>
+      <div class="title-block">
+        <h2 style="font-size:30px">Mon bilan</h2>
+        <p class="lead">Les 7 derniers jours. Pas pour te juger : pour voir ce qui te fait du bien.</p>
+      </div>
+      <div class="stats" id="stats"></div>
+      <div class="panel">
+        <h3>Ta météo sur 14 jours</h3>
+        <div class="chart" id="chart"></div>
+      </div>
+      <div class="panel">
+        <div class="title-block">
+          <h3>Ce qui te fait du bien</h3>
+          <p class="hint">Ton humeur moyenne les jours avec ce geste, comparée aux jours sans.</p>
+        </div>
+        <div class="insights" id="insights"></div>
+      </div>
+      <div class="jar" id="jar"></div>
+
+      <div class="panel">
+        <div class="title-block">
+          <h3>Mes données</h3>
+          <p class="hint" id="data-where">Une copie de sécurité de tout ton atelier, à garder où tu veux.</p>
+        </div>
+        <div class="row">
+          <button class="btn small" id="data-file" type="button" hidden>Sauvegarder dans un fichier</button>
+          <button class="btn alt small" id="data-copy" type="button">Copier mes données</button>
+          <button class="btn alt small" id="data-restore-open" type="button">Restaurer</button>
+        </div>
+        <div id="data-restore" hidden style="display:grid;gap:8px">
+          <label class="hint" for="data-paste">Colle ici une copie de tes données, ou choisis un fichier de sauvegarde.</label>
+          <textarea class="field" id="data-paste" style="font-family:ui-monospace,monospace;font-size:13px;min-height:90px"></textarea>
+          <input type="file" id="data-upload" accept=".json,application/json,text/plain">
+          <div class="row"><button class="btn orange small" id="data-restore-go" type="button">Remplacer par cette copie</button>
+          <button class="linkbtn" id="data-restore-cancel" type="button">Annuler</button></div>
+        </div>
+        <p class="hint" id="data-msg" aria-live="polite"></p>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div id="toast-host"></div>
+
+<nav class="tabs" role="tablist" aria-label="Sections">
+  <div class="in">
+    <button role="tab" id="t-jour" data-view="jour" aria-selected="true" type="button">
+      <svg viewBox="0 0 100 100" aria-hidden="true"><path id="nav-sun" fill="currentColor"/></svg>Jour</button>
+    <button role="tab" id="t-reves" data-view="reves" aria-selected="false" type="button">
+      <svg viewBox="0 0 100 100" aria-hidden="true"><path fill="currentColor" d="M78 14A40 40 0 1 0 86 70A32 32 0 1 1 78 14Z"/></svg>Rêves</button>
+    <button role="tab" id="t-ancrage" data-view="ancrage" aria-selected="false" type="button">
+      <svg viewBox="0 0 100 100" aria-hidden="true"><path fill="currentColor" d="M50 98C46 78 30 74 36 58C41 44 24 38 33 22C44 30 52 24 49 4C66 16 61 32 67 44C74 57 60 70 62 98Z"/></svg>Ancrage</button>
+    <button role="tab" id="t-musique" data-view="musique" aria-selected="false" type="button">
+      <svg viewBox="0 0 100 100" aria-hidden="true"><path fill="currentColor" d="M38 18L84 8V66A14 14 0 1 1 74 53V28L48 34V76A14 14 0 1 1 38 63Z"/></svg>Musique</button>
+    <button role="tab" id="t-bilan" data-view="bilan" aria-selected="false" type="button">
+      <svg viewBox="0 0 100 100" aria-hidden="true"><path fill="currentColor" d="M50 5C80 30 88 70 50 95C12 70 20 30 50 5Z"/></svg>Bilan</button>
+  </div>
+</nav>
+
+<script>
+(() => {
+  /* ================= outils ================= */
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const uid = () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
+  const dayKey = (d = new Date()) => d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+  const daysAgo = (n) => { const d = new Date(); d.setHours(12, 0, 0, 0); d.setDate(d.getDate() - n); return d; };
+  const fmt1 = (x) => x.toFixed(1).replace(".", ",");
+  const star = (n, r1, r2, cx = 50, cy = 50) => {
+    let d = "";
+    for (let i = 0; i < n * 2; i++) {
+      const r = i % 2 ? r2 : r1, a = (Math.PI * i) / n;
+      d += (i ? "L" : "M") + (cx + r * Math.sin(a)).toFixed(1) + " " + (cy - r * Math.cos(a)).toFixed(1);
+    }
+    return d + "Z";
+  };
+  $("star-d").setAttribute("d", star(8, 48, 20));
+  $("rays-path").setAttribute("d", star(16, 50, 40));
+  $("nav-sun").setAttribute("d", star(10, 48, 32));
+
+  const SHAPES = {
+    marche: '<ellipse cx="34" cy="62" rx="13" ry="22" fill="currentColor"/><ellipse cx="64" cy="38" rx="13" ry="22" fill="currentColor"/>',
+    horizon: '<circle cx="50" cy="40" r="17" fill="currentColor"/><path fill="currentColor" d="M4 70Q27 52 50 70T96 68V90H4Z"/>',
+    saut: '<path fill="currentColor" d="M50 6L62 30L88 34L69 52L74 80L50 67L26 80L31 52L12 34L38 30Z"/>',
+    eau: '<path fill="currentColor" d="M50 8C70 40 82 55 82 70A32 32 0 0 1 18 70C18 55 30 40 50 8Z"/>',
+    tisane: '<path fill="currentColor" d="M18 40H74V60A28 28 0 0 1 18 60Z"/><path d="M74 46A11 11 0 0 1 74 66" fill="none" stroke="currentColor" stroke-width="7"/><path fill="currentColor" d="M40 8C50 18 34 22 44 34H38C28 24 44 18 40 8Z"/>',
+    calin: '<path fill="currentColor" d="M50 88C10 60 5 30 28 22C40 18 48 26 50 34C52 26 60 18 72 22C95 30 90 60 50 88Z"/>',
+    souffle: '<path fill="currentColor" d="M50 98C46 78 30 74 36 58C41 44 24 38 33 22C44 30 52 24 49 4C66 16 61 32 67 44C74 57 60 70 62 98Z"/>',
+    soleil: '<path fill="currentColor" d="' + star(12, 46, 30) + '"/>',
+    feuille: '<path fill="currentColor" d="M50 5C80 30 88 70 50 95C12 70 20 30 50 5Z"/>',
+    note: '<path fill="currentColor" d="M38 18L84 8V66A14 14 0 1 1 74 53V28L48 34V76A14 14 0 1 1 38 63Z"/>'
+  };
+  const svg = (k) => `<svg viewBox="0 0 100 100" aria-hidden="true">${SHAPES[k] || SHAPES.feuille}</svg>`;
+  const COLORS = ["var(--cobalt)", "var(--orange)", "var(--turq)", "var(--ochre)", "var(--leaf)", "var(--pink)"];
+  const RADII = [
+    "46% 54% 42% 58% / 52% 44% 56% 48%", "60% 40% 55% 45% / 40% 60% 40% 60%",
+    "38% 62% 50% 50% / 58% 42% 58% 42%", "70% 30% 50% 50% / 50% 50% 50% 50%",
+    "50% 50% 30% 70% / 60% 40% 60% 40%", "42% 58% 62% 38% / 46% 54% 46% 54%"
+  ];
+  const tx = (c) => /ochre|turq|pink/.test(c) ? "#1c2e4a" : "var(--on-color)";
+  const paint = (c) => `--c:${c};--t:${tx(c)}`;
+
+  /* ================= données ================= */
+  const DEFAULT_GESTES = [
+    { id: "marcher", label: "Marcher 10 minutes", icon: "marche" },
+    { id: "horizon", label: "Regarder l'horizon", icon: "horizon" },
+    { id: "sauter", label: "Sauter sur place", icon: "saut" },
+    { id: "eau", label: "Boire un verre d'eau", icon: "eau" },
+    { id: "tisane", label: "Me faire une tisane", icon: "tisane" },
+    { id: "calin", label: "Faire un câlin", icon: "calin" },
+    { id: "respirer", label: "Trois grandes respirations", icon: "souffle" },
+    { id: "lumiere", label: "Prendre la lumière", icon: "soleil" },
+    { id: "musique", label: "Écouter une chanson que j'aime", icon: "note" },
+    { id: "gentillesse", label: "Faire une gentillesse", icon: "feuille" }
+  ];
+  const fresh = () => ({
+    v: 2, gestes: DEFAULT_GESTES.slice(), faits: {}, notes: [], voix: [], checkins: [],
+    rappel: { on: false, min: 45 }, humeur: {}, gratitudes: {}, projets: [], refuges: [], pas: {}
+  });
+  const migrate = (o) => {
+    const s = Object.assign(fresh(), o || {});
+    if (!o || !o.v || o.v < 2) {
+      // v1 → v2 : ajoute les nouveaux gestes musique et gentillesse
+      ["musique", "gentillesse"].forEach((id) => { if (!s.gestes.some((g) => g.id === id)) s.gestes.push(DEFAULT_GESTES.find((g) => g.id === id)); });
+      s.v = 2;
+    }
+    return s;
+  };
+  const LS = "petits-gestes-v1";
+  let S = fresh();
+  try { const raw = localStorage.getItem(LS); if (raw) S = migrate(JSON.parse(raw)); } catch (e) {}
+
+  /* ================= sauvegarde ================= */
+  let dbDoc = null, saveTimer = null;
+  const setSaveLabel = (txt) => { $("save-state").querySelector("span").textContent = txt; };
+  function save() {
+    try { localStorage.setItem(LS, JSON.stringify(S)); } catch (e) {}
+    if (!dbDoc) return;
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(async () => {
+      try { await dbDoc.set(JSON.parse(JSON.stringify(S))); setSaveLabel("Enregistré dans ton compte"); }
+      catch (e) { setSaveLabel("Pas pu enregistrer en ligne, gardé sur cet appareil"); }
+    }, 500);
+  }
+  let sampleFn = null, mcp = null;
+  (async () => {
+    const use = window.claude && window.claude.use;
+    if (!use) return;
+    // assistant (reformuler, découper un rêve)
+    window.claude.use("sample").then((s) => { if (s) { sampleFn = s; $("reframe-panel").hidden = false; renderDreams(); } }).catch(() => {});
+    // Spotify
+    window.claude.use("mcp").then((m) => { mcp = m; }).catch(() => {});
+    try {
+      const [db, user] = await Promise.all([window.claude.use("db"), window.claude.use("user")]);
+      if (!db || !user) return;
+      const id = await user.id();
+      if (!id) return;
+      dbDoc = db.doc("data/users/" + id + "/carnet");
+      const snap = await dbDoc.get();
+      if (snap.exists && snap.data()) {
+        S = migrate(snap.data());
+        try { localStorage.setItem(LS, JSON.stringify(S)); } catch (e) {}
+        renderAll();
+        if (snap.data().v !== S.v) save();
+      } else {
+        await dbDoc.set(JSON.parse(JSON.stringify(S)));
+      }
+      setSaveLabel("Enregistré dans ton compte");
+    } catch (e) { dbDoc = null; }
+  })();
+
+  /* ================= en-tête ================= */
+  const now = new Date();
+  $("today-label").textContent = now.toLocaleDateString("fr-CH", { weekday: "long", day: "numeric", month: "long" });
+  const hr = now.getHours();
+  $("greeting").textContent = hr < 11 ? "Bonjour. Doucement, on commence." : hr < 18 ? "Une chose simple à la fois." : "Le soir, on ralentit.";
+
+  /* ================= humeur ================= */
+  const MOODS = [
+    { v: 1, label: "Orage", c: "var(--cobalt)", d: "M30 6H66L52 40H74L32 96L42 54H22Z" },
+    { v: 2, label: "Gris", c: "var(--turq)", d: "M24 76A18 18 0 0 1 22 40A22 22 0 0 1 62 28A20 20 0 0 1 80 76Z" },
+    { v: 3, label: "Éclaircie", c: "var(--leaf)", d: "M58 30A22 22 0 1 1 57.9 30ZM20 80A16 16 0 0 1 22 52A20 20 0 0 1 58 50A16 16 0 0 1 76 80Z" },
+    { v: 4, label: "Soleil", c: "var(--ochre)", d: "M50 18A32 32 0 1 1 49.9 18Z" },
+    { v: 5, label: "Rayonnant", c: "var(--orange)", d: star(12, 48, 30) }
+  ];
+  function renderMoods() {
+    const cur = S.humeur[dayKey()];
+    $("moods").innerHTML = MOODS.map((m) =>
+      `<button type="button" class="mood" style="--c:${m.c}" data-m="${m.v}" aria-pressed="${cur === m.v}">
+        <svg viewBox="0 0 100 100" aria-hidden="true"><path fill="currentColor" d="${m.d}"/></svg>${m.label}</button>`).join("");
+    $("mood-hint").textContent = !cur ? "Une touche par jour. Ça nourrit ton bilan." :
+      cur <= 2 ? "Merci de l'avoir dit. Le bouton juste en dessous est là pour ça." :
+      cur === 3 ? "Noté. Un petit geste peut faire pencher la journée." : "Noté. Savoure-le, c'est précieux.";
+    $("sos").style.order = cur && cur <= 2 ? "-1" : "";
+  }
+  $("moods").addEventListener("click", (e) => {
+    const b = e.target.closest("[data-m]"); if (!b) return;
+    S.humeur[dayKey()] = +b.dataset.m; save(); renderMoods(); renderBilan();
+  });
+
+  /* ================= gratitude ================= */
+  const GC = ["var(--orange)", "var(--turq)", "var(--ochre)"];
+  function renderGrat() {
+    const g = S.gratitudes[dayKey()] || ["", "", ""];
+    $("grat").innerHTML = [0, 1, 2].map((i) =>
+      `<div class="grat-line" style="--c:${GC[i]}"><b>${i + 1}</b>
+        <label class="sr" for="grat-${i}">Bonne chose ${i + 1}</label>
+        <input class="field" id="grat-${i}" maxlength="140" value="${esc(g[i] || "")}" placeholder="${["Aujourd'hui, j'ai aimé…", "J'ai de la chance d'avoir…", "Un petit moment doux…"][i]}"></div>`).join("");
+  }
+  $("grat-save").onclick = () => {
+    const vals = [0, 1, 2].map((i) => $("grat-" + i).value.trim());
+    if (!vals.some(Boolean)) { $("grat-msg").textContent = "Écris au moins une chose."; return; }
+    S.gratitudes[dayKey()] = vals; save(); renderBilan();
+    $("grat-msg").textContent = vals.filter(Boolean).length === 3 ? "Trois de plus dans ton bocal." : "Dans le bocal.";
+  };
+
+  /* ================= jardin + gestes ================= */
+  const LEAF_SPOTS = [
+    [220, 248, -40], [380, 236, 38], [190, 200, -55], [410, 190, 50], [235, 158, -30], [370, 150, 30],
+    [260, 116, -20], [345, 110, 22], [150, 270, -70], [450, 268, 70], [300, 80, 0], [180, 300, -80]
+  ];
+  function renderGarden() {
+    const done = (S.faits[dayKey()] || []).filter((id) => S.gestes.some((g) => g.id === id));
+    const n = done.length, total = S.gestes.length;
+    let leaves = "";
+    LEAF_SPOTS.slice(0, Math.min(n, LEAF_SPOTS.length)).forEach(([x, y, r], i) => {
+      const c = ["#d6a137", "#4f9fd0", "#c4592b", "#a9bcbc", "#3f8a4c", "#ecdcc0"][i % 6];
+      leaves += `<g transform="translate(${x} ${y}) rotate(${r})"><path class="leafg" fill="${c}" d="M0 0C24 -18 26 -52 0 -78C-26 -52 -24 -18 0 0Z" style="animation-delay:${i * 60}ms"/></g>`;
+    });
+    $("garden").innerHTML = `<svg viewBox="0 0 600 375" role="img" aria-label="Jardin du jour : ${n} feuille${n > 1 ? "s" : ""}">
+      <defs><linearGradient id="ciel" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ecdcc0"/><stop offset="1" stop-color="#f0b884"/></linearGradient>
+        <clipPath id="arche"><path d="M150 375V210A150 150 0 0 1 450 210V375Z"/></clipPath></defs>
+      <path d="M0 0H140C60 60 40 140 0 170Z" fill="#24476b"/>
+      <path d="M600 0H470C540 70 560 160 600 190Z" fill="#24476b"/>
+      <g clip-path="url(#arche)">
+        <rect x="150" y="60" width="300" height="320" fill="url(#ciel)"/>
+        <circle cx="352" cy="250" r="22" fill="#f8f0e1"/>
+        <rect x="150" y="262" width="300" height="120" fill="#4f7fa8"/>
+        <path d="M330 280H374M318 296H386M336 312H368" stroke="#f0d9a8" stroke-width="4" stroke-linecap="round"/>
+      </g>
+      <path d="M90 375V200A210 210 0 0 1 510 200V375" fill="none" stroke="#d6a137" stroke-width="10"/>
+      <path d="M120 375V205A180 180 0 0 1 480 205V375" fill="none" stroke="#d6a137" stroke-width="10"/>
+      <path d="M150 375V210A150 150 0 0 1 450 210V375" fill="none" stroke="#d6a137" stroke-width="10"/>
+      <circle cx="530" cy="300" r="56" fill="#c4592b"/>
+      <path d="M300 375C298 300 302 220 300 70" stroke="#3f8a4c" stroke-width="7" fill="none" opacity="${n ? 1 : .4}"/>
+      ${leaves}
+      <path d="M246 375C226 340 236 302 262 296H338C364 302 374 340 354 375Z" fill="#c4592b"/>
+      <path d="M262 296H338" stroke="#d6a137" stroke-width="6"/>
+    </svg>`;
+    $("count").innerHTML = n === 0 ? "Ton jardin attend sa première feuille." :
+      `<b>${n}</b> geste${n > 1 ? "s" : ""} sur ${total} aujourd'hui${n >= total ? " · tout est fait, bravo" : ""}`;
+  }
+  let editing = false;
+  function renderGestes() {
+    const done = new Set(S.faits[dayKey()] || []);
+    $("gestes").innerHTML = S.gestes.map((g, i) => `
+      <button type="button" class="geste ${done.has(g.id) ? "done" : ""}" data-id="${esc(g.id)}"
+        style="${paint(COLORS[i % COLORS.length])};--r:${RADII[i % RADII.length]}" aria-pressed="${done.has(g.id)}">
+        ${svg(g.icon)}<span>${esc(g.label)}</span>
+        ${editing ? `<span class="del" aria-label="Retirer ${esc(g.label)}" data-del="${esc(g.id)}">×</span>` : ""}
+      </button>`).join("");
+    $("edit-gestes").textContent = editing ? "Terminé" : "Retirer des gestes";
+  }
+  $("gestes").addEventListener("click", (e) => {
+    const del = e.target.closest("[data-del]");
+    if (del) { S.gestes = S.gestes.filter((g) => g.id !== del.dataset.del); save(); renderGestes(); renderGarden(); return; }
+    const b = e.target.closest(".geste"); if (b) toggleGeste(b.dataset.id);
+  });
+  function toggleGeste(id, force) {
+    const k = dayKey(); const list = new Set(S.faits[k] || []);
+    const on = force !== undefined ? force : !list.has(id);
+    on ? list.add(id) : list.delete(id);
+    S.faits[k] = [...list];
+    const keys = Object.keys(S.faits).sort(); while (keys.length > 120) delete S.faits[keys.shift()];
+    save(); renderGestes(); renderGarden(); renderBilan();
+  }
+  $("edit-gestes").onclick = () => { editing = !editing; renderGestes(); };
+  $("f-geste").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const v = $("geste-new").value.trim(); if (!v) return;
+    const icons = Object.keys(SHAPES);
+    S.gestes.push({ id: uid(), label: v, icon: icons[S.gestes.length % icons.length] });
+    $("geste-new").value = ""; save(); renderGestes(); renderGarden();
+  });
+  const pickGeste = () => {
+    const done = new Set(S.faits[dayKey()] || []);
+    const pool = S.gestes.filter((g) => !done.has(g.id));
+    const src = pool.length ? pool : S.gestes;
+    return src[Math.floor(Math.random() * src.length)];
+  };
+  $("random").onclick = () => { const g = pickGeste(); if (g) showToast(g); };
+  function showToast(g) {
+    const host = $("toast-host");
+    host.innerHTML = `<div class="toast" role="status"><p>Et si tu prenais un instant pour : <b>${esc(g.label.toLowerCase())}</b> ?</p>
+      <div class="row"><button class="btn small" type="button" data-a="fait">C'est fait</button>
+      <button class="btn alt small" type="button" data-a="autre">Un autre</button>
+      <button class="btn alt small" type="button" data-a="tard">Plus tard</button></div></div>`;
+    host.onclick = (e) => {
+      const a = e.target.closest("[data-a]"); if (!a) return;
+      if (a.dataset.a === "fait") toggleGeste(g.id, true);
+      if (a.dataset.a === "autre") { showToast(pickGeste()); return; }
+      host.innerHTML = "";
+    };
+  }
+  let rappelTimer = null;
+  function armRappel() {
+    clearInterval(rappelTimer);
+    $("rappel-on").checked = !!S.rappel.on;
+    $("rappel-min").value = String(S.rappel.min || 45);
+    if (S.rappel.on) rappelTimer = setInterval(() => { const g = pickGeste(); if (g) showToast(g); }, (S.rappel.min || 45) * 60000);
+  }
+  $("rappel-on").onchange = () => { S.rappel.on = $("rappel-on").checked; save(); armRappel(); };
+  $("rappel-min").onchange = () => { S.rappel.min = +$("rappel-min").value; save(); armRappel(); };
+
+  /* ================= rêves (WOOP) ================= */
+  const activeDreams = () => S.projets.filter((p) => !p.fini);
+  function nextStep() {
+    for (const p of activeDreams()) {
+      const s = (p.etapes || []).find((x) => !x.ok);
+      if (s) return { p, s };
+    }
+    return null;
+  }
+  function renderNextStep() {
+    const ns = nextStep();
+    if (!ns) {
+      $("nextstep-host").innerHTML = S.projets.length ? "" :
+        `<div class="nextstep"><div class="eyebrow">Un pas vers ton rêve</div><p>Quel rêve aimerais-tu voir pousser cette année ?</p>
+         <button class="btn small" type="button" data-go="reves" style="justify-self:start">Planter un rêve</button></div>`;
+      return;
+    }
+    $("nextstep-host").innerHTML = `<div class="nextstep"><div class="eyebrow">Un pas vers ton rêve</div>
+      <p>${esc(ns.s.txt)}</p><small>Pour : ${esc(ns.p.titre)}</small>
+      <div class="row"><button class="btn small" type="button" data-step-ok="${ns.p.id}|${ns.s.id}">C'est fait</button>
+      <button class="btn alt small" type="button" data-go="reves">Voir mes rêves</button></div></div>`;
+  }
+  $("nextstep-host").addEventListener("click", (e) => {
+    const go_ = e.target.closest("[data-go]"); if (go_) { go(go_.dataset.go); return; }
+    const b = e.target.closest("[data-step-ok]"); if (!b) return;
+    const [pid, sid] = b.dataset.stepOk.split("|"); setStep(pid, sid, true);
+  });
+  function setStep(pid, sid, ok) {
+    const p = S.projets.find((x) => x.id === pid); if (!p) return;
+    const s = p.etapes.find((x) => x.id === sid); if (!s) return;
+    s.ok = ok;
+    if (ok) S.pas[dayKey()] = (S.pas[dayKey()] || 0) + 1;
+    save(); renderDreams(); renderNextStep(); renderBilan();
+  }
+  $("dream-add").onclick = () => {
+    const t = $("dream-title").value.trim();
+    if (!t) { $("dream-msg").textContent = "Donne un nom à ton rêve."; return; }
+    S.projets.unshift({ id: uid(), titre: t, pourquoi: $("dream-why").value.trim(), resultat: "", obstacle: "", plan: "", etapes: [], cree: new Date().toISOString(), fini: false, open: true });
+    $("dream-title").value = ""; $("dream-why").value = ""; $("dream-msg").textContent = "Planté. Ajoute une première petite étape.";
+    save(); renderDreams(); renderNextStep();
+  };
+  let confirmDream = null;
+  const suggestions = {};
+  function renderDreams() {
+    if (!S.projets.length) {
+      $("dreams").innerHTML = `<div class="empty">${svg("feuille")}<p>Aucun rêve planté pour l'instant. Commence par un seul, même un peu fou.</p></div>`;
+      return;
+    }
+    $("dreams").innerHTML = S.projets.map((p, i) => {
+      const c = p.fini ? "var(--leaf)" : COLORS[i % 4];
+      const tot = p.etapes.length, ok = p.etapes.filter((s) => s.ok).length;
+      const pct = tot ? Math.round((ok / tot) * 100) : 0;
+      const sg = suggestions[p.id];
+      return `<article class="dream" data-p="${p.id}">
+        <div class="dream-head" style="${paint(c)}">
+          <span class="pct">${p.fini ? "✓" : pct + " %"}</span>
+          ${p.fini ? `<span class="done-badge">Réalisé</span>` : ""}
+          <h3>${esc(p.titre)}</h3>
+          ${p.pourquoi ? `<p>${esc(p.pourquoi)}</p>` : ""}
+          <div class="bar" aria-hidden="true"><i style="width:${p.fini ? 100 : pct}%"></i></div>
+        </div>
+        <div class="dream-body">
+          <ul class="steps-list">
+            ${p.etapes.map((s) => `<li class="${s.ok ? "ok" : ""}">
+              <input type="checkbox" id="st-${s.id}" data-st="${s.id}" ${s.ok ? "checked" : ""} aria-label="Étape faite">
+              <span>${esc(s.txt)}</span>
+              <button class="linkbtn" type="button" data-st-del="${s.id}" aria-label="Retirer l'étape">retirer</button></li>`).join("")}
+          </ul>
+          ${tot ? "" : `<p class="hint">Pas encore d'étape. La première doit tenir en 10 minutes.</p>`}
+          <form class="inline-form" data-add-step>
+            <label class="sr" for="ns-${p.id}">Nouvelle étape</label>
+            <input class="field" id="ns-${p.id}" maxlength="120" placeholder="Prochaine petite étape">
+            <button class="btn small" type="submit">Ajouter</button>
+          </form>
+          ${sampleFn && !p.fini ? `<div class="row"><button class="btn orange small" type="button" data-ai="${p.id}">Aide-moi à le découper</button><span class="hint" data-ai-msg="${p.id}" aria-live="polite"></span></div>` : ""}
+          ${sg ? `<div class="suggest"><b>Proposition</b><ol>${sg.etapes.map((e) => `<li>${esc(e)}</li>`).join("")}</ol>
+              ${sg.obstacle ? `<p class="hint"><b>Obstacle possible :</b> ${esc(sg.obstacle)}</p>` : ""}
+              ${sg.plan ? `<p class="hint"><b>Plan :</b> ${esc(sg.plan)}</p>` : ""}
+              <div class="row"><button class="btn small" type="button" data-ai-keep="${p.id}">Garder ces étapes</button><button class="linkbtn" type="button" data-ai-drop="${p.id}">Non merci</button></div></div>` : ""}
+          <details ${p.open ? "open" : ""} data-det="${p.id}">
+            <summary>Mon plan (méthode WOOP)</summary>
+            <div class="woop">
+              <label for="w-r-${p.id}">Le plus beau résultat <span>Imagine-le vraiment : qu'est-ce que tu ressens ?</span>
+                <textarea class="field" id="w-r-${p.id}" data-w="resultat">${esc(p.resultat || "")}</textarea></label>
+              <label for="w-o-${p.id}">L'obstacle en moi <span>Ce qui, en toi, pourrait t'arrêter (peur, fatigue, doute…)</span>
+                <textarea class="field" id="w-o-${p.id}" data-w="obstacle">${esc(p.obstacle || "")}</textarea></label>
+              <label for="w-p-${p.id}">Mon plan si…, alors… <span>« Si je doute, alors je relis pourquoi ça compte et je fais 5 minutes. »</span>
+                <textarea class="field" id="w-p-${p.id}" data-w="plan">${esc(p.plan || "")}</textarea></label>
+            </div>
+          </details>
+          <div class="row between">
+            <button class="btn alt small" type="button" data-fini="${p.id}">${p.fini ? "Le remettre en cours" : "Rêve réalisé !"}</button>
+            ${confirmDream === p.id
+              ? `<span><button class="linkbtn" type="button" data-d-cancel>Garder</button><button class="linkbtn danger" type="button" data-d-really="${p.id}">Supprimer pour de bon</button></span>`
+              : `<button class="linkbtn" type="button" data-d-del="${p.id}">Supprimer</button>`}
+          </div>
+        </div></article>`;
+    }).join("");
+  }
+  const dreamOf = (el) => S.projets.find((x) => x.id === el.closest("[data-p]")?.dataset.p);
+  $("dreams").addEventListener("change", (e) => {
+    const p = dreamOf(e.target); if (!p) return;
+    if (e.target.dataset.st) setStep(p.id, e.target.dataset.st, e.target.checked);
+  });
+  $("dreams").addEventListener("input", (e) => {
+    const p = dreamOf(e.target); if (!p || !e.target.dataset.w) return;
+    p[e.target.dataset.w] = e.target.value; save();
+  });
+  $("dreams").addEventListener("toggle", (e) => {
+    const d = e.target.closest && e.target.closest("[data-det]"); if (!d) return;
+    const p = S.projets.find((x) => x.id === d.dataset.det); if (p && p.open !== d.open) { p.open = d.open; save(); }
+  }, true);
+  $("dreams").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const p = dreamOf(e.target); if (!p) return;
+    const inp = e.target.querySelector("input"); const v = inp.value.trim(); if (!v) return;
+    p.etapes.push({ id: uid(), txt: v, ok: false }); save(); renderDreams(); renderNextStep();
+    const again = $("ns-" + p.id); if (again) again.focus();
+  });
+  $("dreams").addEventListener("click", async (e) => {
+    const t = e.target.closest("button"); if (!t) return;
+    const p = dreamOf(t); if (!p) return;
+    const d = t.dataset;
+    if (d.stDel) { p.etapes = p.etapes.filter((s) => s.id !== d.stDel); save(); renderDreams(); renderNextStep(); }
+    else if (d.fini) { p.fini = !p.fini; save(); renderDreams(); renderNextStep(); renderBilan(); }
+    else if (d.dDel) { confirmDream = p.id; renderDreams(); }
+    else if ("dCancel" in d) { confirmDream = null; renderDreams(); }
+    else if (d.dReally) { S.projets = S.projets.filter((x) => x.id !== p.id); confirmDream = null; save(); renderDreams(); renderNextStep(); }
+    else if (d.aiKeep) {
+      (suggestions[p.id].etapes || []).forEach((txt) => p.etapes.push({ id: uid(), txt, ok: false }));
+      if (!p.obstacle && suggestions[p.id].obstacle) p.obstacle = suggestions[p.id].obstacle;
+      if (!p.plan && suggestions[p.id].plan) p.plan = suggestions[p.id].plan;
+      delete suggestions[p.id]; save(); renderDreams(); renderNextStep();
+    }
+    else if (d.aiDrop) { delete suggestions[p.id]; renderDreams(); }
+    else if (d.ai) askSteps(p, t);
+  });
+  async function askSteps(p, btn) {
+    if (!sampleFn) return;
+    const msg = document.querySelector(`[data-ai-msg="${p.id}"]`);
+    btn.disabled = true; if (msg) msg.textContent = "Je réfléchis…";
+    const prompt = `Tu es une coach bienveillante, formée à la psychologie positive et à la méthode WOOP (Gabriele Oettingen).
+Une personne veut réaliser ce rêve : « ${p.titre} ».
+${p.pourquoi ? `Pourquoi ça compte pour elle : « ${p.pourquoi} ».` : ""}
+${p.etapes.length ? `Étapes déjà prévues : ${p.etapes.map((s) => s.txt + (s.ok ? " (faite)" : "")).join(" ; ")}.` : ""}
+Propose les 5 prochaines étapes, très concrètes et petites (12 mots maximum chacune), en commençant par un verbe à l'infinitif. La première doit pouvoir se faire en 10 minutes, aujourd'hui.
+Propose aussi un obstacle intérieur probable (une phrase courte) et un plan « Si …, alors je … » (une phrase).
+Écris en français de Suisse romande, tutoiement, ton chaleureux et simple.
+Réponds uniquement en JSON : {"etapes": ["..."], "obstacle": "...", "plan": "..."}`;
+    try {
+      const r = await sampleFn.json(prompt, { modelTier: "default" });
+      if (!r || !Array.isArray(r.etapes)) throw { code: "format" };
+      suggestions[p.id] = { etapes: r.etapes.slice(0, 6).map(String), obstacle: String(r.obstacle || ""), plan: String(r.plan || "") };
+      renderDreams();
+    } catch (err) {
+      btn.disabled = false;
+      if (msg) msg.textContent = err && err.code === "not_granted" ? "Accès refusé. Tu peux l'autoriser dans les permissions de la page." :
+        err && err.code === "rate_limited" ? "Trop de demandes. Réessaie dans un moment." : "Pas de réponse cette fois. Réessaie plus tard.";
+    }
+  }
+
+  /* ================= carnet ================= */
+  const TYPES = {
+    reve: { label: "Rêve de nuit", c: "var(--cobalt)", ph: "Cette nuit j'ai rêvé que…" },
+    envie: { label: "Envie", c: "var(--orange)", ph: "J'ai envie de…" },
+    pensee: { label: "Pensée", c: "var(--turq)", ph: "Là, je pense à…" }
+  };
+  let noteType = hr < 11 ? "reve" : "envie", filter = "tout", confirmDel = null;
+  function renderTypePick() {
+    $("type-pick").innerHTML = Object.entries(TYPES).map(([k, t]) =>
+      `<button type="button" class="chip" style="${paint(t.c)}" data-k="${k}" aria-pressed="${k === noteType}">${t.label}</button>`).join("");
+    $("note-text").placeholder = TYPES[noteType].ph;
+    $("filter").innerHTML = [["tout", "Tout", "var(--ink)"], ...Object.entries(TYPES).map(([k, t]) => [k, t.label, t.c])]
+      .map(([k, l, c]) => `<button type="button" class="chip" style="${paint(c)};padding:5px 11px;font-size:13px" data-f="${k}" aria-pressed="${k === filter}">${l}</button>`).join("");
+  }
+  $("type-pick").addEventListener("click", (e) => { const b = e.target.closest("[data-k]"); if (b) { noteType = b.dataset.k; renderTypePick(); } });
+  $("filter").addEventListener("click", (e) => { const b = e.target.closest("[data-f]"); if (b) { filter = b.dataset.f; renderTypePick(); renderEntries(); } });
+  const addNote = (type, texte) => { S.notes.unshift({ id: uid(), type, texte, date: new Date().toISOString() }); save(); renderEntries(); };
+  $("note-save").onclick = () => {
+    const v = $("note-text").value.trim();
+    if (!v) { $("note-msg").textContent = "Écris quelques mots d'abord."; return; }
+    addNote(noteType, v); $("note-text").value = ""; $("note-msg").textContent = "Gardé.";
+  };
+  function renderEntries() {
+    const list = S.notes.filter((n) => filter === "tout" || n.type === filter);
+    if (!list.length) {
+      $("entries").innerHTML = `<div class="empty">${svg("souffle")}<p>${filter === "reve" ? "Aucun rêve de nuit noté. Le matin, avant le téléphone, écris ce qui reste." :
+        filter === "envie" ? "Aucune envie notée. Même minuscule, elle compte." : "Ton carnet est vide pour l'instant."}</p></div>`;
+      return;
+    }
+    $("entries").innerHTML = list.slice(0, 60).map((n) => {
+      const t = TYPES[n.type] || TYPES.pensee;
+      const d = new Date(n.date).toLocaleDateString("fr-CH", { weekday: "short", day: "numeric", month: "long" });
+      return `<article class="entry" style="${paint(t.c)}">
+        <div class="meta"><span class="tag">${t.label}</span><span>${d}</span></div>
+        <p>${esc(n.texte)}</p>
+        <div class="row" style="justify-content:flex-end">${confirmDel === n.id
+          ? `<button class="linkbtn" data-cancel type="button">Garder</button><button class="linkbtn danger" data-really="${n.id}" type="button">Supprimer pour de bon</button>`
+          : `<button class="linkbtn" data-del="${n.id}" type="button">Supprimer</button>`}</div></article>`;
+    }).join("");
+  }
+  $("entries").addEventListener("click", (e) => {
+    const t = e.target;
+    if (t.dataset.del) { confirmDel = t.dataset.del; renderEntries(); }
+    else if (t.hasAttribute("data-cancel")) { confirmDel = null; renderEntries(); }
+    else if (t.dataset.really) { S.notes = S.notes.filter((n) => n.id !== t.dataset.really); confirmDel = null; save(); renderEntries(); }
+  });
+
+  /* ================= ancrage ================= */
+  let breathRun = null;
+  $("breath-go").onclick = () => {
+    if (breathRun) { stopBreath(); return; }
+    const blob = $("blob"), label = $("breath-label"), t0 = Date.now();
+    $("breath-go").textContent = "Arrêter";
+    const tick = () => {
+      const el = (Date.now() - t0) / 1000;
+      if (el >= 60) { stopBreath("C'est bien. Reviens quand tu veux."); return; }
+      const c = el % 12;
+      if (c < 4) { label.textContent = "Inspire"; blob.className = "blob in"; }
+      else if (c < 6) { label.textContent = "Garde"; blob.className = "blob in"; }
+      else { label.textContent = "Expire"; blob.className = "blob out"; }
+    };
+    tick(); breathRun = setInterval(tick, 250);
+  };
+  function stopBreath(msg) {
+    clearInterval(breathRun); breathRun = null;
+    $("blob").className = "blob"; $("breath-label").textContent = msg || "Prête ?";
+    $("breath-go").textContent = "Respirer 1 minute";
+  }
+  const STEPS = [
+    [5, "choses que tu vois", "var(--cobalt)"], [4, "choses que tu peux toucher", "var(--turq)"],
+    [3, "sons que tu entends", "var(--ochre)"], [2, "odeurs que tu sens", "var(--orange)"], [1, "chose que tu goûtes", "var(--pink)"]
+  ];
+  let stepAt = 0;
+  function renderSteps() {
+    $("steps").innerHTML = STEPS.map(([n, t, c], i) =>
+      `<button type="button" class="step ${i > stepAt ? "off" : ""}" data-i="${i}" style="--c:${c}"><b>${n}</b><span>${t}${i < stepAt ? " · fait" : ""}</span></button>`).join("") +
+      (stepAt >= STEPS.length ? `<p class="lead">Tu es ici. C'est assez. <button class="linkbtn" id="steps-reset" type="button">Recommencer</button></p>` : "");
+  }
+  $("steps").addEventListener("click", (e) => {
+    if (e.target.id === "steps-reset") { stepAt = 0; renderSteps(); return; }
+    const b = e.target.closest(".step"); if (b && +b.dataset.i === stepAt) { stepAt++; renderSteps(); }
+  });
+  const THOUGHTS = [
+    "Qu'est-ce qui est doux, là, tout de suite ?",
+    "Nomme une chose que tu vois de jaune.",
+    "De quoi ton corps a-t-il besoin maintenant : eau, chaleur, mouvement, repos ?",
+    "Une petite chose qui s'est bien passée aujourd'hui ?",
+    "Pense à quelqu'un qui t'aime bien. Qu'est-ce qu'il ou elle te dirait ?",
+    "Ce que tu ressens n'est pas toi. C'est une météo. Elle va passer.",
+    "Quelle est la plus petite chose que tu peux faire dans les cinq prochaines minutes ?",
+    "Pose une main sur ton cœur. Qu'est-ce que tu sens sous ta main ?",
+    "Qu'est-ce que tu aimerais entendre, là ? Écris-le-toi.",
+    "Un endroit où tu te sens bien. Décris-le en trois mots.",
+    "Tu as déjà traversé des journées difficiles. Tu es encore là.",
+    "Est-ce que ça peut attendre demain ? Si oui, tu as le droit de laisser.",
+    "Dans un an, ta vie rêvée ressemble à quoi ? Une seule image.",
+    "Qu'est-ce qui te ferait sourire, même un tout petit peu ?"
+  ];
+  let thoughtIdx = Math.floor(Math.random() * THOUGHTS.length);
+  const showThought = () => { $("thought").textContent = THOUGHTS[thoughtIdx]; };
+  $("thought-next").onclick = () => { thoughtIdx = (thoughtIdx + 1 + Math.floor(Math.random() * (THOUGHTS.length - 1))) % THOUGHTS.length; showThought(); $("thought-msg").textContent = ""; };
+  $("thought-save").onclick = () => {
+    const v = $("thought-answer").value.trim();
+    if (!v) { $("thought-msg").textContent = "Écris quelques mots d'abord."; return; }
+    addNote("pensee", THOUGHTS[thoughtIdx] + "\n— " + v); $("thought-answer").value = ""; $("thought-msg").textContent = "Gardé dans ton carnet.";
+  };
+
+  // regarder autrement (assistant)
+  let lastReframe = null;
+  $("reframe-go").onclick = async () => {
+    const v = $("reframe-in").value.trim();
+    if (!v) { $("reframe-msg").textContent = "Écris la pensée d'abord."; return; }
+    if (!sampleFn) return;
+    const btn = $("reframe-go"); btn.disabled = true; $("reframe-msg").textContent = "Je réfléchis…";
+    const out = $("reframe-out"); out.hidden = false; out.querySelector("p").textContent = "…"; $("reframe-keep").hidden = true;
+    try {
+      const r = await sampleFn(`Une personne écrit cette pensée qui lui pèse : « ${v} ».
+Réponds en 4 phrases courtes maximum, en français de Suisse romande, tutoiement, ton chaleureux, sans jargon :
+1) accueille l'émotion sans la nier ; 2) propose une façon plus juste et plus douce de voir la situation (recadrage cognitif, sans positivité forcée) ; 3) propose un seul petit geste concret pour maintenant.
+Si la pensée évoque une envie de se faire du mal ou de mourir, réponds avec douceur et indique qu'elle peut appeler La Main Tendue au 143 (Suisse, 24h/24) ou le 144 en urgence.`,
+        { onText: ({ text }) => { out.querySelector("p").textContent = text; } });
+      out.querySelector("p").textContent = r.text; lastReframe = { pensee: v, reponse: r.text };
+      $("reframe-keep").hidden = false; $("reframe-msg").textContent = "";
+    } catch (err) {
+      out.hidden = true;
+      $("reframe-msg").textContent = err && err.code === "not_granted" ? "Accès refusé. Tu peux l'autoriser dans les permissions de la page." : "Pas de réponse cette fois. Réessaie plus tard.";
+    }
+    btn.disabled = false;
+  };
+  $("reframe-keep").onclick = () => {
+    if (!lastReframe) return;
+    addNote("pensee", lastReframe.pensee + "\n— " + lastReframe.reponse);
+    $("reframe-keep").hidden = true; $("reframe-msg").textContent = "Gardé dans ton carnet.";
+  };
+
+  // voix
+  const VOICES = {
+    douce: { label: "Ma voix douce", c: "var(--leaf)", a: "Garde-la près de toi. Qu'est-ce qu'elle te dit ? Écris-le dans ton carnet." },
+    critique: { label: "Ma critique intérieure", c: "var(--orange)", a: "Est-ce que tu parlerais comme ça à une amie ? Dis-toi ce que tu lui dirais, à elle." },
+    peur: { label: "Ma peur", c: "var(--cobalt)", a: "La peur veut te protéger. Remercie-la, puis demande : qu'est-ce qui est vrai, là, maintenant ?" },
+    fatigue: { label: "Ma fatigue", c: "var(--turq)", a: "La fatigue ne ment pas. Un verre d'eau, une tisane, et le droit de faire moins aujourd'hui." },
+    reve: { label: "Mon rêve", c: "var(--pink)", a: "Écoute-le. Quelle est la plus petite chose que tu peux faire pour lui aujourd'hui ?" },
+    autre: { label: "Quelqu'un d'autre", c: "var(--ochre)", a: "Ses mots lui appartiennent. Qu'est-ce que toi, tu en penses vraiment ?" }
+  };
+  let voice = null;
+  function renderVoices() {
+    $("voices").innerHTML = Object.entries(VOICES).map(([k, v]) =>
+      `<button type="button" class="chip" style="${paint(v.c)}" data-v="${k}" aria-pressed="${k === voice}">${v.label}</button>`).join("");
+    const box = $("voice-answer");
+    if (voice) { box.hidden = false; box.style.cssText = paint(VOICES[voice].c); box.querySelector("p").textContent = VOICES[voice].a; }
+    else box.hidden = true;
+    $("voice-history").innerHTML = S.checkins.slice(0, 5).map((c) => {
+      const v = VOICES[c.voix] || VOICES.autre;
+      const d = new Date(c.date).toLocaleString("fr-CH", { weekday: "short", hour: "2-digit", minute: "2-digit" });
+      return `<div style="--c:${v.c}"><i></i><span>${d} · ${v.label}${c.qui ? " (" + esc(c.qui) + ")" : ""}</span></div>`;
+    }).join("");
+  }
+  $("voices").addEventListener("click", (e) => { const b = e.target.closest("[data-v]"); if (b) { voice = b.dataset.v; $("voice-msg").textContent = ""; renderVoices(); } });
+  $("voice-save").onclick = () => {
+    if (!voice) { $("voice-msg").textContent = "Choisis d'abord une voix."; return; }
+    S.checkins.unshift({ id: uid(), voix: voice, qui: $("voice-who").value.trim(), date: new Date().toISOString() });
+    S.checkins = S.checkins.slice(0, 200);
+    $("voice-who").value = ""; $("voice-msg").textContent = "Noté."; save(); renderVoices();
+  };
+  function renderPeople() {
+    ["nourrit", "epuise"].forEach((eff) => {
+      const items = S.voix.filter((p) => p.effet === eff);
+      $("list-" + eff).innerHTML = items.length ? items.map((p) =>
+        `<li><span>${esc(p.nom)}</span><button class="linkbtn" data-rm="${p.id}" type="button" aria-label="Retirer ${esc(p.nom)}">retirer</button></li>`).join("")
+        : `<li style="background:none;padding:2px 0;color:var(--ink-soft);font-size:14px">Rien pour l'instant.</li>`;
+    });
+  }
+  $("f-person").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const eff = (e.submitter && e.submitter.dataset.effet) || "nourrit";
+    const v = $("person-name").value.trim(); if (!v) return;
+    S.voix.push({ id: uid(), nom: v, effet: eff }); $("person-name").value = ""; save(); renderPeople();
+  });
+  document.querySelector(".people").addEventListener("click", (e) => {
+    const b = e.target.closest("[data-rm]"); if (!b) return;
+    S.voix = S.voix.filter((p) => p.id !== b.dataset.rm); save(); renderPeople();
+  });
+
+  /* ================= musique (Spotify) ================= */
+  const MUSIC_MOODS = [
+    { k: "energie", label: "Me réveiller", sub: "énergie, envie de bouger", q: "musique joyeuse et énergique pour bien commencer la journée", c: "var(--orange)" },
+    { k: "calme", label: "Me calmer", sub: "respirer, ralentir", q: "musique douce et apaisante pour se calmer", c: "var(--turq)" },
+    { k: "joie", label: "Danser", sub: "dans le salon, seule", q: "chansons feel good pour danser à la maison", c: "var(--ochre)" },
+    { k: "focus", label: "Me concentrer", sub: "travailler, créer", q: "musique instrumentale pour se concentrer", c: "var(--cobalt)" },
+    { k: "pleurer", label: "Laisser sortir", sub: "pleurer un bon coup", q: "chansons émouvantes pour laisser sortir ses émotions", c: "var(--pink)" },
+    { k: "reve", label: "Rêver grand", sub: "élan, inspiration", q: "musique inspirante et épique pour rêver grand", c: "var(--leaf)" }
+  ];
+  let lastQuery = "";
+  $("moodmusic").innerHTML = MUSIC_MOODS.map((m, i) =>
+    `<button type="button" class="mm" data-mm="${m.k}" style="${paint(m.c)};--r:${RADII[i % RADII.length]}"><b>${m.label}</b><small>${m.sub}</small></button>`).join("");
+  $("moodmusic").addEventListener("click", (e) => {
+    const b = e.target.closest("[data-mm]"); if (!b) return;
+    const m = MUSIC_MOODS.find((x) => x.k === b.dataset.mm); searchMusic(m.q, m.label);
+  });
+  $("f-music").addEventListener("submit", (e) => { e.preventDefault(); const q = $("music-q").value.trim(); if (q) searchMusic(q, "Ta recherche"); });
+  const spotifySearchUrl = (q) => "https://open.spotify.com/search/" + encodeURIComponent(q);
+  let lastResults = [];
+  async function searchMusic(q, title) {
+    lastQuery = q;
+    $("music-panel").hidden = false; $("music-title").textContent = title; $("playlist-out").hidden = true;
+    const box = $("music-results");
+    if (!mcp) {
+      box.innerHTML = `<p class="hint">Spotify n'est pas relié ici. <a href="${spotifySearchUrl(q)}" target="_blank" rel="noopener">Ouvrir la recherche dans Spotify</a></p>`;
+      $("playlist-row").hidden = true; return;
+    }
+    $("music-msg").textContent = "Je cherche…"; box.innerHTML = "";
+    try {
+      const r = await mcp.callTool("Spotify", "search", { prompt: q, language: "fr-CH" }, { cache: { staleTime: 3600000 } });
+      const ents = (r.payload && r.payload.entities) || [];
+      lastResults = ents;
+      box.innerHTML = ents.length ? ents.map((en, i) => trackHtml({
+        nom: en.name, sous: [(en.display && en.display.type_label) || "", (en.creators || []).map((c) => c.name).join(", ")].filter(Boolean).join(" · "),
+        url: en.url, uri: en.uri
+      }, i, true)).join("") : `<p class="hint">Rien trouvé. Essaie avec d'autres mots.</p>`;
+      $("music-msg").textContent = ""; $("playlist-row").hidden = false;
+    } catch (err) {
+      $("music-msg").textContent = "";
+      const code = err && err.code;
+      box.innerHTML = `<p class="hint">${code === "server_not_connected" || code === "needs_reauth" ? "Connecte Spotify dans tes connecteurs claude.ai pour des propositions personnalisées." :
+        code === "not_granted" || code === "consent_required" ? "Accès à Spotify refusé pour cette page." : "Spotify ne répond pas pour l'instant."}
+        <a href="${spotifySearchUrl(q)}" target="_blank" rel="noopener">Chercher directement dans Spotify</a></p>`;
+      $("playlist-row").hidden = true;
+    }
+  }
+  function trackHtml(t, i, canSave) {
+    const saved = S.refuges.some((r) => r.url && r.url === t.url);
+    const href = t.url || spotifySearchUrl(t.nom);
+    return `<div class="track" style="--c:${COLORS[i % COLORS.length]}"><span class="disc" aria-hidden="true"></span>
+      <div><strong>${esc(t.nom)}</strong>${t.sous ? `<small>${esc(t.sous)}</small>` : ""}</div>
+      <div class="acts"><a href="${esc(href)}" target="_blank" rel="noopener">Écouter</a>
+      ${canSave ? (saved ? `<span class="hint">refuge ✓</span>` : `<button class="linkbtn" type="button" data-keep="${i}">Garder</button>`)
+        : `<button class="linkbtn" type="button" data-rf-del="${t.id}">retirer</button>`}</div></div>`;
+  }
+  $("music-results").addEventListener("click", (e) => {
+    const b = e.target.closest("[data-keep]"); if (!b) return;
+    const en = lastResults[+b.dataset.keep]; if (!en) return;
+    S.refuges.unshift({ id: uid(), nom: en.name, sous: (en.creators || []).map((c) => c.name).join(", "), url: en.url });
+    save(); renderRefuges(); b.outerHTML = `<span class="hint">refuge ✓</span>`;
+  });
+  function renderRefuges() {
+    $("refuges").innerHTML = S.refuges.length ? S.refuges.map((r, i) => trackHtml(r, i, false)).join("")
+      : `<p class="hint">Aucune pour l'instant. Garde une chanson depuis les propositions, ou écris-la ci-dessous.</p>`;
+  }
+  $("refuges").addEventListener("click", (e) => {
+    const b = e.target.closest("[data-rf-del]"); if (!b) return;
+    S.refuges = S.refuges.filter((r) => r.id !== b.dataset.rfDel); save(); renderRefuges();
+  });
+  $("f-refuge").addEventListener("submit", (e) => {
+    e.preventDefault(); const v = $("refuge-name").value.trim(); if (!v) return;
+    S.refuges.unshift({ id: uid(), nom: v, sous: "", url: "" }); $("refuge-name").value = ""; save(); renderRefuges();
+  });
+  $("playlist-go").onclick = async () => {
+    if (!mcp || !lastQuery) return;
+    const btn = $("playlist-go"), out = $("playlist-out");
+    btn.disabled = true; $("music-msg").textContent = "Je crée ta playlist…";
+    try {
+      const r = await mcp.callTool("Spotify", "generate_playlist", { prompt: "Crée une playlist : " + lastQuery, language: "fr-CH" });
+      const p = r.payload || {};
+      const find = (o, key) => { if (!o || typeof o !== "object") return null; if (typeof o[key] === "string") return o[key]; for (const v of Object.values(o)) { const f = find(v, key); if (f) return f; } return null; };
+      const url = find(p, "url"), name = find(p, "name");
+      out.hidden = false;
+      out.querySelector("p").innerHTML = url ? `Ta playlist ${name ? "« " + esc(name) + " » " : ""}est prête. <a href="${esc(url)}" target="_blank" rel="noopener" style="color:inherit;font-weight:700">L'ouvrir dans Spotify</a>`
+        : esc(typeof p === "string" ? p : "Spotify a répondu, ouvre ton application pour voir la playlist.");
+      $("music-msg").textContent = "";
+    } catch (err) {
+      $("music-msg").textContent = err && err.code === "tool_error" ? "Spotify n'a pas pu créer la playlist (Premium requis)." : "Pas possible pour l'instant.";
+    }
+    btn.disabled = false;
+  };
+
+  /* ================= bilan ================= */
+  function renderBilan() {
+    const last7 = [...Array(7)].map((_, i) => dayKey(daysAgo(i)));
+    const moods7 = last7.map((k) => S.humeur[k]).filter(Boolean);
+    const gestes7 = last7.reduce((a, k) => a + (S.faits[k] || []).length, 0);
+    const grat7 = last7.reduce((a, k) => a + (S.gratitudes[k] || []).filter(Boolean).length, 0);
+    const pas7 = last7.reduce((a, k) => a + (S.pas[k] || 0), 0);
+    const stats = [
+      [moods7.length ? fmt1(moods7.reduce((a, b) => a + b, 0) / moods7.length) : "–", "humeur moyenne sur 5", "var(--ochre)"],
+      [gestes7, "petits gestes", "var(--turq)"],
+      [grat7, "bonnes choses", "var(--orange)"],
+      [pas7, "pas vers tes rêves", "var(--cobalt)"]
+    ];
+    $("stats").innerHTML = stats.map(([v, l, c], i) => `<div class="stat" style="${paint(c)};--r:${RADII[i]}"><b>${v}</b><small>${l}</small></div>`).join("");
+
+    // graphique 14 jours
+    const W = 560, H = 200, L = 34, R = 28, T = 16, B = 32;
+    const xs = (i) => L + ((W - L - R) / 13) * i, ys = (v) => T + (H - T - B) * (1 - (v - 1) / 4);
+    const days = [...Array(14)].map((_, i) => daysAgo(13 - i));
+    let g = "";
+    [1, 2, 3, 4, 5].forEach((v) => { g += `<line x1="${L}" x2="${W - R}" y1="${ys(v)}" y2="${ys(v)}" stroke="currentColor" opacity=".12"/><text x="${L - 8}" y="${ys(v) + 4}" text-anchor="end">${v}</text>`; });
+    const pts = days.map((d, i) => ({ i, v: S.humeur[dayKey(d)] })).filter((p) => p.v);
+    if (pts.length > 1) g += `<path d="${pts.map((p, j) => (j ? "L" : "M") + xs(p.i) + " " + ys(p.v)).join("")}" fill="none" stroke="currentColor" stroke-width="2" opacity=".35"/>`;
+    pts.forEach((p) => { g += `<circle cx="${xs(p.i)}" cy="${ys(p.v)}" r="${p.i === 13 ? 9 : 7}" fill="${MOODS[p.v - 1].c}"/>`; });
+    days.forEach((d, i) => { if (i % 2 === 1 || i === 13) g += `<text x="${xs(i)}" y="${H - 8}" text-anchor="middle">${i === 13 ? "auj." : d.toLocaleDateString("fr-CH", { day: "numeric", month: "numeric" })}</text>`; });
+    $("chart").innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Humeur des 14 derniers jours" style="color:var(--ink)">${g}</svg>` +
+      (pts.length ? "" : `<p class="hint">Touche ta météo intérieure chaque jour : la courbe apparaîtra ici.</p>`);
+
+    // ce qui fait du bien
+    const moodDays = Object.keys(S.humeur);
+    const ins = [];
+    S.gestes.forEach((ge) => {
+      const withD = moodDays.filter((k) => (S.faits[k] || []).includes(ge.id)).map((k) => S.humeur[k]);
+      const without = moodDays.filter((k) => !(S.faits[k] || []).includes(ge.id)).map((k) => S.humeur[k]);
+      if (withD.length >= 3 && without.length >= 3) {
+        const a = withD.reduce((x, y) => x + y, 0) / withD.length, b = without.reduce((x, y) => x + y, 0) / without.length;
+        ins.push({ label: ge.label, a, b, d: a - b });
+      }
+    });
+    const gd = moodDays.filter((k) => (S.gratitudes[k] || []).some(Boolean)).map((k) => S.humeur[k]);
+    const gn = moodDays.filter((k) => !(S.gratitudes[k] || []).some(Boolean)).map((k) => S.humeur[k]);
+    if (gd.length >= 3 && gn.length >= 3) {
+      const a = gd.reduce((x, y) => x + y, 0) / gd.length, b = gn.reduce((x, y) => x + y, 0) / gn.length;
+      ins.push({ label: "Écrire trois bonnes choses", a, b, d: a - b });
+    }
+    ins.sort((x, y) => y.d - x.d);
+    $("insights").innerHTML = ins.length ? ins.slice(0, 4).map((x, i) =>
+      `<div class="insight" style="--c:${x.d >= 0 ? COLORS[i % 4] : "var(--ink-soft)"}"><b>${x.d >= 0 ? "+" : "−"}${fmt1(Math.abs(x.d))}</b>
+        <span><strong>${esc(x.label)}</strong><br><span class="hint">${fmt1(x.a)} avec, ${fmt1(x.b)} sans</span></span></div>`).join("")
+      : `<p class="hint">Il faut quelques jours de météo et de gestes notés (au moins 3 jours avec et 3 sans). Tu verras ensuite ce qui t'aide vraiment, à toi.</p>`;
+
+    renderJar();
+  }
+  let jarPick = null;
+  function renderJar() {
+    const all = [];
+    Object.entries(S.gratitudes).forEach(([k, arr]) => (arr || []).forEach((t) => { if (t && t.trim()) all.push({ k, t: t.trim() }); }));
+    if (!all.length) {
+      $("jar").innerHTML = `<div class="eyebrow" style="color:#efe3cc;opacity:.8">Le bocal à bonheurs</div><p>Il se remplit avec tes trois bonnes choses du jour.</p><small>Les jours gris, viens y piocher un souvenir.</small>`;
+      return;
+    }
+    if (!jarPick || !all.some((x) => x.t === jarPick.t)) jarPick = all[Math.floor(Math.random() * all.length)];
+    const d = new Date(jarPick.k + "T12:00:00").toLocaleDateString("fr-CH", { day: "numeric", month: "long" });
+    $("jar").innerHTML = `<div class="eyebrow" style="color:#efe3cc;opacity:.8">Le bocal à bonheurs · ${all.length} souvenir${all.length > 1 ? "s" : ""}</div>
+      <p>« ${esc(jarPick.t)} »</p><small>${d}</small><button class="btn small" type="button" id="jar-next">Piocher un autre</button>`;
+    $("jar-next").onclick = () => { jarPick = all[Math.floor(Math.random() * all.length)]; renderJar(); };
+  }
+
+  /* ================= navigation ================= */
+  const VIEWS = ["jour", "reves", "ancrage", "musique", "bilan"];
+  function go(view) {
+    document.querySelectorAll("nav.tabs [role=tab]").forEach((t) => t.setAttribute("aria-selected", String(t.dataset.view === view)));
+    document.querySelectorAll("section.view").forEach((s) => (s.hidden = s.id !== "v-" + view));
+    window.scrollTo({ top: 0 });
+    try { localStorage.setItem(LS + "-tab", view); } catch (e) {}
+  }
+  document.querySelector("nav.tabs").addEventListener("click", (e) => { const b = e.target.closest("[data-view]"); if (b) go(b.dataset.view); });
+  $("sos").onclick = () => go("ancrage");
+
+  /* ================= sauvegarde / restauration ================= */
+  const standalone = !(window.claude && window.claude.use);
+  if (standalone) {
+    $("data-file").hidden = false;
+    $("data-where").textContent = "Tes données sont gardées sur ce téléphone. Fais une sauvegarde de temps en temps, par exemple dans Fichiers ou iCloud.";
+  }
+  const dump = () => JSON.stringify(Object.assign({ app: "atelier-bonheur", exporte: new Date().toISOString() }, S));
+  const dataMsg = (t) => { $("data-msg").textContent = t; };
+  $("data-copy").onclick = async () => {
+    const txt = dump();
+    try { await navigator.clipboard.writeText(txt); dataMsg("Copié. Colle-le dans Notes ou dans l'autre version de l'app."); }
+    catch (e) { $("data-restore").hidden = false; $("data-paste").value = txt; $("data-paste").select(); dataMsg("Copie automatique impossible : le texte est sélectionné ci-dessus, copie-le à la main."); }
+  };
+  $("data-file").onclick = async () => {
+    const name = "atelier-bonheur-" + dayKey() + ".json";
+    const blob = new Blob([dump()], { type: "application/json" });
+    try {
+      const file = new File([blob], name, { type: "application/json" });
+      if (navigator.canShare && navigator.canShare({ files: [file] })) { await navigator.share({ files: [file], title: name }); dataMsg("Sauvegarde prête."); return; }
+    } catch (e) { if (e && e.name === "AbortError") return; }
+    const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click(); a.remove();
+    dataMsg("Sauvegarde téléchargée.");
+  };
+  $("data-restore-open").onclick = () => { $("data-restore").hidden = false; dataMsg(""); };
+  $("data-restore-cancel").onclick = () => { $("data-restore").hidden = true; $("data-paste").value = ""; dataMsg(""); };
+  $("data-upload").onchange = async () => { const f = $("data-upload").files[0]; if (f) $("data-paste").value = await f.text(); };
+  $("data-restore-go").onclick = () => {
+    let o;
+    try { o = JSON.parse($("data-paste").value); } catch (e) { dataMsg("Ce texte n'est pas une copie valide de l'atelier."); return; }
+    if (!o || typeof o !== "object" || !Array.isArray(o.gestes)) { dataMsg("Ce texte n'est pas une copie valide de l'atelier."); return; }
+    delete o.app; delete o.exporte;
+    S = migrate(o); save(); renderAll();
+    $("data-restore").hidden = true; $("data-paste").value = "";
+    dataMsg("Données restaurées.");
+  };
+
+  function renderAll() {
+    renderMoods(); renderGrat(); renderNextStep(); renderGarden(); renderGestes(); renderDreams();
+    renderTypePick(); renderEntries(); renderVoices(); renderPeople(); renderRefuges(); renderBilan(); armRappel();
+  }
+  renderAll(); showThought(); renderSteps();
+  const hash = location.hash.slice(1);
+  let start = VIEWS.includes(hash) ? hash : null;
+  if (!start) { try { start = localStorage.getItem(LS + "-tab"); } catch (e) {} }
+  go(VIEWS.includes(start) ? start : "jour");
+})();
+</script>
+
+<script>
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));
+  }
+  if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {});
+</script>
+</body>
+</html>
