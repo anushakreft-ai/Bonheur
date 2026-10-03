@@ -589,7 +589,7 @@ nav.tabs button[aria-selected="true"] { color: var(--ink); background: var(--och
   $("dots").innerHTML = [...Array(34)].map((_, i) => { const a = i * 2.4, r = 6 + i * 1.6; return `<circle cx="${(60 + r * Math.cos(a)).toFixed(1)}" cy="${(60 + r * Math.sin(a)).toFixed(1)}" r="${(2.6 + (i % 3)).toFixed(1)}" fill="currentColor"/>`; }).join("");
   $("rays-path").setAttribute("d", star(16, 50, 40));
   // soleil à visage : 8 rayons droits, 8 rayons ondulés, yeux et sourire découpés
-  (() => {
+  const SUN_FACE = (() => {
     const pt = (r, a) => [(50 + r * Math.sin(a)).toFixed(1), (50 - r * Math.cos(a)).toFixed(1)].join(" ");
     let d = "";
     for (let i = 0; i < 8; i++) {
@@ -599,8 +599,9 @@ nav.tabs button[aria-selected="true"] { color: var(--ink); background: var(--och
       d += `M${pt(24, b - 0.13)}C${pt(32, b + 0.12)} ${pt(36, b - 0.16)} ${pt(45, b + 0.02)}C${pt(38, b + 0.08)} ${pt(33, b + 0.26)} ${pt(24, b + 0.13)}Z`;
     }
     const face = "M50 24A26 26 0 1 1 49.9 24ZM38.5 44A4.2 3.2 0 1 0 47 44A4.2 3.2 0 1 0 38.5 44ZM53 44A4.2 3.2 0 1 0 61.5 44A4.2 3.2 0 1 0 53 44ZM39 58C44 64 56 64 61 58C56 61 44 61 39 58Z";
-    $("nav-sun").innerHTML = `<path d="${d}"/><path fill-rule="evenodd" d="${face}"/>`;
+    return `<path fill="currentColor" d="${d}"/><path fill="currentColor" fill-rule="evenodd" d="${face}"/>`;
   })();
+  $("nav-sun").innerHTML = SUN_FACE;
 
   const SHAPES = {
     marche: '<ellipse cx="34" cy="62" rx="13" ry="22" fill="currentColor"/><ellipse cx="64" cy="38" rx="13" ry="22" fill="currentColor"/>',
@@ -704,14 +705,14 @@ nav.tabs button[aria-selected="true"] { color: var(--ink); background: var(--och
     { v: 1, label: "Orage", c: "var(--cobalt)", d: "M30 6H66L52 40H74L32 96L42 54H22Z" },
     { v: 2, label: "Gris", c: "var(--turq)", d: "M24 76A18 18 0 0 1 22 40A22 22 0 0 1 62 28A20 20 0 0 1 80 76Z" },
     { v: 3, label: "Éclaircie", c: "var(--leaf)", d: "M58 30A22 22 0 1 1 57.9 30ZM20 80A16 16 0 0 1 22 52A20 20 0 0 1 58 50A16 16 0 0 1 76 80Z" },
-    { v: 4, label: "Soleil", c: "var(--ochre)", d: "M50 18A32 32 0 1 1 49.9 18Z" },
-    { v: 5, label: "Rayonnant", c: "var(--orange)", d: star(12, 48, 30) }
+    { v: 4, label: "Soleil", c: "var(--orange)", d: "M50 18A32 32 0 1 1 49.9 18Z" },
+    { v: 5, label: "Rayonnant", c: "var(--ochre)", svg: SUN_FACE }
   ];
   function renderMoods() {
     const cur = S.humeur[dayKey()];
     $("moods").innerHTML = MOODS.map((m) =>
       `<button type="button" class="mood" style="--c:${m.c}" data-m="${m.v}" aria-pressed="${cur === m.v}">
-        <svg viewBox="0 0 100 100" aria-hidden="true"><path fill="currentColor" d="${m.d}"/></svg>${m.label}</button>`).join("");
+        <svg viewBox="0 0 100 100" aria-hidden="true">${m.svg || `<path fill="currentColor" d="${m.d}"/>`}</svg>${m.label}</button>`).join("");
     $("mood-hint").textContent = !cur ? "Une touche par jour. Ça nourrit ton bilan." :
       cur <= 2 ? "Merci de l'avoir dit. Le bouton juste en dessous est là pour ça." :
       cur === 3 ? "Noté. Un petit geste peut faire pencher la journée." : "Noté. Savoure-le, c'est précieux.";
