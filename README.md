@@ -1,4 +1,4 @@
-# Atelier Bonheur
+# Zora
 
 App web installable : petits gestes, gratitude, rêves (méthode WOOP), ancrage, musique et bilan.
 

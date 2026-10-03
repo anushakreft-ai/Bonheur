@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Atelier Bonheur</title>
+<title>Zora</title>
 <meta name="description" content="Petits gestes, gratitude, rêves, ancrage et musique pour être et rester heureuse.">
 <meta name="theme-color" content="#fbf6f1">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Bonheur">
+<meta name="apple-mobile-web-app-title" content="Zora">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icons/icon-180.png">
@@ -300,7 +300,7 @@ nav.tabs button[aria-selected="true"] { color: var(--ink); background: var(--och
 <div class="wrap">
   <header>
     <div class="eyebrow" id="today-label">Aujourd'hui</div>
-    <h1 class="brand">Atelier <span>Bonheur</span></h1>
+    <h1 class="brand">Zor<span>a</span></h1>
     <p class="greeting" id="greeting">Une chose simple à la fois.</p>
     <div class="save-state" id="save-state"><i></i><span>Enregistré sur cet appareil</span></div>
   </header>
@@ -525,7 +525,7 @@ nav.tabs button[aria-selected="true"] { color: var(--ink); background: var(--och
       <div class="panel">
         <div class="title-block">
           <h3>Mes données</h3>
-          <p class="hint" id="data-where">Une copie de sécurité de tout ton atelier, à garder où tu veux.</p>
+          <p class="hint" id="data-where">Une copie de sécurité de tout ton Zora, à garder où tu veux.</p>
         </div>
         <div class="row">
           <button class="btn small" id="data-file" type="button" hidden>Sauvegarder dans un fichier</button>
@@ -1339,7 +1339,7 @@ Si la pensée évoque une envie de se faire du mal ou de mourir, réponds avec d
     $("data-file").hidden = false;
     $("data-where").textContent = "Tes données sont gardées sur ce téléphone. Fais une sauvegarde de temps en temps, par exemple dans Fichiers ou iCloud.";
   }
-  const dump = () => JSON.stringify(Object.assign({ app: "atelier-bonheur", exporte: new Date().toISOString() }, S));
+  const dump = () => JSON.stringify(Object.assign({ app: "zora", exporte: new Date().toISOString() }, S));
   const dataMsg = (t) => { $("data-msg").textContent = t; };
   $("data-copy").onclick = async () => {
     const txt = dump();
@@ -1347,7 +1347,7 @@ Si la pensée évoque une envie de se faire du mal ou de mourir, réponds avec d
     catch (e) { $("data-restore").hidden = false; $("data-paste").value = txt; $("data-paste").select(); dataMsg("Copie automatique impossible : le texte est sélectionné ci-dessus, copie-le à la main."); }
   };
   $("data-file").onclick = async () => {
-    const name = "atelier-bonheur-" + dayKey() + ".json";
+    const name = "zora-" + dayKey() + ".json";
     const blob = new Blob([dump()], { type: "application/json" });
     try {
       const file = new File([blob], name, { type: "application/json" });
@@ -1361,8 +1361,8 @@ Si la pensée évoque une envie de se faire du mal ou de mourir, réponds avec d
   $("data-upload").onchange = async () => { const f = $("data-upload").files[0]; if (f) $("data-paste").value = await f.text(); };
   $("data-restore-go").onclick = () => {
     let o;
-    try { o = JSON.parse($("data-paste").value); } catch (e) { dataMsg("Ce texte n'est pas une copie valide de l'atelier."); return; }
-    if (!o || typeof o !== "object" || !Array.isArray(o.gestes)) { dataMsg("Ce texte n'est pas une copie valide de l'atelier."); return; }
+    try { o = JSON.parse($("data-paste").value); } catch (e) { dataMsg("Ce texte n'est pas une copie valide de Zora."); return; }
+    if (!o || typeof o !== "object" || !Array.isArray(o.gestes)) { dataMsg("Ce texte n'est pas une copie valide de Zora."); return; }
     delete o.app; delete o.exporte;
     S = migrate(o); save(); renderAll();
     $("data-restore").hidden = true; $("data-paste").value = "";
