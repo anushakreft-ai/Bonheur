@@ -274,16 +274,47 @@ details[open] summary { margin-bottom: 10px; }
 .jar small { opacity: .75; }
 .jar .btn { justify-self: center; background: var(--ochre); color: #2b3440; }
 
-/* ---- navigation ---- */
-nav.tabs {
-  position: fixed; left: 0; right: 0; bottom: 0; z-index: 20;
-  padding: 8px 8px calc(8px + env(safe-area-inset-bottom, 0px));
-  background: var(--card); border-top: 1px solid var(--line); display: flex; justify-content: center;
-}
-nav.tabs .in { display: grid; grid-template-columns: repeat(5, 1fr); gap: 2px; width: 100%; max-width: 560px; }
-nav.tabs button { border: 0; background: transparent; color: var(--ink-soft); display: grid; justify-items: center; gap: 2px; font-size: 11.5px; font-weight: 600; padding: 6px 2px; border-radius: 16px; }
-nav.tabs svg { width: 24px; height: 24px; }
-nav.tabs button[aria-selected="true"] { color: var(--ink); background: var(--ochre); }
+/* ---- accueil : l'arbre des Séphiroth, sans défilement ---- */
+html, body { height: 100%; }
+body { overflow: hidden; padding: 0 16px; margin: 0; }
+.home { height: 100%; display: grid; grid-template-rows: auto minmax(0, 1fr); gap: 4px; padding-block: 12px 10px; }
+.home-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; padding: 0; }
+.home .brand { font-size: clamp(40px, 11vw, 56px); margin-top: 0; }
+.home .greeting { font-size: 16px; margin-top: 2px; max-width: 34ch; overflow-wrap: anywhere; }
+.quick { flex: none; border: 0; border-radius: 99px; background: var(--blush); color: var(--ink); display: inline-flex; gap: 6px; align-items: center; padding: 8px 14px 8px 10px; font-weight: 700; font-size: 14px; box-shadow: inset 0 0 0 2px var(--orange); margin-top: 18px; }
+.quick svg { width: 24px; height: 24px; color: var(--ochre); }
+.tree-wrap { min-height: 0; display: flex; justify-content: center; align-items: stretch; }
+#tree { width: 100%; height: 100%; max-width: 100%; display: block; overflow: visible; }
+#tree .node { cursor: pointer; outline: none; }
+#tree .node circle.main { transition: transform .2s; transform-box: fill-box; transform-origin: center; }
+#tree .node:hover circle.main, #tree .node:active circle.main { transform: scale(1.06); }
+#tree .node:focus-visible circle.main { stroke: var(--ink); stroke-width: 3; }
+#tree .t-mot { font: 700 11.5px var(--f-display); }
+#tree .t-sub { font: 700 9px var(--f-body); opacity: .85; }
+#tree .t-heb { font: 600 9px var(--f-body); fill: var(--ink-soft); letter-spacing: .06em; }
+
+/* ---- pages des sphères ---- */
+.sheet { position: fixed; inset: 0; z-index: 40; background: var(--paper); overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; padding-bottom: calc(28px + env(safe-area-inset-bottom, 0px)); animation: monte .28s ease both; }
+.sheet-head { position: sticky; top: 0; z-index: 3; background: var(--c); color: var(--t); padding: calc(10px + env(safe-area-inset-top, 0px)) 16px 14px; border-radius: 0 0 26px 26px; display: grid; gap: 6px; box-shadow: 0 1px 0 var(--line); }
+.sheet-head > * { max-width: 640px; width: 100%; margin: 0 auto; }
+.back { border: 0; background: rgba(255,255,255,.6); color: #2b3440; border-radius: 99px; padding: 6px 12px 6px 6px; display: inline-flex; align-items: center; gap: 2px; font-weight: 700; font-size: 14px; width: auto !important; margin: 0 !important; justify-self: start; }
+.back svg { width: 20px; height: 20px; }
+.sheet-title { display: grid; gap: 2px; }
+.sheet-title .heb { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; font-weight: 700; opacity: .75; }
+.sheet-title h2 { font-size: 30px; color: inherit; }
+.sheet-title p { margin: 0; font-family: var(--f-poem); font-size: 16px; opacity: .9; }
+.sheet-body { max-width: 640px; margin: 0 auto; padding: 16px 16px 0; display: grid; gap: 18px; }
+.sheet-body > .title-block h2 { font-size: 24px; }
+details.tight summary { font-weight: 700; color: var(--cobalt); }
+#s-malkhut .gestes { grid-template-columns: repeat(auto-fill, minmax(76px, 1fr)); gap: 8px; }
+#s-malkhut .geste { min-height: 90px; padding: 10px 6px 8px; gap: 4px; }
+#s-malkhut .geste svg { width: 30px; height: 30px; }
+#s-malkhut .geste span { font-size: 12px; }
+#s-malkhut .geste.done::after { top: 4px; right: 6px; font-size: 9px; padding: 1px 6px; }
+#s-malkhut .garden-art { aspect-ratio: 16/8; }
+#s-malkhut .title-block .lead { font-size: 15px; }
+details.tight[open] { gap: 12px; }
+body.sheet-open .home { visibility: hidden; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
@@ -297,90 +328,48 @@ nav.tabs button[aria-selected="true"] { color: var(--ink); background: var(--och
   <svg class="d4" viewBox="0 0 120 120" id="dots"></svg>
 </div>
 
-<div class="wrap">
-  <header>
-    <div class="eyebrow" id="today-label">Aujourd'hui</div>
-    <h1 class="brand">Zor<span>a</span></h1>
-    <p class="greeting" id="greeting">Une chose simple à la fois.</p>
-    <div class="save-state" id="save-state"><i></i><span>Enregistré sur cet appareil</span></div>
+<div class="wrap home" id="home">
+  <header class="home-head">
+    <div>
+      <div class="eyebrow" id="today-label">Aujourd'hui</div>
+      <h1 class="brand">Zor<span>a</span></h1>
+      <p class="greeting" id="greeting">Une chose simple à la fois.</p>
+    </div>
+    <button class="quick" type="button" data-open="yesod"><svg viewBox="0 0 100 100" aria-hidden="true"><g id="nav-sun"></g></svg>Respirer</button>
   </header>
+  <main class="tree-wrap">
+    <svg id="tree" viewBox="0 0 300 566" role="group" aria-label="Arbre des Séphiroth : touche une sphère"></svg>
+  </main>
+</div>
 
-  <main>
-    <!-- ================= AUJOURD'HUI ================= -->
-    <section class="view" id="v-jour" role="tabpanel" aria-labelledby="t-jour">
-      <div class="panel">
-        <h2>Ta météo intérieure</h2>
-        <div class="moods" id="moods" role="group" aria-label="Humeur du jour"></div>
-        <p class="hint" id="mood-hint">Un geste par jour. Ça nourrit ton bilan.</p>
-      </div>
-
-      <button class="sos" id="sos" type="button">
-        <svg viewBox="0 0 100 100" aria-hidden="true"><path fill="currentColor" d="M50 8C70 40 82 55 82 70A32 32 0 0 1 18 70C18 55 30 40 50 8Z"/></svg>
-        <span><strong>Ça ne va pas trop</strong><small>Respirer, revenir ici, une pensée simple</small></span>
-      </button>
-
+  <section class="sheet" id="s-keter" role="dialog" aria-modal="true" aria-labelledby="h-keter" hidden>
+    <div class="sheet-head" style="--c:#ffffff;--t:var(--ink)">
+      <button class="back" type="button" data-close aria-label="Revenir à l'arbre">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Arbre</button>
+      <div class="sheet-title"><span class="heb">Keter · Couronne</span><h2 id="h-keter">Intention</h2><p>Ce qui guide ma journée.</p></div>
+    </div>
+    <div class="sheet-body">
       <div class="panel">
         <div class="title-block">
-          <h2>Trois bonnes choses</h2>
-          <p class="lead">Même minuscules. Le café chaud, un sourire, la lumière sur le lac.</p>
+          <h2>Mon intention du jour</h2>
+          <p class="lead">Une phrase courte pour donner la direction. Pas un objectif : une manière d'être.</p>
         </div>
-        <div class="grat" id="grat"></div>
-        <div class="row"><button class="btn" id="grat-save" type="button">Mettre dans le bocal</button><span class="hint" id="grat-msg" aria-live="polite"></span></div>
+        <label class="sr" for="intention-in">Mon intention</label>
+        <input class="field" id="intention-in" maxlength="90" placeholder="Aujourd'hui, je choisis de…">
+        <div class="seg" id="intention-ideas"></div>
+        <div class="row"><button class="btn" id="intention-save" type="button">Poser mon intention</button><span class="hint" id="intention-msg" aria-live="polite"></span></div>
+        <div class="history" id="intention-history"></div>
       </div>
+    </div>
+  </section>
 
-      <div id="nextstep-host"></div>
-
-      <div class="panel">
-        <div class="garden-art" id="garden"></div>
-        <div class="row between">
-          <div class="count" id="count"></div>
-          <button class="btn orange small" id="random" type="button">Un geste au hasard</button>
-        </div>
-      </div>
-
-      <div class="title-block">
-        <h2 style="font-size:28px">Les petits gestes</h2>
-        <p class="lead">Touche un geste quand tu l'as fait. Une feuille pousse dans ton jardin.</p>
-      </div>
-      <div class="gestes" id="gestes"></div>
-
-      <div class="panel">
-        <h3>Ajouter un geste</h3>
-        <form class="inline-form" id="f-geste">
-          <label class="sr" for="geste-new">Nouveau geste</label>
-          <input class="field" id="geste-new" maxlength="40" placeholder="Ex. ouvrir la fenêtre">
-          <button class="btn" type="submit">Ajouter</button>
-        </form>
-        <div class="row"><button class="linkbtn" id="edit-gestes" type="button">Retirer des gestes</button></div>
-        <div class="toggle">
-          <input type="checkbox" id="rappel-on">
-          <label for="rappel-on">Me souffler un geste toutes les
-            <select id="rappel-min" class="field" style="width:auto;display:inline-block;padding:4px 8px">
-              <option value="20">20</option><option value="45">45</option><option value="60">60</option><option value="90">90</option>
-            </select> minutes</label>
-        </div>
-        <p class="hint">Les rappels apparaissent tant que l'app est ouverte.</p>
-      </div>
-    </section>
-
-    <!-- ================= RÊVES ================= -->
-    <section class="view" id="v-reves" role="tabpanel" aria-labelledby="t-reves" hidden>
-      <div class="title-block">
-        <h2 style="font-size:30px">Mes rêves</h2>
-        <p class="lead">Un rêve devient réel par petits pas. Pour chacun : ce que tu souhaites, le plus beau résultat, l'obstacle en toi, et ton plan « si…, alors… ».</p>
-      </div>
-
-      <div class="panel">
-        <h3>Nouveau rêve</h3>
-        <label class="sr" for="dream-title">Mon rêve</label>
-        <input class="field" id="dream-title" maxlength="80" placeholder="Ex. Partir un mois au Japon, apprendre la céramique…">
-        <label class="sr" for="dream-why">Pourquoi ça compte</label>
-        <input class="field" id="dream-why" maxlength="160" placeholder="Pourquoi ça compte pour moi ?">
-        <div class="row"><button class="btn" id="dream-add" type="button">Planter ce rêve</button><span class="hint" id="dream-msg" aria-live="polite"></span></div>
-      </div>
-
-      <div id="dreams" style="display:grid;gap:18px"></div>
-
+  <section class="sheet" id="s-chokhmah" role="dialog" aria-modal="true" aria-labelledby="h-chokhmah" hidden>
+    <div class="sheet-head" style="--c:#8fc4bb;--t:var(--ink)">
+      <button class="back" type="button" data-close aria-label="Revenir à l'arbre">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Arbre</button>
+      <div class="sheet-title"><span class="heb">Hokhmah · Sagesse</span><h2 id="h-chokhmah">Intuitions</h2><p>Mes rêves de nuit, mes envies, mes idées.</p></div>
+    </div>
+    <div class="sheet-body">
       <div class="panel">
         <div class="title-block">
           <h2>Carnet</h2>
@@ -396,26 +385,16 @@ nav.tabs button[aria-selected="true"] { color: var(--ink); background: var(--och
         <div class="seg" id="filter" role="group" aria-label="Filtrer"></div>
       </div>
       <div class="entries" id="entries"></div>
-    </section>
+    </div>
+  </section>
 
-    <!-- ================= ANCRAGE ================= -->
-    <section class="view" id="v-ancrage" role="tabpanel" aria-labelledby="t-ancrage" hidden>
-      <div class="panel breath">
-        <div class="blob-wrap">
-          <svg class="rays" viewBox="0 0 100 100" aria-hidden="true"><path id="rays-path" fill="currentColor"/></svg>
-          <div class="blob" id="blob"></div>
-        </div>
-        <div class="breath-label" id="breath-label" aria-live="polite">Prête ?</div>
-        <button class="btn" id="breath-go" type="button">Respirer 1 minute</button>
-        <p class="hint">Inspire 4 secondes, garde 2, expire 6.</p>
-      </div>
-
-      <div class="panel">
-        <h2>5 · 4 · 3 · 2 · 1</h2>
-        <p class="lead">Pour revenir ici, maintenant. Touche chaque ligne quand c'est fait.</p>
-        <div class="steps" id="steps"></div>
-      </div>
-
+  <section class="sheet" id="s-binah" role="dialog" aria-modal="true" aria-labelledby="h-binah" hidden>
+    <div class="sheet-head" style="--c:#2f7f7c;--t:#ffffff">
+      <button class="back" type="button" data-close aria-label="Revenir à l'arbre">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Arbre</button>
+      <div class="sheet-title"><span class="heb">Binah · Compréhension</span><h2 id="h-binah">Comprendre</h2><p>Regarder ce qui se passe, avec douceur.</p></div>
+    </div>
+    <div class="sheet-body">
       <div class="panel">
         <div class="eyebrow">Une pensée simple</div>
         <p class="thought" id="thought"></p>
@@ -436,76 +415,18 @@ nav.tabs button[aria-selected="true"] { color: var(--ink); background: var(--och
         <div class="answer" id="reframe-out" style="--c:var(--turq);--t:#2b3440" hidden><p></p></div>
         <div class="row" id="reframe-keep" hidden><button class="btn alt small" type="button">Garder dans le carnet</button></div>
       </div>
+    </div>
+  </section>
 
-      <div class="panel">
-        <h2>Là, maintenant, j'écoute…</h2>
-        <div class="seg" id="voices" role="group" aria-label="Quelle voix"></div>
-        <label class="sr" for="voice-who">Qui ou quoi exactement</label>
-        <input class="field" id="voice-who" maxlength="80" placeholder="Qui ou quoi ? (facultatif)">
-        <div class="answer" id="voice-answer" hidden><p></p></div>
-        <div class="row"><button class="btn" id="voice-save" type="button">Noter</button><span class="hint" id="voice-msg" aria-live="polite"></span></div>
-        <div class="history" id="voice-history"></div>
-      </div>
-
-      <div class="panel">
-        <div class="title-block">
-          <h2>Les voix autour de moi</h2>
-          <p class="lead">Personnes, podcasts, comptes… Qui te nourrit, qui t'épuise ?</p>
-        </div>
-        <div class="people">
-          <div style="--c:var(--leaf)"><h3>Me nourrissent</h3><ul id="list-nourrit"></ul></div>
-          <div style="--c:var(--orange)"><h3>M'épuisent</h3><ul id="list-epuise"></ul></div>
-        </div>
-        <form id="f-person" style="display:grid;gap:8px">
-          <label class="sr" for="person-name">Nom</label>
-          <input class="field" id="person-name" maxlength="60" placeholder="Ex. Mamie, un podcast, une amie…">
-          <div class="row">
-            <button class="chip" type="submit" data-effet="nourrit" style="--c:var(--leaf)">Me nourrit</button>
-            <button class="chip" type="submit" data-effet="epuise" style="--c:var(--orange)">M'épuise</button>
-          </div>
-        </form>
-      </div>
-    </section>
-
-    <!-- ================= MUSIQUE ================= -->
-    <section class="view" id="v-musique" role="tabpanel" aria-labelledby="t-musique" hidden>
+  <section class="sheet" id="s-daat" role="dialog" aria-modal="true" aria-labelledby="h-daat" hidden>
+    <div class="sheet-head" style="--c:#fbf6f1;--t:var(--ink)">
+      <button class="back" type="button" data-close aria-label="Revenir à l'arbre">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Arbre</button>
+      <div class="sheet-title"><span class="heb">Daat · Connaissance</span><h2 id="h-daat">Bilan</h2><p>Ce qui me fait vraiment du bien.</p></div>
+    </div>
+    <div class="sheet-body">
       <div class="title-block">
-        <h2 style="font-size:30px">Musique</h2>
-        <p class="lead">La musique change l'humeur en trois minutes. Choisis ce dont tu as besoin.</p>
-      </div>
-      <div class="moodmusic" id="moodmusic"></div>
-      <form class="inline-form" id="f-music">
-        <label class="sr" for="music-q">Chercher</label>
-        <input class="field" id="music-q" maxlength="120" placeholder="Ou décris : « du jazz doux pour un dimanche »">
-        <button class="btn" type="submit">Chercher</button>
-      </form>
-      <div class="panel" id="music-panel" hidden>
-        <div class="row between"><h3 id="music-title">Pour toi</h3><span class="hint" id="music-msg" aria-live="polite"></span></div>
-        <div class="results" id="music-results"></div>
-        <div class="row" id="playlist-row" hidden>
-          <button class="btn orange small" id="playlist-go" type="button">Créer une playlist Spotify</button>
-          <span class="hint">Spotify Premium requis</span>
-        </div>
-        <div class="answer" id="playlist-out" style="--c:var(--ochre);--t:#2b3440" hidden><p></p></div>
-      </div>
-      <div class="panel">
-        <div class="title-block">
-          <h2>Mes chansons refuge</h2>
-          <p class="lead">Celles qui te ramènent à toi. Garde-les ici pour les retrouver vite.</p>
-        </div>
-        <div class="results" id="refuges"></div>
-        <form id="f-refuge" style="display:grid;gap:8px">
-          <label class="sr" for="refuge-name">Titre et artiste</label>
-          <input class="field" id="refuge-name" maxlength="100" placeholder="Titre – artiste">
-          <button class="btn alt small" type="submit" style="justify-self:start">Ajouter à mes refuges</button>
-        </form>
-      </div>
-    </section>
-
-    <!-- ================= BILAN ================= -->
-    <section class="view" id="v-bilan" role="tabpanel" aria-labelledby="t-bilan" hidden>
-      <div class="title-block">
-        <h2 style="font-size:30px">Mon bilan</h2>
+        <h2>Mon bilan</h2>
         <p class="lead">Les 7 derniers jours. Pas pour te juger : pour voir ce qui te fait du bien.</p>
       </div>
       <div class="stats" id="stats"></div>
@@ -541,39 +462,220 @@ nav.tabs button[aria-selected="true"] { color: var(--ink); background: var(--och
         </div>
         <p class="hint" id="data-msg" aria-live="polite"></p>
       </div>
-    </section>
-  </main>
-</div>
+      <div class="save-state" id="save-state"><i></i><span>Enregistré sur cet appareil</span></div>
+    </div>
+  </section>
+
+  <section class="sheet" id="s-chesed" role="dialog" aria-modal="true" aria-labelledby="h-chesed" hidden>
+    <div class="sheet-head" style="--c:#f2c3b5;--t:var(--ink)">
+      <button class="back" type="button" data-close aria-label="Revenir à l'arbre">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Arbre</button>
+      <div class="sheet-title"><span class="heb">Hessed · Bonté</span><h2 id="h-chesed">Gratitude</h2><p>Ce que je reçois et ce que je donne.</p></div>
+    </div>
+    <div class="sheet-body">
+      <div class="panel">
+        <div class="title-block">
+          <h2>Trois bonnes choses</h2>
+          <p class="lead">Même minuscules. Le café chaud, un sourire, la lumière sur le lac.</p>
+        </div>
+        <div class="grat" id="grat"></div>
+        <div class="row"><button class="btn" id="grat-save" type="button">Mettre dans le bocal</button><span class="hint" id="grat-msg" aria-live="polite"></span></div>
+      </div>
+      <div class="jar" id="jar"></div>
+    </div>
+  </section>
+
+  <section class="sheet" id="s-gevurah" role="dialog" aria-modal="true" aria-labelledby="h-gevurah" hidden>
+    <div class="sheet-head" style="--c:#e08a76;--t:var(--ink)">
+      <button class="back" type="button" data-close aria-label="Revenir à l'arbre">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Arbre</button>
+      <div class="sheet-title"><span class="heb">Guevourah · Force</span><h2 id="h-gevurah">Limites</h2><p>Les voix que j'écoute, celles que je laisse.</p></div>
+    </div>
+    <div class="sheet-body">
+      <div class="panel">
+        <h2>Là, maintenant, j'écoute…</h2>
+        <div class="seg" id="voices" role="group" aria-label="Quelle voix"></div>
+        <label class="sr" for="voice-who">Qui ou quoi exactement</label>
+        <input class="field" id="voice-who" maxlength="80" placeholder="Qui ou quoi ? (facultatif)">
+        <div class="answer" id="voice-answer" hidden><p></p></div>
+        <div class="row"><button class="btn" id="voice-save" type="button">Noter</button><span class="hint" id="voice-msg" aria-live="polite"></span></div>
+        <div class="history" id="voice-history"></div>
+      </div>
+
+      <div class="panel">
+        <div class="title-block">
+          <h2>Les voix autour de moi</h2>
+          <p class="lead">Personnes, podcasts, comptes… Qui te nourrit, qui t'épuise ?</p>
+        </div>
+        <div class="people">
+          <div style="--c:var(--leaf)"><h3>Me nourrissent</h3><ul id="list-nourrit"></ul></div>
+          <div style="--c:var(--orange)"><h3>M'épuisent</h3><ul id="list-epuise"></ul></div>
+        </div>
+        <form id="f-person" style="display:grid;gap:8px">
+          <label class="sr" for="person-name">Nom</label>
+          <input class="field" id="person-name" maxlength="60" placeholder="Ex. Mamie, un podcast, une amie…">
+          <div class="row">
+            <button class="chip" type="submit" data-effet="nourrit" style="--c:var(--leaf)">Me nourrit</button>
+            <button class="chip" type="submit" data-effet="epuise" style="--c:var(--orange)">M'épuise</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <section class="sheet" id="s-tiferet" role="dialog" aria-modal="true" aria-labelledby="h-tiferet" hidden>
+    <div class="sheet-head" style="--c:#e3b04f;--t:var(--ink)">
+      <button class="back" type="button" data-close aria-label="Revenir à l'arbre">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Arbre</button>
+      <div class="sheet-title"><span class="heb">Tiferet · Beauté</span><h2 id="h-tiferet">Cœur</h2><p>Ma météo intérieure, au centre de tout.</p></div>
+    </div>
+    <div class="sheet-body">
+      <div class="panel">
+        <h2>Ta météo intérieure</h2>
+        <div class="moods" id="moods" role="group" aria-label="Humeur du jour"></div>
+        <p class="hint" id="mood-hint">Un geste par jour. Ça nourrit ton bilan.</p>
+      </div>
+
+      <button class="sos" id="sos" type="button">
+        <svg viewBox="0 0 100 100" aria-hidden="true"><path fill="currentColor" d="M50 8C70 40 82 55 82 70A32 32 0 0 1 18 70C18 55 30 40 50 8Z"/></svg>
+        <span><strong>Ça ne va pas trop</strong><small>Respirer, revenir ici, une pensée simple</small></span>
+      </button>
+    </div>
+  </section>
+
+  <section class="sheet" id="s-netzach" role="dialog" aria-modal="true" aria-labelledby="h-netzach" hidden>
+    <div class="sheet-head" style="--c:#3f8a55;--t:#ffffff">
+      <button class="back" type="button" data-close aria-label="Revenir à l'arbre">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Arbre</button>
+      <div class="sheet-title"><span class="heb">Netsah · Victoire</span><h2 id="h-netzach">Rêves</h2><p>Mes rêves, un petit pas à la fois.</p></div>
+    </div>
+    <div class="sheet-body">
+      <div id="nextstep-host"></div>
+      <div class="title-block">
+        <h2>Mes rêves</h2>
+        <p class="lead">Un rêve devient réel par petits pas. Pour chacun : ce que tu souhaites, le plus beau résultat, l'obstacle en toi, et ton plan « si…, alors… ».</p>
+      </div>
+
+      <div class="panel">
+        <h3>Nouveau rêve</h3>
+        <label class="sr" for="dream-title">Mon rêve</label>
+        <input class="field" id="dream-title" maxlength="80" placeholder="Ex. Partir un mois au Japon, apprendre la céramique…">
+        <label class="sr" for="dream-why">Pourquoi ça compte</label>
+        <input class="field" id="dream-why" maxlength="160" placeholder="Pourquoi ça compte pour moi ?">
+        <div class="row"><button class="btn" id="dream-add" type="button">Planter ce rêve</button><span class="hint" id="dream-msg" aria-live="polite"></span></div>
+      </div>
+
+      <div id="dreams" style="display:grid;gap:18px"></div>
+    </div>
+  </section>
+
+  <section class="sheet" id="s-hod" role="dialog" aria-modal="true" aria-labelledby="h-hod" hidden>
+    <div class="sheet-head" style="--c:#f0d08a;--t:var(--ink)">
+      <button class="back" type="button" data-close aria-label="Revenir à l'arbre">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Arbre</button>
+      <div class="sheet-title"><span class="heb">Hod · Splendeur</span><h2 id="h-hod">Musique</h2><p>Ce qui m'élève et me fait vibrer.</p></div>
+    </div>
+    <div class="sheet-body">
+      <div class="title-block">
+        <h2>Musique</h2>
+        <p class="lead">La musique change l'humeur en trois minutes. Choisis ce dont tu as besoin.</p>
+      </div>
+      <div class="moodmusic" id="moodmusic"></div>
+      <form class="inline-form" id="f-music">
+        <label class="sr" for="music-q">Chercher</label>
+        <input class="field" id="music-q" maxlength="120" placeholder="Ou décris : « du jazz doux pour un dimanche »">
+        <button class="btn" type="submit">Chercher</button>
+      </form>
+      <div class="panel" id="music-panel" hidden>
+        <div class="row between"><h3 id="music-title">Pour toi</h3><span class="hint" id="music-msg" aria-live="polite"></span></div>
+        <div class="results" id="music-results"></div>
+        <div class="row" id="playlist-row" hidden>
+          <button class="btn orange small" id="playlist-go" type="button">Créer une playlist Spotify</button>
+          <span class="hint">Spotify Premium requis</span>
+        </div>
+        <div class="answer" id="playlist-out" style="--c:var(--ochre);--t:#2b3440" hidden><p></p></div>
+      </div>
+      <div class="panel">
+        <div class="title-block">
+          <h2>Mes chansons refuge</h2>
+          <p class="lead">Celles qui te ramènent à toi. Garde-les ici pour les retrouver vite.</p>
+        </div>
+        <div class="results" id="refuges"></div>
+        <form id="f-refuge" style="display:grid;gap:8px">
+          <label class="sr" for="refuge-name">Titre et artiste</label>
+          <input class="field" id="refuge-name" maxlength="100" placeholder="Titre – artiste">
+          <button class="btn alt small" type="submit" style="justify-self:start">Ajouter à mes refuges</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <section class="sheet" id="s-yesod" role="dialog" aria-modal="true" aria-labelledby="h-yesod" hidden>
+    <div class="sheet-head" style="--c:#a8cfe0;--t:var(--ink)">
+      <button class="back" type="button" data-close aria-label="Revenir à l'arbre">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Arbre</button>
+      <div class="sheet-title"><span class="heb">Yesod · Fondement</span><h2 id="h-yesod">Ancrage</h2><p>Respirer, revenir ici, prendre racine.</p></div>
+    </div>
+    <div class="sheet-body">
+      <div class="panel breath">
+        <div class="blob-wrap">
+          <svg class="rays" viewBox="0 0 100 100" aria-hidden="true"><path id="rays-path" fill="currentColor"/></svg>
+          <div class="blob" id="blob"></div>
+        </div>
+        <div class="breath-label" id="breath-label" aria-live="polite">Prête ?</div>
+        <button class="btn" id="breath-go" type="button">Respirer 1 minute</button>
+        <p class="hint">Inspire 4 secondes, garde 2, expire 6.</p>
+      </div>
+
+      <div class="panel">
+        <h2>5 · 4 · 3 · 2 · 1</h2>
+        <p class="lead">Pour revenir ici, maintenant. Touche chaque ligne quand c'est fait.</p>
+        <div class="steps" id="steps"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sheet" id="s-malkhut" role="dialog" aria-modal="true" aria-labelledby="h-malkhut" hidden>
+    <div class="sheet-head" style="--c:#b97a57;--t:#ffffff">
+      <button class="back" type="button" data-close aria-label="Revenir à l'arbre">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Arbre</button>
+      <div class="sheet-title"><span class="heb">Malkhout · Royaume</span><h2 id="h-malkhut">Gestes</h2><p>Le corps, le concret, les petits gestes.</p></div>
+    </div>
+    <div class="sheet-body">
+      <div class="panel">
+        <div class="garden-art" id="garden"></div>
+        <div class="row between">
+          <div class="count" id="count"></div>
+          <button class="btn orange small" id="random" type="button">Un geste au hasard</button>
+        </div>
+      </div>
+      <div class="title-block">
+        <h2>Les petits gestes</h2>
+        <p class="lead">Touche un geste quand tu l'as fait. Une feuille pousse dans ton jardin.</p>
+      </div>
+      <div class="gestes" id="gestes"></div>
+      <details class="panel tight">
+        <summary>Modifier mes gestes et les rappels</summary>
+        <h3>Ajouter un geste</h3>
+        <form class="inline-form" id="f-geste">
+          <label class="sr" for="geste-new">Nouveau geste</label>
+          <input class="field" id="geste-new" maxlength="40" placeholder="Ex. ouvrir la fenêtre">
+          <button class="btn" type="submit">Ajouter</button>
+        </form>
+        <div class="row"><button class="linkbtn" id="edit-gestes" type="button">Retirer des gestes</button></div>
+        <div class="toggle">
+          <input type="checkbox" id="rappel-on">
+          <label for="rappel-on">Me souffler un geste toutes les
+            <select id="rappel-min" class="field" style="width:auto;display:inline-block;padding:4px 8px">
+              <option value="20">20</option><option value="45">45</option><option value="60">60</option><option value="90">90</option>
+            </select> minutes</label>
+        </div>
+        <p class="hint">Les rappels apparaissent tant que l'app est ouverte.</p>
+      </details>
+    </div>
+  </section>
 
 <div id="toast-host"></div>
-
-<nav class="tabs" role="tablist" aria-label="Sections">
-  <div class="in">
-    <button role="tab" id="t-jour" data-view="jour" aria-selected="true" type="button">
-      <svg viewBox="0 0 100 100" aria-hidden="true"><g id="nav-sun" fill="currentColor"></g></svg>Jour</button>
-    <button role="tab" id="t-reves" data-view="reves" aria-selected="false" type="button">
-      <svg viewBox="0 0 100 100" aria-hidden="true"><g fill="currentColor">
-        <path d="M49 22C50 26 52 28 52 31H46C46 28 48 26 49 22Z"/>
-        <path d="M43 34H55V37H43ZM45 39H53C55 42 56 45 57 48H41C42 45 43 42 45 39Z"/>
-        <path d="M22 52C36 49 50 49 62 51C74 52 86 44 98 38C94 46 86 56 74 63C62 70 46 72 34 68C26 65 22 60 22 52Z"/>
-        <path d="M44 70H56C55 75 56 79 60 82H40C44 79 45 75 44 70Z"/>
-        <path d="M32 83H68V88H32Z"/></g>
-        <path d="M24 56C12 58 6 50 9 42C12 34 22 34 24 40C26 46 18 48 16 44" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round"/></svg>Rêves</button>
-    <button role="tab" id="t-ancrage" data-view="ancrage" aria-selected="false" type="button">
-      <svg viewBox="0 0 100 100" aria-hidden="true">
-        <circle cx="50" cy="19" r="15" fill="currentColor"/><circle cx="35" cy="30" r="12" fill="currentColor"/><circle cx="65" cy="30" r="12" fill="currentColor"/>
-        <path fill="currentColor" d="M46 30L43 60H57L54 30Z"/>
-        <path d="M10 60H90" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>
-        <g fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round">
-          <path d="M50 60V92"/><path d="M48 64C40 70 28 72 20 86"/><path d="M52 64C60 70 72 72 80 86"/>
-          <path d="M49 72C44 78 38 82 34 96"/><path d="M51 72C56 78 62 82 66 96"/>
-        </g></svg>Ancrage</button>
-    <button role="tab" id="t-musique" data-view="musique" aria-selected="false" type="button">
-      <svg viewBox="0 0 100 100" aria-hidden="true"><path fill="currentColor" d="M38 18L84 8V66A14 14 0 1 1 74 53V28L48 34V76A14 14 0 1 1 38 63Z"/></svg>Musique</button>
-    <button role="tab" id="t-bilan" data-view="bilan" aria-selected="false" type="button">
-      <svg viewBox="0 0 100 100" aria-hidden="true"><path fill="currentColor" d="M50 5C80 30 88 70 50 95C12 70 20 30 50 5Z"/></svg>Bilan</button>
-  </div>
-</nav>
 
 <script>
 (() => {
@@ -647,7 +749,7 @@ nav.tabs button[aria-selected="true"] { color: var(--ink); background: var(--och
   ];
   const fresh = () => ({
     v: 2, gestes: DEFAULT_GESTES.slice(), faits: {}, notes: [], voix: [], checkins: [],
-    rappel: { on: false, min: 45 }, humeur: {}, gratitudes: {}, projets: [], refuges: [], pas: {}
+    rappel: { on: false, min: 45 }, humeur: {}, gratitudes: {}, projets: [], refuges: [], pas: {}, intentions: {}, ancre: {}
   });
   const migrate = (o) => {
     const s = Object.assign(fresh(), o || {});
@@ -667,6 +769,7 @@ nav.tabs button[aria-selected="true"] { color: var(--ink); background: var(--och
   const setSaveLabel = (txt) => { $("save-state").querySelector("span").textContent = txt; };
   function save() {
     try { localStorage.setItem(LS, JSON.stringify(S)); } catch (e) {}
+    if (typeof renderTree === "function") renderTree();
     if (!dbDoc) return;
     clearTimeout(saveTimer);
     saveTimer = setTimeout(async () => {
@@ -705,7 +808,8 @@ nav.tabs button[aria-selected="true"] { color: var(--ink); background: var(--och
   const now = new Date();
   $("today-label").textContent = now.toLocaleDateString("fr-CH", { weekday: "long", day: "numeric", month: "long" });
   const hr = now.getHours();
-  $("greeting").textContent = hr < 11 ? "Bonjour. Doucement, on commence." : hr < 18 ? "Une chose simple à la fois." : "Le soir, on ralentit.";
+  const greetingText = hr < 11 ? "Bonjour. Doucement, on commence." : hr < 18 ? "Une chose simple à la fois." : "Le soir, on ralentit.";
+  $("greeting").textContent = greetingText;
 
   /* ================= humeur ================= */
   const MOODS = [
@@ -1060,7 +1164,7 @@ Réponds uniquement en JSON : {"etapes": ["..."], "obstacle": "...", "plan": "..
     $("breath-go").textContent = "Arrêter";
     const tick = () => {
       const el = (Date.now() - t0) / 1000;
-      if (el >= 60) { stopBreath("C'est bien. Reviens quand tu veux."); return; }
+      if (el >= 60) { stopBreath("C'est bien. Reviens quand tu veux."); S.ancre[dayKey()] = 1; save(); return; }
       const c = el % 12;
       if (c < 4) { label.textContent = "Inspire"; blob.className = "blob in"; }
       else if (c < 6) { label.textContent = "Garde"; blob.className = "blob in"; }
@@ -1085,7 +1189,7 @@ Réponds uniquement en JSON : {"etapes": ["..."], "obstacle": "...", "plan": "..
   }
   $("steps").addEventListener("click", (e) => {
     if (e.target.id === "steps-reset") { stepAt = 0; renderSteps(); return; }
-    const b = e.target.closest(".step"); if (b && +b.dataset.i === stepAt) { stepAt++; renderSteps(); }
+    const b = e.target.closest(".step"); if (b && +b.dataset.i === stepAt) { stepAt++; renderSteps(); if (stepAt >= STEPS.length) { S.ancre[dayKey()] = 1; save(); } }
   });
   const THOUGHTS = [
     "Qu'est-ce qui est doux, là, tout de suite ?",
@@ -1348,16 +1452,101 @@ Si la pensée évoque une envie de se faire du mal ou de mourir, réponds avec d
     $("jar-next").onclick = () => { jarPick = all[Math.floor(Math.random() * all.length)]; renderJar(); };
   }
 
-  /* ================= navigation ================= */
-  const VIEWS = ["jour", "reves", "ancrage", "musique", "bilan"];
-  function go(view) {
-    document.querySelectorAll("nav.tabs [role=tab]").forEach((t) => t.setAttribute("aria-selected", String(t.dataset.view === view)));
-    document.querySelectorAll("section.view").forEach((s) => (s.hidden = s.id !== "v-" + view));
-    window.scrollTo({ top: 0 });
-    try { localStorage.setItem(LS + "-tab", view); } catch (e) {}
+  /* ================= arbre des Séphiroth ================= */
+  const SEPH = [
+    { k: "keter", heb: "Keter", mot: "Intention", x: 150, y: 44, fill: "#ffffff", txt: "#2b3440", ring: "#e3b04f" },
+    { k: "chokhmah", heb: "Hokhmah", mot: "Intuitions", x: 248, y: 108, fill: "#8fc4bb", txt: "#2b3440" },
+    { k: "binah", heb: "Binah", mot: "Comprendre", x: 52, y: 108, fill: "#2f7f7c", txt: "#ffffff" },
+    { k: "daat", heb: "Daat", mot: "Bilan", x: 150, y: 170, fill: "#fbf6f1", txt: "#2b3440", dash: true },
+    { k: "chesed", heb: "Hessed", mot: "Gratitude", x: 248, y: 236, fill: "#f2c3b5", txt: "#2b3440" },
+    { k: "gevurah", heb: "Guevourah", mot: "Limites", x: 52, y: 236, fill: "#e08a76", txt: "#2b3440" },
+    { k: "tiferet", heb: "Tiferet", mot: "Cœur", x: 150, y: 300, fill: "#e3b04f", txt: "#2b3440" },
+    { k: "netzach", heb: "Netsah", mot: "Rêves", x: 248, y: 390, fill: "#3f8a55", txt: "#ffffff" },
+    { k: "hod", heb: "Hod", mot: "Musique", x: 52, y: 390, fill: "#f0d08a", txt: "#2b3440" },
+    { k: "yesod", heb: "Yesod", mot: "Ancrage", x: 150, y: 452, fill: "#a8cfe0", txt: "#2b3440" },
+    { k: "malkhut", heb: "Malkhout", mot: "Gestes", x: 150, y: 524, fill: "#b97a57", txt: "#ffffff" }
+  ];
+  const PATHS = "keter-chokhmah keter-binah keter-tiferet chokhmah-binah chokhmah-tiferet chokhmah-chesed binah-tiferet binah-gevurah chesed-gevurah chesed-tiferet chesed-netzach gevurah-tiferet gevurah-hod tiferet-netzach tiferet-yesod tiferet-hod netzach-hod netzach-yesod netzach-malkhut hod-yesod hod-malkhut yesod-malkhut".split(" ").map((x) => x.split("-"));
+  const byK = Object.fromEntries(SEPH.map((n) => [n.k, n]));
+  function seStatus(k) {
+    const t = dayKey(), notesToday = (type) => S.notes.some((n) => n.date && dayKey(new Date(n.date)) === t && type.includes(n.type));
+    switch (k) {
+      case "keter": return !!S.intentions[t];
+      case "chokhmah": return notesToday(["reve", "envie"]);
+      case "binah": return notesToday(["pensee"]);
+      case "chesed": return (S.gratitudes[t] || []).some((x) => x && x.trim());
+      case "gevurah": return S.checkins.some((c) => dayKey(new Date(c.date)) === t);
+      case "tiferet": return !!S.humeur[t];
+      case "netzach": return !!S.pas[t];
+      case "yesod": return !!S.ancre[t];
+      case "malkhut": return (S.faits[t] || []).length > 0;
+      default: return false;
+    }
   }
-  document.querySelector("nav.tabs").addEventListener("click", (e) => { const b = e.target.closest("[data-view]"); if (b) go(b.dataset.view); });
-  $("sos").onclick = () => go("ancrage");
+  function renderTree() {
+    const R = 29, t = dayKey();
+    let g = `<g stroke="#e3b04f" stroke-width="3" stroke-linecap="round" opacity=".75">` +
+      PATHS.map(([a, b]) => `<line x1="${byK[a].x}" y1="${byK[a].y}" x2="${byK[b].x}" y2="${byK[b].y}"/>`).join("") + `</g>`;
+    SEPH.forEach((n) => {
+      const done = seStatus(n.k);
+      let sub = "";
+      if (n.k === "malkhut") sub = `${(S.faits[t] || []).filter((id) => S.gestes.some((x) => x.id === id)).length}/${S.gestes.length}`;
+      if (n.k === "tiferet" && S.humeur[t]) sub = MOODS[S.humeur[t] - 1].label;
+      g += `<g class="node" data-open="${n.k}" tabindex="0" role="button" aria-label="${n.heb}, ${n.mot}${done ? ", fait aujourd'hui" : ""}">
+        <circle class="main" cx="${n.x}" cy="${n.y}" r="${R}" fill="${n.fill}" stroke="${n.dash ? "#6b6f78" : n.ring || "rgba(43,52,64,.12)"}" stroke-width="${n.dash || n.ring ? 2 : 1}" ${n.dash ? 'stroke-dasharray="4 4"' : ""}/>
+        <text x="${n.x}" y="${n.y + (sub ? 0 : 4)}" text-anchor="middle" class="t-mot" fill="${n.txt}"${n.mot.length > 9 ? ' style="font-size:9.6px"' : ""}>${n.mot}</text>
+        ${sub ? `<text x="${n.x}" y="${n.y + 13}" text-anchor="middle" class="t-sub" fill="${n.txt}">${esc(sub)}</text>` : ""}
+        <text x="${n.x}" y="${n.y + R + 12}" text-anchor="middle" class="t-heb">${n.heb}</text>
+        ${done ? `<g transform="translate(${n.x + 21} ${n.y - 21})"><circle r="8" fill="#2b3440"/><path d="M-3.5 0l2.5 2.5 4.5-5" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></g>` : ""}
+      </g>`;
+    });
+    $("tree").innerHTML = g;
+    const it = S.intentions[t];
+    $("greeting").textContent = it ? "« " + it + " »" : greetingText;
+  }
+  let current = null;
+  function openSheet(k) {
+    const el = $("s-" + k); if (!el) return;
+    document.querySelectorAll(".sheet").forEach((x) => { x.hidden = x !== el; });
+    el.hidden = false; el.scrollTop = 0; current = k;
+    document.body.classList.add("sheet-open");
+    try { history.replaceState(null, "", "#" + k); } catch (e) {}
+  }
+  function closeSheet() {
+    document.querySelectorAll(".sheet").forEach((x) => (x.hidden = true));
+    document.body.classList.remove("sheet-open");
+    const node = current && document.querySelector(`#tree [data-open="${current}"]`);
+    current = null;
+    try { history.replaceState(null, "", location.pathname + location.search); } catch (e) {}
+    if (node) node.focus({ preventScroll: true });
+  }
+  const go = (v) => openSheet({ jour: "malkhut", reves: "netzach", ancrage: "yesod", musique: "hod", bilan: "daat" }[v] || v);
+  document.addEventListener("click", (e) => {
+    const o = e.target.closest("[data-open]"); if (o) { openSheet(o.dataset.open); return; }
+    if (e.target.closest("[data-close]")) closeSheet();
+  });
+  $("tree").addEventListener("keydown", (e) => {
+    const o = e.target.closest("[data-open]");
+    if (o && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); openSheet(o.dataset.open); }
+  });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && current) closeSheet(); });
+  $("sos").onclick = () => openSheet("yesod");
+
+  /* ================= intention (Keter) ================= */
+  const IDEAS = ["Être douce avec moi", "Savourer les petites choses", "Avancer d'un petit pas", "Écouter mon corps", "Dire oui à la joie", "Lâcher ce qui pèse"];
+  $("intention-ideas").innerHTML = IDEAS.map((x, i) => `<button type="button" class="chip" style="${paint(COLORS[i % COLORS.length])};padding:6px 12px;font-size:14px" data-idea="${esc(x)}">${esc(x)}</button>`).join("");
+  $("intention-ideas").addEventListener("click", (e) => { const b = e.target.closest("[data-idea]"); if (b) { $("intention-in").value = b.dataset.idea; $("intention-in").focus(); } });
+  function renderIntention() {
+    $("intention-in").value = S.intentions[dayKey()] || "";
+    const past = Object.entries(S.intentions).sort((a, b) => b[0].localeCompare(a[0])).filter(([k]) => k !== dayKey()).slice(0, 5);
+    $("intention-history").innerHTML = past.map(([k, v]) =>
+      `<div style="--c:var(--ochre)"><i></i><span>${new Date(k + "T12:00:00").toLocaleDateString("fr-CH", { weekday: "short", day: "numeric", month: "short" })} · ${esc(v)}</span></div>`).join("");
+  }
+  $("intention-save").onclick = () => {
+    const v = $("intention-in").value.trim();
+    if (!v) { $("intention-msg").textContent = "Écris quelques mots, ou choisis une idée."; return; }
+    S.intentions[dayKey()] = v; save(); renderIntention(); $("intention-msg").textContent = "Posée. Elle t'accompagne sur l'arbre.";
+  };
 
   /* ================= sauvegarde / restauration ================= */
   const standalone = !(window.claude && window.claude.use);
@@ -1398,12 +1587,11 @@ Si la pensée évoque une envie de se faire du mal ou de mourir, réponds avec d
   function renderAll() {
     renderMoods(); renderGrat(); renderNextStep(); renderGarden(); renderGestes(); renderDreams();
     renderTypePick(); renderEntries(); renderVoices(); renderPeople(); renderRefuges(); renderBilan(); armRappel();
+    renderIntention(); renderTree();
   }
   renderAll(); showThought(); renderSteps();
   const hash = location.hash.slice(1);
-  let start = VIEWS.includes(hash) ? hash : null;
-  if (!start) { try { start = localStorage.getItem(LS + "-tab"); } catch (e) {} }
-  go(VIEWS.includes(start) ? start : "jour");
+  if (byK[hash]) openSheet(hash);
 })();
 </script>
 
