@@ -5,8 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Atelier Bonheur</title>
 <meta name="description" content="Petits gestes, gratitude, rêves, ancrage et musique pour être et rester heureuse.">
-<meta name="theme-color" content="#efe3cc" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#16233a" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#fbf6f1">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Bonheur">
@@ -27,41 +26,29 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Figtree:wght@400;500;600;700&family=Fraunces:opsz,wght,SOFT@9..144,300..600,0..100&display=swap">
 <style>
 /* Layout : une colonne façon carnet de papiers découpés (Matisse), cinq onglets en bas.
-   Palette tirée de la fresque aux arches : bleu profond, or, terracotta, sable, bleu ciel, pêche, trèfle */
+   Toujours en clair. Palette du plateau « jungle douce » : blanc chaud, rose poudré, sarcelle, moutarde, corail, points noirs */
 :root {
-  --paper: #efe3cc;
-  --card: #f8f0e1;
-  --ink: #1c2e4a;
-  --ink-soft: #50607a;
-  --cobalt: #24476b;
-  --ochre: #d6a137;
-  --orange: #c4592b;
-  --turq: #4f9fd0;
-  --pink: #f0b884;
-  --leaf: #2f7a3e;
-  --sage: #a9bcbc;
-  --night: #1c2e4a;
-  --line: rgba(28,46,74,.15);
-  --on-color: #f8f0e1;
+  --paper: #fbf6f1;
+  --card: #ffffff;
+  --ink: #2b3440;
+  --ink-soft: #6b6f78;
+  --cobalt: #2f7f7c;
+  --ochre: #e3b04f;
+  --orange: #e08a76;
+  --turq: #8fc4bb;
+  --pink: #f2c3b5;
+  --leaf: #3f8a55;
+  --sage: #cfcbc6;
+  --blush: #f8e4dc;
+  --mint: #e3f0ec;
+  --line: rgba(43,52,64,.12);
+  --on-color: #ffffff;
   --f-display: "Bagel Fat One", "Arial Rounded MT Bold", system-ui, sans-serif;
   --f-body: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
   --f-poem: "Fraunces", Georgia, "Times New Roman", serif;
   --poem-axes: "SOFT" 100, "opsz" 24;
   --nav-h: 68px;
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --paper: #16233a; --card: #1f304d; --ink: #efe3cc; --ink-soft: #b8c0cc;
-    --cobalt: #5b8cc0; --ochre: #e0b04e; --orange: #d9774a; --turq: #6bb3dd;
-    --pink: #f0bf94; --leaf: #4f9a5e; --sage: #a9bcbc; --night: #101a2c; --line: rgba(239,227,204,.16);
-    --on-color: #16233a; color-scheme: dark;
-  }
-}
-:root[data-theme="dark"] {
-  --paper: #16233a; --card: #1f304d; --ink: #efe3cc; --ink-soft: #b8c0cc;
-  --cobalt: #5b8cc0; --ochre: #e0b04e; --orange: #d9774a; --turq: #6bb3dd;
-  --pink: #f0bf94; --leaf: #4f9a5e; --sage: #a9bcbc; --night: #101a2c; --line: rgba(239,227,204,.16);
-  --on-color: #16233a; color-scheme: dark;
+  color-scheme: light;
 }
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
@@ -90,6 +77,7 @@ a { color: var(--cobalt); }
 .decor .d1 { width: 180px; top: -40px; right: -50px; color: var(--turq); transform: rotate(18deg); }
 .decor .d2 { width: 120px; bottom: 120px; left: -46px; color: var(--orange); transform: rotate(-24deg); }
 .decor .d3 { width: 70px; top: 260px; right: -20px; color: var(--ochre); }
+.decor .d4 { width: 110px; bottom: 170px; right: -40px; color: var(--ink); opacity: .4; }
 main, header { position: relative; z-index: 1; }
 
 /* ---- en-tête ---- */
@@ -111,7 +99,7 @@ section.view { display: grid; gap: 22px; padding-block: 14px 8px; }
 .title-block { display: grid; gap: 6px; }
 
 /* ---- boutons, champs ---- */
-.btn { border: 0; border-radius: 99px; padding: 11px 18px; font-weight: 700; background: var(--cobalt); color: #f8f0e1; }
+.btn { border: 0; border-radius: 99px; padding: 11px 18px; font-weight: 700; background: var(--cobalt); color: #ffffff; }
 .btn.alt { background: transparent; color: var(--ink); box-shadow: inset 0 0 0 2px var(--ink); }
 .btn.orange { background: var(--orange); }
 .btn.small { padding: 7px 13px; font-size: 14px; }
@@ -140,9 +128,9 @@ textarea.field { min-height: 110px; resize: vertical; font-family: var(--f-poem)
 /* ---- SOS ---- */
 .sos {
   display: grid; grid-template-columns: auto 1fr; gap: 14px; align-items: center; text-align: left;
-  background: var(--night); color: #efe3cc; border: 2px solid var(--ochre); border-radius: 30px 30px 30px 8px; padding: 16px 20px;
+  background: var(--blush); color: var(--ink); border: 2px solid var(--orange); border-radius: 30px 30px 30px 8px; padding: 16px 20px;
 }
-.sos svg { width: 46px; height: 46px; color: var(--ochre); }
+.sos svg { width: 46px; height: 46px; color: var(--orange); }
 .sos strong { font-family: var(--f-display); font-weight: 400; font-size: 21px; display: block; }
 .sos small { font-size: 14px; opacity: .85; }
 
@@ -153,15 +141,15 @@ textarea.field { min-height: 110px; resize: vertical; font-family: var(--f-poem)
 .grat-line input { font-family: var(--f-poem); font-size: 17px; }
 
 /* ---- pas vers le rêve ---- */
-.nextstep { background: #24476b; color: #f8f0e1; border-radius: 26px 26px 6px 26px; padding: 18px 20px; display: grid; gap: 10px; }
-.nextstep .eyebrow { color: #efe3cc; opacity: .8; }
+.nextstep { background: var(--cobalt); color: #ffffff; border-radius: 26px 26px 6px 26px; padding: 18px 20px; display: grid; gap: 10px; }
+.nextstep .eyebrow { color: #ffffff; opacity: .8; }
 .nextstep p { margin: 0; font-family: var(--f-poem); font-size: 21px; line-height: 1.2; }
 .nextstep small { opacity: .85; }
-.nextstep .btn { background: var(--ochre); color: #1c2e4a; }
-.nextstep .btn.alt { background: transparent; color: #f8f0e1; box-shadow: inset 0 0 0 2px #f8f0e1; }
+.nextstep .btn { background: var(--ochre); color: #2b3440; }
+.nextstep .btn.alt { background: transparent; color: #ffffff; box-shadow: inset 0 0 0 2px #ffffff; }
 
 /* ---- jardin + gestes ---- */
-.garden-art { background: var(--night); border-radius: 160px 160px 24px 24px; overflow: hidden; aspect-ratio: 16/10; max-width: 100%; }
+.garden-art { background: var(--blush); border-radius: 160px 160px 24px 24px; overflow: hidden; aspect-ratio: 16/10; max-width: 100%; }
 .garden-art svg { width: 100%; height: 100%; display: block; }
 .garden-art .leafg { transform-box: fill-box; transform-origin: 50% 100%; animation: pousse .7s cubic-bezier(.3,1.5,.5,1) both; }
 @keyframes pousse { from { transform: scale(0) rotate(-20deg); } to { transform: scale(1); } }
@@ -188,12 +176,12 @@ textarea.field { min-height: 110px; resize: vertical; font-family: var(--f-poem)
 /* ---- toast ---- */
 .toast {
   position: fixed; left: 16px; right: 16px; bottom: calc(var(--nav-h) + 16px + env(safe-area-inset-bottom, 0px)); z-index: 30;
-  max-width: 560px; margin: 0 auto; background: var(--ochre); color: #1c2e4a; border-radius: 28px 28px 28px 6px; padding: 16px 18px;
+  max-width: 560px; margin: 0 auto; background: var(--ochre); color: #2b3440; border-radius: 28px 28px 28px 6px; padding: 16px 18px;
   display: grid; gap: 10px; box-shadow: 0 12px 30px rgba(0,0,0,.18); animation: monte .4s ease both;
 }
 .toast p { margin: 0; font-family: var(--f-poem); font-size: 19px; line-height: 1.2; }
-.toast .btn { background: #1c2e4a; }
-.toast .btn.alt { background: transparent; color: #1c2e4a; box-shadow: inset 0 0 0 2px #1c2e4a; }
+.toast .btn { background: #2b3440; }
+.toast .btn.alt { background: transparent; color: #2b3440; box-shadow: inset 0 0 0 2px #2b3440; }
 @keyframes monte { from { transform: translateY(20px); opacity: 0; } }
 
 /* ---- rêves / projets ---- */
@@ -281,21 +269,21 @@ details[open] summary { margin-bottom: 10px; }
 .insights { display: grid; gap: 8px; }
 .insight { display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: center; background: var(--paper); border-radius: 18px; padding: 12px 14px; }
 .insight b { font-family: var(--f-display); font-weight: 400; font-size: 22px; color: var(--c); font-variant-numeric: tabular-nums; }
-.jar { background: var(--night); color: #efe3cc; border-radius: 40px 40px 26px 26px; padding: 22px 20px; display: grid; gap: 10px; text-align: center; }
+.jar { background: var(--mint); color: var(--ink); border-radius: 40px 40px 26px 26px; padding: 22px 20px; display: grid; gap: 10px; text-align: center; }
 .jar p { margin: 0; font-family: var(--f-poem); font-size: 21px; line-height: 1.25; overflow-wrap: anywhere; }
 .jar small { opacity: .75; }
-.jar .btn { justify-self: center; background: var(--ochre); color: #1c2e4a; }
+.jar .btn { justify-self: center; background: var(--ochre); color: #2b3440; }
 
 /* ---- navigation ---- */
 nav.tabs {
   position: fixed; left: 0; right: 0; bottom: 0; z-index: 20;
   padding: 8px 8px calc(8px + env(safe-area-inset-bottom, 0px));
-  background: var(--night); display: flex; justify-content: center;
+  background: var(--card); border-top: 1px solid var(--line); display: flex; justify-content: center;
 }
 nav.tabs .in { display: grid; grid-template-columns: repeat(5, 1fr); gap: 2px; width: 100%; max-width: 560px; }
-nav.tabs button { border: 0; background: transparent; color: #c9cde0; display: grid; justify-items: center; gap: 2px; font-size: 11.5px; font-weight: 600; padding: 6px 2px; border-radius: 16px; }
+nav.tabs button { border: 0; background: transparent; color: var(--ink-soft); display: grid; justify-items: center; gap: 2px; font-size: 11.5px; font-weight: 600; padding: 6px 2px; border-radius: 16px; }
 nav.tabs svg { width: 24px; height: 24px; }
-nav.tabs button[aria-selected="true"] { color: #1c2e4a; background: var(--ochre); }
+nav.tabs button[aria-selected="true"] { color: var(--ink); background: var(--ochre); }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
@@ -306,6 +294,7 @@ nav.tabs button[aria-selected="true"] { color: #1c2e4a; background: var(--ochre)
   <svg class="d1" viewBox="0 0 100 100"><path fill="currentColor" d="M50 98C46 78 30 74 36 58C41 44 24 38 33 22C44 30 52 24 49 4C66 16 61 32 67 44C74 57 60 70 62 98Z"/></svg>
   <svg class="d2" viewBox="0 0 100 100"><path fill="currentColor" d="M50 5C80 30 88 70 50 95C12 70 20 30 50 5Z"/></svg>
   <svg class="d3" viewBox="0 0 100 100"><path id="star-d" fill="currentColor"/></svg>
+  <svg class="d4" viewBox="0 0 120 120" id="dots"></svg>
 </div>
 
 <div class="wrap">
@@ -444,7 +433,7 @@ nav.tabs button[aria-selected="true"] { color: #1c2e4a; background: var(--ochre)
         <label class="sr" for="reframe-in">Pensée qui pèse</label>
         <textarea class="field" id="reframe-in" placeholder="Ex. Je n'y arriverai jamais."></textarea>
         <div class="row"><button class="btn" id="reframe-go" type="button">Regarder autrement</button><span class="hint" id="reframe-msg" aria-live="polite"></span></div>
-        <div class="answer" id="reframe-out" style="--c:var(--turq);--t:#1c2e4a" hidden><p></p></div>
+        <div class="answer" id="reframe-out" style="--c:var(--turq);--t:#2b3440" hidden><p></p></div>
         <div class="row" id="reframe-keep" hidden><button class="btn alt small" type="button">Garder dans le carnet</button></div>
       </div>
 
@@ -497,7 +486,7 @@ nav.tabs button[aria-selected="true"] { color: #1c2e4a; background: var(--ochre)
           <button class="btn orange small" id="playlist-go" type="button">Créer une playlist Spotify</button>
           <span class="hint">Spotify Premium requis</span>
         </div>
-        <div class="answer" id="playlist-out" style="--c:var(--ochre);--t:#1c2e4a" hidden><p></p></div>
+        <div class="answer" id="playlist-out" style="--c:var(--ochre);--t:#2b3440" hidden><p></p></div>
       </div>
       <div class="panel">
         <div class="title-block">
@@ -591,6 +580,7 @@ nav.tabs button[aria-selected="true"] { color: #1c2e4a; background: var(--ochre)
     return d + "Z";
   };
   $("star-d").setAttribute("d", star(8, 48, 20));
+  $("dots").innerHTML = [...Array(34)].map((_, i) => { const a = i * 2.4, r = 6 + i * 1.6; return `<circle cx="${(60 + r * Math.cos(a)).toFixed(1)}" cy="${(60 + r * Math.sin(a)).toFixed(1)}" r="${(2.6 + (i % 3)).toFixed(1)}" fill="currentColor"/>`; }).join("");
   $("rays-path").setAttribute("d", star(16, 50, 40));
   $("nav-sun").setAttribute("d", star(10, 48, 32));
 
@@ -613,7 +603,7 @@ nav.tabs button[aria-selected="true"] { color: #1c2e4a; background: var(--ochre)
     "38% 62% 50% 50% / 58% 42% 58% 42%", "70% 30% 50% 50% / 50% 50% 50% 50%",
     "50% 50% 30% 70% / 60% 40% 60% 40%", "42% 58% 62% 38% / 46% 54% 46% 54%"
   ];
-  const tx = (c) => /ochre|turq|pink/.test(c) ? "#1c2e4a" : "var(--on-color)";
+  const tx = (c) => /ochre|turq|pink|orange|sage/.test(c) ? "var(--ink)" : "var(--on-color)";
   const paint = (c) => `--c:${c};--t:${tx(c)}`;
 
   /* ================= données ================= */
@@ -740,28 +730,28 @@ nav.tabs button[aria-selected="true"] { color: #1c2e4a; background: var(--ochre)
     const n = done.length, total = S.gestes.length;
     let leaves = "";
     LEAF_SPOTS.slice(0, Math.min(n, LEAF_SPOTS.length)).forEach(([x, y, r], i) => {
-      const c = ["#d6a137", "#4f9fd0", "#c4592b", "#a9bcbc", "#3f8a4c", "#ecdcc0"][i % 6];
+      const c = ["#e3b04f", "#2f7f7c", "#e08a76", "#8fc4bb", "#3f8a55", "#2b3440"][i % 6];
       leaves += `<g transform="translate(${x} ${y}) rotate(${r})"><path class="leafg" fill="${c}" d="M0 0C24 -18 26 -52 0 -78C-26 -52 -24 -18 0 0Z" style="animation-delay:${i * 60}ms"/></g>`;
     });
     $("garden").innerHTML = `<svg viewBox="0 0 600 375" role="img" aria-label="Jardin du jour : ${n} feuille${n > 1 ? "s" : ""}">
       <defs><linearGradient id="ciel" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ecdcc0"/><stop offset="1" stop-color="#f0b884"/></linearGradient>
         <clipPath id="arche"><path d="M150 375V210A150 150 0 0 1 450 210V375Z"/></clipPath></defs>
-      <path d="M0 0H140C60 60 40 140 0 170Z" fill="#24476b"/>
-      <path d="M600 0H470C540 70 560 160 600 190Z" fill="#24476b"/>
+      <path d="M0 0H140C60 60 40 140 0 170Z" fill="#8fc4bb"/>
+      <path d="M600 0H470C540 70 560 160 600 190Z" fill="#8fc4bb"/>
       <g clip-path="url(#arche)">
         <rect x="150" y="60" width="300" height="320" fill="url(#ciel)"/>
-        <circle cx="352" cy="250" r="22" fill="#f8f0e1"/>
-        <rect x="150" y="262" width="300" height="120" fill="#4f7fa8"/>
+        <circle cx="352" cy="250" r="22" fill="#ffffff"/>
+        <rect x="150" y="262" width="300" height="120" fill="#5fa3a0"/>
         <path d="M330 280H374M318 296H386M336 312H368" stroke="#f0d9a8" stroke-width="4" stroke-linecap="round"/>
       </g>
-      <path d="M90 375V200A210 210 0 0 1 510 200V375" fill="none" stroke="#d6a137" stroke-width="10"/>
-      <path d="M120 375V205A180 180 0 0 1 480 205V375" fill="none" stroke="#d6a137" stroke-width="10"/>
-      <path d="M150 375V210A150 150 0 0 1 450 210V375" fill="none" stroke="#d6a137" stroke-width="10"/>
-      <circle cx="530" cy="300" r="56" fill="#c4592b"/>
+      <path d="M90 375V200A210 210 0 0 1 510 200V375" fill="none" stroke="#e3b04f" stroke-width="10"/>
+      <path d="M120 375V205A180 180 0 0 1 480 205V375" fill="none" stroke="#e3b04f" stroke-width="10"/>
+      <path d="M150 375V210A150 150 0 0 1 450 210V375" fill="none" stroke="#e3b04f" stroke-width="10"/>
+      <circle cx="530" cy="300" r="56" fill="#e08a76"/>
       <path d="M300 375C298 300 302 220 300 70" stroke="#3f8a4c" stroke-width="7" fill="none" opacity="${n ? 1 : .4}"/>
       ${leaves}
-      <path d="M246 375C226 340 236 302 262 296H338C364 302 374 340 354 375Z" fill="#c4592b"/>
-      <path d="M262 296H338" stroke="#d6a137" stroke-width="6"/>
+      <path d="M246 375C226 340 236 302 262 296H338C364 302 374 340 354 375Z" fill="#e08a76"/>
+      <path d="M262 296H338" stroke="#e3b04f" stroke-width="6"/>
     </svg>`;
     $("count").innerHTML = n === 0 ? "Ton jardin attend sa première feuille." :
       `<b>${n}</b> geste${n > 1 ? "s" : ""} sur ${total} aujourd'hui${n >= total ? " · tout est fait, bravo" : ""}`;
@@ -1322,12 +1312,12 @@ Si la pensée évoque une envie de se faire du mal ou de mourir, réponds avec d
     const all = [];
     Object.entries(S.gratitudes).forEach(([k, arr]) => (arr || []).forEach((t) => { if (t && t.trim()) all.push({ k, t: t.trim() }); }));
     if (!all.length) {
-      $("jar").innerHTML = `<div class="eyebrow" style="color:#efe3cc;opacity:.8">Le bocal à bonheurs</div><p>Il se remplit avec tes trois bonnes choses du jour.</p><small>Les jours gris, viens y piocher un souvenir.</small>`;
+      $("jar").innerHTML = `<div class="eyebrow" style="color:var(--ink-soft)">Le bocal à bonheurs</div><p>Il se remplit avec tes trois bonnes choses du jour.</p><small>Les jours gris, viens y piocher un souvenir.</small>`;
       return;
     }
     if (!jarPick || !all.some((x) => x.t === jarPick.t)) jarPick = all[Math.floor(Math.random() * all.length)];
     const d = new Date(jarPick.k + "T12:00:00").toLocaleDateString("fr-CH", { day: "numeric", month: "long" });
-    $("jar").innerHTML = `<div class="eyebrow" style="color:#efe3cc;opacity:.8">Le bocal à bonheurs · ${all.length} souvenir${all.length > 1 ? "s" : ""}</div>
+    $("jar").innerHTML = `<div class="eyebrow" style="color:var(--ink-soft)">Le bocal à bonheurs · ${all.length} souvenir${all.length > 1 ? "s" : ""}</div>
       <p>« ${esc(jarPick.t)} »</p><small>${d}</small><button class="btn small" type="button" id="jar-next">Piocher un autre</button>`;
     $("jar-next").onclick = () => { jarPick = all[Math.floor(Math.random() * all.length)]; renderJar(); };
   }

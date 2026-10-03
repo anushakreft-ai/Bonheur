@@ -1,5 +1,5 @@
-// Atelier Bonheur — fonctionne hors ligne. Version 348593ad33
-const CACHE = "bonheur-348593ad33";
+// Atelier Bonheur — fonctionne hors ligne. Version 060a8ae909
+const CACHE = "bonheur-060a8ae909";
 const FICHIERS = ["./", "index.html", "manifest.webmanifest", "icons/icon-180.png", "icons/icon-192.png", "icons/icon-512.png"];
 
 self.addEventListener("install", (e) => {
