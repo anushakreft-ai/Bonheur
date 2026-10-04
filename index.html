@@ -2090,7 +2090,17 @@ Si la pensée évoque une envie de se faire du mal ou de mourir, réponds avec d
   const NOTE = `<path fill="currentColor" d="M38 18L84 8V66A14 14 0 1 1 74 53V28L48 34V76A14 14 0 1 1 38 63Z"/>`;
   const STAR = `<path fill="currentColor" d="M50 4L56 36L80 18L64 44L96 50L64 56L80 82L56 64L50 96L44 64L20 82L36 56L4 50L36 44L20 18L44 36Z"/>`;
   const PLUME = `<path fill="currentColor" d="M86 6C56 8 32 26 24 56L18 78L14 92L22 92L28 76C34 74 42 70 48 64L40 62L54 56L46 52L62 44L54 40L72 30C80 22 84 14 86 6Z"/>`;
-  const ICONS = { netzach: EAGLE, yesod: ROOTS, hod: PLUME, chokhmah: STAR, keter: SUN_FACE };
+  // mains ouvertes vers le ciel, la lumière au-dessus (picto de Hessed, dessin original)
+  const HANDS = `<g fill="currentColor"><g transform="rotate(-8 50 95)">
+<rect x="26.5" y="31" width="6.6" height="24" rx="3.3"/><rect x="33.4" y="25.5" width="6.6" height="29" rx="3.3"/><rect x="40.3" y="26.5" width="6.6" height="28" rx="3.3"/><rect x="47.2" y="32" width="5.6" height="22" rx="2.8"/>
+<path d="M26.5 47H52.8V63C52.8 70 49 74 44 74H34C29.5 74 26.5 70 26.5 64Z"/>
+<path d="M29 64L17.5 49.5" stroke="currentColor" stroke-width="7.4" stroke-linecap="round"/>
+<path d="M33.5 71H49.6L48.6 100H36Z"/></g><g transform="translate(100 0) scale(-1 1)"><g transform="rotate(-8 50 95)">
+<rect x="26.5" y="31" width="6.6" height="24" rx="3.3"/><rect x="33.4" y="25.5" width="6.6" height="29" rx="3.3"/><rect x="40.3" y="26.5" width="6.6" height="28" rx="3.3"/><rect x="47.2" y="32" width="5.6" height="22" rx="2.8"/>
+<path d="M26.5 47H52.8V63C52.8 70 49 74 44 74H34C29.5 74 26.5 70 26.5 64Z"/>
+<path d="M29 64L17.5 49.5" stroke="currentColor" stroke-width="7.4" stroke-linecap="round"/>
+<path d="M33.5 71H49.6L48.6 100H36Z"/></g></g></g><circle cx="50" cy="14" r="5.5" fill="currentColor"/><g stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M58.5 14.0L63.0 14.0"/><path d="M56.0 20.0L57.8 21.8"/><path d="M50.0 22.5L50.0 27.0"/><path d="M44.0 20.0L42.2 21.8"/><path d="M41.5 14.0L37.0 14.0"/><path d="M44.0 8.0L42.2 6.2"/><path d="M50.0 5.5L50.0 1.0"/><path d="M56.0 8.0L57.8 6.2"/></g>`;
+  const ICONS = { chesed: HANDS, netzach: EAGLE, yesod: ROOTS, hod: PLUME, chokhmah: STAR, keter: SUN_FACE };
   Object.entries(ICONS).forEach(([k, ic]) => {
     const head = document.querySelector(`#s-${k} .sheet-head`);
     if (head) head.insertAdjacentHTML("beforeend", `<svg class="head-ico" viewBox="0 0 100 100" aria-hidden="true">${ic.replaceAll("eaglem", "eaglem-head")}</svg>`);
