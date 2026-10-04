@@ -294,6 +294,7 @@ body { overflow: hidden; padding: 0 16px; margin: 0; }
 #tree .node:hover circle.main, #tree .node:active circle.main { transform: scale(1.06); }
 #tree .node:focus-visible circle.main { stroke: var(--ink); stroke-width: 3; }
 #tree .t-mot { font: 700 11.5px var(--f-display); }
+#tree .t-halo { paint-order: stroke; stroke: rgba(20,20,30,.55); stroke-width: 2.5px; stroke-linejoin: round; }
 #tree .t-sub { font: 700 9px var(--f-body); opacity: .85; }
 #tree .t-heb { font: 700 9px var(--f-body); fill: #2b3440; letter-spacing: .06em; paint-order: stroke; stroke: #fbf1e2; stroke-width: 3px; stroke-linejoin: round; }
 
@@ -1719,18 +1720,19 @@ Si la pensée évoque une envie de se faire du mal ou de mourir, réponds avec d
   }
 
   /* ================= arbre des Séphiroth ================= */
+  // couleurs traditionnelles des séphiroth (échelle de la Reine)
   const SEPH = [
-    { k: "keter", heb: "Keter", mot: "Intention", x: 150, y: 44, fill: "#fff6e0", txt: "#2b3440" },
-    { k: "chokhmah", heb: "Hokhmah", mot: "Intuitions", x: 248, y: 108, fill: "#2a9d8f", txt: "#ffffff" },
-    { k: "binah", heb: "Binah", mot: "Comprendre", x: 52, y: 108, fill: "#1f3f6b", txt: "#ffffff" },
+    { k: "keter", heb: "Keter", mot: "Intention", x: 150, y: 44, fill: "#fbf7ee", txt: "#2b3440" },
+    { k: "chokhmah", heb: "Hokhmah", mot: "Intuitions", x: 248, y: 108, fill: "#8e8a85", txt: "#ffffff" },
+    { k: "binah", heb: "Binah", mot: "Comprendre", x: 52, y: 108, fill: "#1f2f52", txt: "#ffffff" },
     { k: "daat", heb: "Daat", mot: "Bilan", x: 150, y: 170, fill: "rgba(255,248,235,.75)", txt: "#2b3440", dash: true },
-    { k: "chesed", heb: "Hessed", mot: "Gratitude", x: 248, y: 236, fill: "#d9487e", txt: "#ffffff" },
-    { k: "gevurah", heb: "Guevourah", mot: "Limites", x: 52, y: 236, fill: "#c4562b", txt: "#ffffff" },
-    { k: "tiferet", heb: "Tiferet", mot: "Cœur", x: 150, y: 300, fill: "#f0b43c", txt: "#2b3440" },
-    { k: "netzach", heb: "Netsah", mot: "Rêves", x: 248, y: 390, fill: "#2e7d46", txt: "#ffffff" },
-    { k: "hod", heb: "Hod", mot: "Musique", x: 52, y: 390, fill: "#7a4aa8", txt: "#ffffff" },
-    { k: "yesod", heb: "Yesod", mot: "Ancrage", x: 150, y: 452, fill: "#3567b5", txt: "#ffffff" },
-    { k: "malkhut", heb: "Malkhout", mot: "Gestes", x: 150, y: 524, fill: "#9a3f2a", txt: "#ffffff" }
+    { k: "chesed", heb: "Hessed", mot: "Gratitude", x: 248, y: 236, fill: "#3f86c0", txt: "#ffffff" },
+    { k: "gevurah", heb: "Guevourah", mot: "Limites", x: 52, y: 236, fill: "#c4412a", txt: "#ffffff" },
+    { k: "tiferet", heb: "Tiferet", mot: "Cœur", x: 150, y: 300, fill: "#e6bf35", txt: "#2b3440" },
+    { k: "netzach", heb: "Netsah", mot: "Rêves", x: 248, y: 390, fill: "#2f7a45", txt: "#ffffff" },
+    { k: "hod", heb: "Hod", mot: "Musique", x: 52, y: 390, fill: "#d08a2c", txt: "#2b3440" },
+    { k: "yesod", heb: "Yesod", mot: "Ancrage", x: 150, y: 452, fill: "#7a5ea8", txt: "#ffffff" },
+    { k: "malkhut", heb: "Malkhout", mot: "Gestes", x: 150, y: 524, fill: "#a8452a", txt: "#ffffff", quarters: ["#c9a43a", "#5f7a3a", "#1f2f52", "#a8452a"] }
   ];
   const PATHS = "keter-chokhmah keter-binah keter-tiferet chokhmah-binah chokhmah-tiferet chokhmah-chesed binah-tiferet binah-gevurah chesed-gevurah chesed-tiferet chesed-netzach gevurah-tiferet gevurah-hod tiferet-netzach tiferet-yesod tiferet-hod netzach-hod netzach-yesod netzach-malkhut hod-yesod hod-malkhut yesod-malkhut".split(" ").map((x) => x.split("-"));
   const byK = Object.fromEntries(SEPH.map((n) => [n.k, n]));
@@ -1749,13 +1751,19 @@ Si la pensée évoque une envie de se faire du mal ou de mourir, réponds avec d
       default: return false;
     }
   }
+  // Malkhout : quatre quartiers (citrin, olive, noir, roux) séparés en croix
+  function quarters(x, y, r, cols) {
+    const pt = (a) => `${(x + r * Math.cos(a)).toFixed(2)} ${(y + r * Math.sin(a)).toFixed(2)}`;
+    return cols.map((c, i) => { const a0 = -Math.PI * 3 / 4 + i * Math.PI / 2, a1 = a0 + Math.PI / 2;
+      return `<path d="M${x} ${y}L${pt(a0)}A${r} ${r} 0 0 1 ${pt(a1)}Z" fill="${c}" pointer-events="none"/>`; }).join("") +
+      `<path d="M${pt(-Math.PI * 3 / 4)}L${pt(Math.PI / 4)}M${pt(-Math.PI / 4)}L${pt(Math.PI * 3 / 4)}" stroke="#dcb24e" stroke-width="2" pointer-events="none"/>`;
+  }
   function renderTree() {
     const R = 29, t = dayKey();
     const lines = PATHS.map(([a, b]) => `<line x1="${byK[a].x}" y1="${byK[a].y}" x2="${byK[b].x}" y2="${byK[b].y}"/>`).join("");
-    let g = `<defs><radialGradient id="gloss" cx=".35" cy=".3" r=".75"><stop offset="0" stop-color="#fff" stop-opacity=".45"/><stop offset=".55" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".18"/></radialGradient></defs>
-      <g stroke="#7a5414" stroke-width="6" stroke-linecap="round" opacity=".35">${lines}</g>
-      <g stroke="#e2b04a" stroke-width="3.6" stroke-linecap="round">${lines}</g>
-      <g stroke="#fff3c9" stroke-width="1" stroke-linecap="round" opacity=".7">${lines}</g>`;
+    let g = `<g stroke="#a87a22" stroke-width="11" stroke-linecap="round" opacity=".55">${lines}</g>
+      <g stroke="#dcb24e" stroke-width="8.5" stroke-linecap="round">${lines}</g>
+      <g stroke="#f0d283" stroke-width="2" stroke-linecap="round" opacity=".6">${lines}</g>`;
     SEPH.forEach((n) => {
       const done = seStatus(n.k);
       let sub = "";
@@ -1763,11 +1771,11 @@ Si la pensée évoque une envie de se faire du mal ou de mourir, réponds avec d
       if (n.k === "tiferet" && S.humeur[t]) sub = MOODS[S.humeur[t] - 1].label;
       g += `<g class="node" data-open="${n.k}" tabindex="0" role="button" aria-label="${n.heb}, ${n.mot}${done ? ", fait aujourd'hui" : ""}">
         <circle cx="${n.x + 1.5}" cy="${n.y + 2.5}" r="${R + 3}" fill="rgba(40,25,10,.22)"/>
-        <circle class="main" cx="${n.x}" cy="${n.y}" r="${R}" fill="${n.fill}" stroke="#d9a33a" stroke-width="4" ${n.dash ? 'stroke-dasharray="5 4"' : ""}/>
-        ${n.dash ? "" : `<circle cx="${n.x}" cy="${n.y}" r="${R}" fill="url(#gloss)" pointer-events="none"/><circle cx="${n.x}" cy="${n.y}" r="${R - 4.5}" fill="none" stroke="#fff4d6" stroke-width="1" opacity=".75" pointer-events="none"/>`}
+        <circle class="main" cx="${n.x}" cy="${n.y}" r="${R}" fill="${n.fill}" stroke="#dcb24e" stroke-width="4.5" ${n.dash ? 'stroke-dasharray="5 4"' : ""}/>
+        ${n.quarters ? quarters(n.x, n.y, R - 2.3, n.quarters) + `<circle cx="${n.x}" cy="${n.y}" r="${R}" fill="none" stroke="#dcb24e" stroke-width="4.5" pointer-events="none"/>` : ""}
         ${ICONS[n.k] ? `<svg x="${n.x - 11}" y="${n.y - 24}" width="22" height="22" viewBox="0 0 100 100" style="color:${n.k === "keter" ? "#d9a33a" : n.txt}" aria-hidden="true">${ICONS[n.k]}</svg>` : ""}
-        <text x="${n.x}" y="${n.y + (ICONS[n.k] ? 11 : sub ? 0 : 4)}" text-anchor="middle" class="t-mot" fill="${n.txt}"${n.mot.length > 9 ? ' style="font-size:9.6px"' : ""}>${n.mot}</text>
-        ${sub ? `<text x="${n.x}" y="${n.y + 13}" text-anchor="middle" class="t-sub" fill="${n.txt}">${esc(sub)}</text>` : ""}
+        <text x="${n.x}" y="${n.y + (ICONS[n.k] ? 11 : sub ? 0 : 4)}" text-anchor="middle" class="t-mot${n.quarters ? " t-halo" : ""}" fill="${n.txt}"${n.mot.length > 9 ? ' style="font-size:9.6px"' : ""}>${n.mot}</text>
+        ${sub ? `<text x="${n.x}" y="${n.y + 13}" text-anchor="middle" class="t-sub${n.quarters ? " t-halo" : ""}" fill="${n.txt}">${esc(sub)}</text>` : ""}
         <text x="${n.x}" y="${n.y + R + 12}" text-anchor="middle" class="t-heb">${n.heb}</text>
         ${done ? `<g transform="translate(${n.x + 21} ${n.y - 21})"><circle r="8" fill="#2b3440"/><path d="M-3.5 0l2.5 2.5 4.5-5" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></g>` : ""}
       </g>`;
