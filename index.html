@@ -306,6 +306,42 @@ body { overflow: hidden; padding: 0 16px; margin: 0; }
 .sheet-body { max-width: 640px; margin: 0 auto; padding: 16px 16px 0; display: grid; gap: 18px; }
 .sheet-body > .title-block h2 { font-size: 24px; }
 details.tight summary { font-weight: 700; color: var(--cobalt); }
+.vision { display: grid; grid-template-columns: repeat(auto-fill, minmax(92px, 1fr)); gap: 6px; }
+.vision button { border: 0; padding: 0; aspect-ratio: 1; border-radius: var(--r, 18px); overflow: hidden; background: var(--blush); position: relative; }
+.vision img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.vision span { position: absolute; left: 0; right: 0; bottom: 0; padding: 22px 12px 12px; background: linear-gradient(transparent, rgba(0,0,0,.55)); font-size: 11px; font-weight: 700; color: #fff; text-align: center; line-height: 1.15; }
+.sortbar { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.sortbar .chip { padding: 5px 11px; font-size: 13px; }
+.dream-list { display: grid; gap: 10px; }
+.drow { width: 100%; border: 0; background: var(--card); border-radius: 22px; padding: 10px 12px; display: grid; grid-template-columns: 56px 1fr auto; gap: 12px; align-items: center; text-align: left; box-shadow: inset 0 0 0 1px var(--line); }
+.drow.open { border-radius: 22px 22px 0 0; }
+.thumb { width: 56px; height: 56px; border-radius: 16px; overflow: hidden; background: var(--c); display: grid; place-items: center; color: var(--t); }
+.thumb img { width: 100%; height: 100%; object-fit: cover; }
+.thumb svg { width: 30px; height: 30px; }
+.drow .dtxt { display: block; min-width: 0; }
+.drow .meta, .drow .minibar { display: flex; }
+.drow .minibar { display: block; }
+.drow strong { display: block; font-family: var(--f-display); font-size: 17px; line-height: 1.15; overflow-wrap: anywhere; }
+.drow .meta { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; margin-top: 4px; font-size: 12px; color: var(--ink-soft); }
+.hearts { color: var(--orange); letter-spacing: 1px; font-size: 13px; }
+.pill { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 99px; background: var(--mint); color: var(--ink); }
+.pill.go { background: var(--ochre); }
+.minibar { height: 6px; border-radius: 99px; background: var(--line); overflow: hidden; margin-top: 6px; }
+.minibar i { display: block; height: 100%; background: var(--leaf); }
+.drow .pctn { font-family: var(--f-num); font-size: 18px; color: var(--cobalt); }
+.dream-detail { background: var(--card); border-radius: 0 0 22px 22px; box-shadow: inset 0 0 0 1px var(--line); margin-top: -10px; padding: 14px 16px 16px; display: grid; gap: 14px; }
+.photo-strip { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 2px; }
+.photo-strip button { flex: none; width: 78px; height: 78px; border: 0; padding: 0; border-radius: 16px; overflow: hidden; background: var(--blush); }
+.photo-strip img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.photo-strip .add { display: grid; place-items: center; color: var(--cobalt); font-weight: 700; font-size: 12px; box-shadow: inset 0 0 0 2px var(--cobalt); background: transparent; text-align: center; line-height: 1.2; }
+.rate { display: grid; gap: 6px; }
+.rate .lbl { font-size: 13px; font-weight: 700; color: var(--ink-soft); }
+.heart-pick { display: flex; gap: 2px; }
+.heart-pick button { border: 0; background: none; font-size: 26px; line-height: 1; padding: 2px 3px; color: var(--sage); }
+.heart-pick button.on { color: var(--orange); }
+.lightbox { position: fixed; inset: 0; z-index: 60; background: rgba(20,24,30,.92); display: grid; grid-template-rows: 1fr auto; padding: calc(16px + env(safe-area-inset-top, 0px)) 16px calc(16px + env(safe-area-inset-bottom, 0px)); gap: 12px; }
+.lightbox img { max-width: 100%; max-height: 100%; object-fit: contain; margin: auto; border-radius: 12px; }
+.lb-actions { justify-content: center; }
 #s-malkhut .gestes { grid-template-columns: repeat(auto-fill, minmax(76px, 1fr)); gap: 8px; }
 #s-malkhut .geste { min-height: 90px; padding: 10px 6px 8px; gap: 4px; }
 #s-malkhut .geste svg { width: 30px; height: 30px; }
@@ -551,21 +587,22 @@ body.sheet-open .home { visibility: hidden; }
     </div>
     <div class="sheet-body">
       <div id="nextstep-host"></div>
-      <div class="title-block">
-        <h2>Mes rêves</h2>
-        <p class="lead">Un rêve devient réel par petits pas. Pour chacun : ce que tu souhaites, le plus beau résultat, l'obstacle en toi, et ton plan « si…, alors… ».</p>
+      <div class="vision" id="vision" hidden></div>
+      <div class="sortbar">
+        <span class="hint">Trier</span>
+        <div class="seg" id="dream-sort" role="group" aria-label="Trier mes rêves"></div>
       </div>
-
-      <div class="panel">
-        <h3>Nouveau rêve</h3>
+      <p class="hint" id="sort-hint"></p>
+      <div id="dreams" class="dream-list"></div>
+      <details class="panel tight" id="dream-new">
+        <summary>+ Planter un nouveau rêve</summary>
         <label class="sr" for="dream-title">Mon rêve</label>
         <input class="field" id="dream-title" maxlength="80" placeholder="Ex. Partir un mois au Japon, apprendre la céramique…">
         <label class="sr" for="dream-why">Pourquoi ça compte</label>
         <input class="field" id="dream-why" maxlength="160" placeholder="Pourquoi ça compte pour moi ?">
         <div class="row"><button class="btn" id="dream-add" type="button">Planter ce rêve</button><span class="hint" id="dream-msg" aria-live="polite"></span></div>
-      </div>
-
-      <div id="dreams" style="display:grid;gap:18px"></div>
+      </details>
+      <input type="file" id="photo-input" accept="image/*" multiple hidden>
     </div>
   </section>
 
@@ -675,6 +712,13 @@ body.sheet-open .home { visibility: hidden; }
     </div>
   </section>
 
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Photo" hidden>
+  <img id="lb-img" alt="">
+  <div class="row lb-actions">
+    <button class="btn small" type="button" id="lb-close">Fermer</button>
+    <button class="btn alt small" type="button" id="lb-del" style="color:#fff;box-shadow:inset 0 0 0 2px #fff">Retirer cette photo</button>
+  </div>
+</div>
 <div id="toast-host"></div>
 
 <script>
@@ -749,7 +793,7 @@ body.sheet-open .home { visibility: hidden; }
   ];
   const fresh = () => ({
     v: 2, gestes: DEFAULT_GESTES.slice(), faits: {}, notes: [], voix: [], checkins: [],
-    rappel: { on: false, min: 45 }, humeur: {}, gratitudes: {}, projets: [], refuges: [], pas: {}, intentions: {}, ancre: {}
+    rappel: { on: false, min: 45 }, humeur: {}, gratitudes: {}, projets: [], refuges: [], pas: {}, intentions: {}, ancre: {}, triReves: "commencer"
   });
   const migrate = (o) => {
     const s = Object.assign(fresh(), o || {});
@@ -791,6 +835,7 @@ body.sheet-open .home { visibility: hidden; }
       const id = await user.id();
       if (!id) return;
       dbDoc = db.doc("data/users/" + id + "/carnet");
+      photoCol = db.collection("data/users/" + id);
       const snap = await dbDoc.get();
       if (snap.exists && snap.data()) {
         S = migrate(snap.data());
@@ -803,6 +848,56 @@ body.sheet-open .home { visibility: hidden; }
       setSaveLabel("Enregistré dans ton compte");
     } catch (e) { dbDoc = null; }
   })();
+
+  /* ================= photos (IndexedDB + compte) ================= */
+  const photoCache = new Map();
+  let photoCol = null;
+  const idb = (() => {
+    let p = null;
+    const open = () => p || (p = new Promise((res, rej) => {
+      try { const r = indexedDB.open("zora-photos", 1); r.onupgradeneeded = () => r.result.createObjectStore("p"); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); }
+      catch (e) { rej(e); }
+    }));
+    const tx = (mode, fn) => open().then((d) => new Promise((res, rej) => { const t = d.transaction("p", mode); const q = fn(t.objectStore("p")); t.oncomplete = () => res(q && q.result); t.onerror = () => rej(t.error); }));
+    return { get: (k) => tx("readonly", (st) => st.get(k)).catch(() => null), put: (k, v) => tx("readwrite", (st) => st.put(v, k)).catch(() => null), del: (k) => tx("readwrite", (st) => st.delete(k)).catch(() => null) };
+  })();
+  async function putPhoto(pid, data) {
+    photoCache.set(pid, data);
+    await idb.put(pid, data);
+    if (photoCol) { try { await photoCol.doc("photo-" + pid).set({ d: data }); } catch (e) {} }
+  }
+  async function getPhoto(pid) {
+    if (photoCache.has(pid)) return photoCache.get(pid);
+    let d = await idb.get(pid);
+    if (!d && photoCol) { try { const sn = await photoCol.doc("photo-" + pid).get(); if (sn.exists) { d = sn.data().d; idb.put(pid, d); } } catch (e) {} }
+    if (d) photoCache.set(pid, d);
+    return d || null;
+  }
+  async function delPhoto(pid) {
+    photoCache.delete(pid); await idb.del(pid);
+    if (photoCol) { try { await photoCol.doc("photo-" + pid).delete(); } catch (e) {} }
+  }
+  function hydratePhotos(root) {
+    root.querySelectorAll("img[data-photo]:not([src])").forEach((img) => {
+      getPhoto(img.dataset.photo).then((d) => { if (d) img.src = d; else img.closest("button")?.classList.add("missing"); });
+    });
+  }
+  // réduit l'image (capture d'écran, photo) à 900 px max, en JPEG léger
+  function shrink(file) {
+    return new Promise((res, rej) => {
+      const url = URL.createObjectURL(file), im = new Image();
+      im.onload = () => {
+        const k = Math.min(1, 900 / Math.max(im.width, im.height));
+        const c = document.createElement("canvas"); c.width = Math.round(im.width * k); c.height = Math.round(im.height * k);
+        c.getContext("2d").drawImage(im, 0, 0, c.width, c.height); URL.revokeObjectURL(url);
+        let q = 0.78, d = c.toDataURL("image/jpeg", q);
+        while (d.length > 200000 && q > 0.4) { q -= 0.12; d = c.toDataURL("image/jpeg", q); }
+        res(d);
+      };
+      im.onerror = () => { URL.revokeObjectURL(url); rej(new Error("image")); };
+      im.src = url;
+    });
+  }
 
   /* ================= en-tête ================= */
   const now = new Date();
@@ -985,38 +1080,84 @@ body.sheet-open .home { visibility: hidden; }
   $("dream-add").onclick = () => {
     const t = $("dream-title").value.trim();
     if (!t) { $("dream-msg").textContent = "Donne un nom à ton rêve."; return; }
-    S.projets.unshift({ id: uid(), titre: t, pourquoi: $("dream-why").value.trim(), resultat: "", obstacle: "", plan: "", etapes: [], cree: new Date().toISOString(), fini: false, open: true });
-    $("dream-title").value = ""; $("dream-why").value = ""; $("dream-msg").textContent = "Planté. Ajoute une première petite étape.";
+    const nid = uid(); S.projets.unshift({ id: nid, titre: t, pourquoi: $("dream-why").value.trim(), resultat: "", obstacle: "", plan: "", etapes: [], cree: new Date().toISOString(), fini: false, open: false, importance: 3, effort: "moyen", photos: [] }); openDream = nid; $("dream-new").open = false;
+    $("dream-title").value = ""; $("dream-why").value = ""; $("dream-msg").textContent = "";
     save(); renderDreams(); renderNextStep();
   };
   let confirmDream = null;
   const suggestions = {};
+  let openDream = null, photoFor = null, lbPhoto = null, lbConfirm = false;
+  const EFFORTS = { petit: { n: 1, label: "Petit pas" }, moyen: { n: 2, label: "Moyen" }, grand: { n: 3, label: "Grand projet" } };
+  const SORTS = {
+    commencer: { label: "Par où commencer", hint: "Ce qui compte beaucoup et demande peu d'effort passe devant." },
+    importance: { label: "Importance", hint: "Les rêves qui comptent le plus pour toi en premier." },
+    accessible: { label: "Le plus accessible", hint: "Ce que tu peux atteindre le plus vite en premier." },
+    avancement: { label: "Avancement", hint: "Les rêves les plus avancés en premier." },
+    recents: { label: "Récents", hint: "Les derniers plantés en premier." }
+  };
+  const pctOf = (p) => { const t = p.etapes.length; return t ? Math.round((p.etapes.filter((x) => x.ok).length / t) * 100) : 0; };
+  const imp = (p) => p.importance || 3, eff = (p) => (EFFORTS[p.effort] || EFFORTS.moyen).n;
+  const startScore = (p) => imp(p) * 2 + (4 - eff(p)) * 1.5 + pctOf(p) / 50;
+  function sortedDreams() {
+    const k = S.triReves || "commencer";
+    const left = (p) => p.etapes.filter((x) => !x.ok).length;
+    const cmp = {
+      commencer: (a, b) => startScore(b) - startScore(a),
+      importance: (a, b) => imp(b) - imp(a) || pctOf(b) - pctOf(a),
+      accessible: (a, b) => eff(a) - eff(b) || left(a) - left(b) || imp(b) - imp(a),
+      avancement: (a, b) => pctOf(b) - pctOf(a),
+      recents: (a, b) => String(b.cree).localeCompare(String(a.cree))
+    }[k] || ((a, b) => 0);
+    return S.projets.slice().sort((a, b) => (a.fini - b.fini) || cmp(a, b));
+  }
   function renderDreams() {
+    const k = S.triReves || "commencer";
+    $("dream-sort").innerHTML = Object.entries(SORTS).map(([key, v]) =>
+      `<button type="button" class="chip" style="--c:var(--leaf)" data-sort="${key}" aria-pressed="${key === k}">${v.label}</button>`).join("");
+    $("sort-hint").textContent = S.projets.length > 1 ? SORTS[k].hint : "";
+    // tableau de rêves
+    const pics = S.projets.filter((p) => !p.fini && (p.photos || []).length);
+    $("vision").hidden = !pics.length;
+    $("vision").innerHTML = pics.map((p, i) => `<button type="button" data-goto="${p.id}" style="--r:${RADII[i % RADII.length]}" aria-label="${esc(p.titre)}"><img data-photo="${p.photos[0]}" alt=""><span>${esc(p.titre)}</span></button>`).join("");
     if (!S.projets.length) {
       $("dreams").innerHTML = `<div class="empty">${svg("feuille")}<p>Aucun rêve planté pour l'instant. Commence par un seul, même un peu fou.</p></div>`;
-      return;
+      $("dream-new").open = true;
+      hydratePhotos($("s-netzach")); return;
     }
-    $("dreams").innerHTML = S.projets.map((p, i) => {
-      const c = p.fini ? "var(--leaf)" : COLORS[i % 4];
-      const tot = p.etapes.length, ok = p.etapes.filter((s) => s.ok).length;
-      const pct = tot ? Math.round((ok / tot) * 100) : 0;
+    const list = sortedDreams();
+    const firstActive = list.find((p) => !p.fini);
+    $("dreams").innerHTML = list.map((p, i) => {
+      const c = p.fini ? "var(--leaf)" : COLORS[S.projets.indexOf(p) % 4];
+      const pct = pctOf(p), isOpen = openDream === p.id, ph = p.photos || [];
+      const badge = k === "commencer" && p === firstActive && list.length > 1 ? `<span class="pill go">Commence ici</span>` : "";
+      const row = `<button type="button" class="drow ${isOpen ? "open" : ""}" data-toggle="${p.id}" aria-expanded="${isOpen}">
+          <span class="thumb" style="${paint(c)}">${ph.length ? `<img data-photo="${ph[0]}" alt="">` : svg(p.fini ? "soleil" : "feuille")}</span>
+          <span class="dtxt"><strong>${esc(p.titre)}</strong>
+            <span class="meta"><span class="hearts" aria-label="Importance ${imp(p)} sur 5">${"♥".repeat(imp(p))}<span style="color:var(--sage)">${"♥".repeat(5 - imp(p))}</span></span>
+            <span class="pill">${p.fini ? "Réalisé" : (EFFORTS[p.effort] || EFFORTS.moyen).label}</span>${badge}</span>
+            <span class="minibar"><i style="width:${p.fini ? 100 : pct}%"></i></span></span>
+          <span class="pctn">${p.fini ? "✓" : pct + "%"}</span>
+        </button>`;
+      if (!isOpen) return `<article data-p="${p.id}">${row}</article>`;
       const sg = suggestions[p.id];
-      return `<article class="dream" data-p="${p.id}">
-        <div class="dream-head" style="${paint(c)}">
-          <span class="pct">${p.fini ? "✓" : pct + " %"}</span>
-          ${p.fini ? `<span class="done-badge">Réalisé</span>` : ""}
-          <h3>${esc(p.titre)}</h3>
-          ${p.pourquoi ? `<p>${esc(p.pourquoi)}</p>` : ""}
-          <div class="bar" aria-hidden="true"><i style="width:${p.fini ? 100 : pct}%"></i></div>
-        </div>
-        <div class="dream-body">
+      return `<article data-p="${p.id}">${row}
+        <div class="dream-detail">
+          ${p.pourquoi ? `<p class="lead" style="margin:0">${esc(p.pourquoi)}</p>` : ""}
+          <div class="photo-strip">
+            ${ph.map((id) => `<button type="button" data-view-photo="${id}" aria-label="Voir la photo"><img data-photo="${id}" alt=""></button>`).join("")}
+            <button type="button" class="add" data-add-photo="${p.id}">+ Photo<br>ou capture</button>
+          </div>
+          <div class="rate"><span class="lbl">Importance pour moi</span>
+            <div class="heart-pick">${[1, 2, 3, 4, 5].map((n) => `<button type="button" class="${n <= imp(p) ? "on" : ""}" data-imp="${n}" aria-label="${n} sur 5">♥</button>`).join("")}</div></div>
+          <div class="rate"><span class="lbl">Effort pour l'atteindre</span>
+            <div class="seg">${Object.entries(EFFORTS).map(([key, v]) => `<button type="button" class="chip" style="--c:var(--cobalt);padding:5px 11px;font-size:13px" data-eff="${key}" aria-pressed="${(p.effort || "moyen") === key}">${v.label}</button>`).join("")}</div></div>
           <ul class="steps-list">
             ${p.etapes.map((s) => `<li class="${s.ok ? "ok" : ""}">
               <input type="checkbox" id="st-${s.id}" data-st="${s.id}" ${s.ok ? "checked" : ""} aria-label="Étape faite">
               <span>${esc(s.txt)}</span>
               <button class="linkbtn" type="button" data-st-del="${s.id}" aria-label="Retirer l'étape">retirer</button></li>`).join("")}
           </ul>
-          ${tot ? "" : `<p class="hint">Pas encore d'étape. La première doit tenir en 10 minutes.</p>`}
+          ${p.etapes.length ? "" : `<p class="hint">Pas encore d'étape. La première doit tenir en 10 minutes.</p>`}
           <form class="inline-form" data-add-step>
             <label class="sr" for="ns-${p.id}">Nouvelle étape</label>
             <input class="field" id="ns-${p.id}" maxlength="120" placeholder="Prochaine petite étape">
@@ -1046,6 +1187,39 @@ body.sheet-open .home { visibility: hidden; }
           </div>
         </div></article>`;
     }).join("");
+    hydratePhotos($("s-netzach"));
+  }
+  $("dream-sort").addEventListener("click", (e) => { const b = e.target.closest("[data-sort]"); if (b) { S.triReves = b.dataset.sort; save(); renderDreams(); } });
+  $("vision").addEventListener("click", (e) => {
+    const b = e.target.closest("[data-goto]"); if (!b) return;
+    openDream = b.dataset.goto; renderDreams();
+    const el = document.querySelector(`#dreams [data-p="${openDream}"]`); if (el) el.scrollIntoView({ block: "start", behavior: "smooth" });
+  });
+  $("photo-input").addEventListener("change", async () => {
+    const files = [...$("photo-input").files]; $("photo-input").value = "";
+    const p = S.projets.find((x) => x.id === photoFor); if (!p || !files.length) return;
+    p.photos = p.photos || [];
+    for (const f of files.slice(0, 6)) {
+      try { const d = await shrink(f); const pid = uid(); await putPhoto(pid, d); p.photos.push(pid); }
+      catch (e) { toastMsg("Cette image n'a pas pu être lue. Essaie avec une autre."); }
+    }
+    save(); renderDreams();
+  });
+  function showPhoto(pid) {
+    lbPhoto = pid; lbConfirm = false; $("lb-img").removeAttribute("src");
+    getPhoto(pid).then((d) => { if (d) $("lb-img").src = d; });
+    $("lb-del").textContent = "Retirer cette photo"; $("lightbox").hidden = false;
+  }
+  $("lb-close").onclick = () => { $("lightbox").hidden = true; };
+  $("lightbox").addEventListener("click", (e) => { if (e.target.id === "lightbox") $("lightbox").hidden = true; });
+  $("lb-del").onclick = async () => {
+    if (!lbConfirm) { lbConfirm = true; $("lb-del").textContent = "Oui, retirer pour de bon"; return; }
+    S.projets.forEach((p) => { p.photos = (p.photos || []).filter((x) => x !== lbPhoto); });
+    await delPhoto(lbPhoto); save(); $("lightbox").hidden = true; renderDreams();
+  };
+  function toastMsg(t) {
+    $("toast-host").innerHTML = `<div class="toast" role="status"><p>${esc(t)}</p><div class="row"><button class="btn small" type="button" data-a="tard">OK</button></div></div>`;
+    $("toast-host").onclick = (e) => { if (e.target.closest("[data-a]")) $("toast-host").innerHTML = ""; };
   }
   const dreamOf = (el) => S.projets.find((x) => x.id === el.closest("[data-p]")?.dataset.p);
   $("dreams").addEventListener("change", (e) => {
@@ -1071,11 +1245,16 @@ body.sheet-open .home { visibility: hidden; }
     const t = e.target.closest("button"); if (!t) return;
     const p = dreamOf(t); if (!p) return;
     const d = t.dataset;
+    if (d.toggle) { openDream = openDream === p.id ? null : p.id; confirmDream = null; renderDreams(); return; }
+    if (d.addPhoto) { photoFor = p.id; $("photo-input").click(); return; }
+    if (d.viewPhoto) { showPhoto(d.viewPhoto); return; }
+    if (d.imp) { p.importance = +d.imp; save(); renderDreams(); return; }
+    if (d.eff) { p.effort = d.eff; save(); renderDreams(); return; }
     if (d.stDel) { p.etapes = p.etapes.filter((s) => s.id !== d.stDel); save(); renderDreams(); renderNextStep(); }
     else if (d.fini) { p.fini = !p.fini; save(); renderDreams(); renderNextStep(); renderBilan(); }
     else if (d.dDel) { confirmDream = p.id; renderDreams(); }
     else if ("dCancel" in d) { confirmDream = null; renderDreams(); }
-    else if (d.dReally) { S.projets = S.projets.filter((x) => x.id !== p.id); confirmDream = null; save(); renderDreams(); renderNextStep(); }
+    else if (d.dReally) { (p.photos || []).forEach(delPhoto); S.projets = S.projets.filter((x) => x.id !== p.id); confirmDream = null; save(); renderDreams(); renderNextStep(); }
     else if (d.aiKeep) {
       (suggestions[p.id].etapes || []).forEach((txt) => p.etapes.push({ id: uid(), txt, ok: false }));
       if (!p.obstacle && suggestions[p.id].obstacle) p.obstacle = suggestions[p.id].obstacle;
@@ -1554,16 +1733,20 @@ Si la pensée évoque une envie de se faire du mal ou de mourir, réponds avec d
     $("data-file").hidden = false;
     $("data-where").textContent = "Tes données sont gardées sur ce téléphone. Fais une sauvegarde de temps en temps, par exemple dans Fichiers ou iCloud.";
   }
-  const dump = () => JSON.stringify(Object.assign({ app: "zora", exporte: new Date().toISOString() }, S));
+  const dump = async () => {
+    const photos = {};
+    for (const p of S.projets) for (const pid of p.photos || []) { const d = await getPhoto(pid); if (d) photos[pid] = d; }
+    return JSON.stringify(Object.assign({ app: "zora", exporte: new Date().toISOString() }, S, { photos }));
+  };
   const dataMsg = (t) => { $("data-msg").textContent = t; };
   $("data-copy").onclick = async () => {
-    const txt = dump();
+    const txt = await dump();
     try { await navigator.clipboard.writeText(txt); dataMsg("Copié. Colle-le dans Notes ou dans l'autre version de l'app."); }
     catch (e) { $("data-restore").hidden = false; $("data-paste").value = txt; $("data-paste").select(); dataMsg("Copie automatique impossible : le texte est sélectionné ci-dessus, copie-le à la main."); }
   };
   $("data-file").onclick = async () => {
     const name = "zora-" + dayKey() + ".json";
-    const blob = new Blob([dump()], { type: "application/json" });
+    const blob = new Blob([await dump()], { type: "application/json" });
     try {
       const file = new File([blob], name, { type: "application/json" });
       if (navigator.canShare && navigator.canShare({ files: [file] })) { await navigator.share({ files: [file], title: name }); dataMsg("Sauvegarde prête."); return; }
@@ -1579,6 +1762,8 @@ Si la pensée évoque une envie de se faire du mal ou de mourir, réponds avec d
     try { o = JSON.parse($("data-paste").value); } catch (e) { dataMsg("Ce texte n'est pas une copie valide de Zora."); return; }
     if (!o || typeof o !== "object" || !Array.isArray(o.gestes)) { dataMsg("Ce texte n'est pas une copie valide de Zora."); return; }
     delete o.app; delete o.exporte;
+    const ph = o.photos || {}; delete o.photos;
+    Object.entries(ph).forEach(([k, v]) => putPhoto(k, v));
     S = migrate(o); save(); renderAll();
     $("data-restore").hidden = true; $("data-paste").value = "";
     dataMsg("Données restaurées.");
