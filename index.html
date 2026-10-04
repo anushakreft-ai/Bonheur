@@ -789,10 +789,11 @@ body.sheet-open .home { visibility: hidden; }
     { id: "respirer", label: "Trois grandes respirations", icon: "souffle" },
     { id: "lumiere", label: "Prendre la lumière", icon: "soleil" },
     { id: "musique", label: "Écouter une chanson que j'aime", icon: "note" },
-    { id: "gentillesse", label: "Faire une gentillesse", icon: "feuille" }
+    { id: "gentillesse", label: "Faire une gentillesse", icon: "feuille" },
+    { id: "baroque", label: "Écouter de la musique baroque", icon: "note" }
   ];
   const fresh = () => ({
-    v: 2, gestes: DEFAULT_GESTES.slice(), faits: {}, notes: [], voix: [], checkins: [],
+    v: 3, gestes: DEFAULT_GESTES.slice(), faits: {}, notes: [], voix: [], checkins: [],
     rappel: { on: false, min: 45 }, humeur: {}, gratitudes: {}, projets: [], refuges: [], pas: {}, intentions: {}, ancre: {}, triReves: "commencer"
   });
   const migrate = (o) => {
@@ -801,6 +802,11 @@ body.sheet-open .home { visibility: hidden; }
       // v1 → v2 : ajoute les nouveaux gestes musique et gentillesse
       ["musique", "gentillesse"].forEach((id) => { if (!s.gestes.some((g) => g.id === id)) s.gestes.push(DEFAULT_GESTES.find((g) => g.id === id)); });
       s.v = 2;
+    }
+    if (s.v < 3) {
+      // v2 → v3 : ajoute le geste musique baroque
+      if (!s.gestes.some((g) => g.id === "baroque")) s.gestes.push(DEFAULT_GESTES.find((g) => g.id === "baroque"));
+      s.v = 3;
     }
     return s;
   };
@@ -1478,7 +1484,8 @@ Si la pensée évoque une envie de se faire du mal ou de mourir, réponds avec d
     { k: "joie", label: "Danser", sub: "dans le salon, seule", q: "chansons feel good pour danser à la maison", c: "var(--ochre)" },
     { k: "focus", label: "Me concentrer", sub: "travailler, créer", q: "musique instrumentale pour se concentrer", c: "var(--cobalt)" },
     { k: "pleurer", label: "Laisser sortir", sub: "pleurer un bon coup", q: "chansons émouvantes pour laisser sortir ses émotions", c: "var(--pink)" },
-    { k: "reve", label: "Rêver grand", sub: "élan, inspiration", q: "musique inspirante et épique pour rêver grand", c: "var(--leaf)" }
+    { k: "reve", label: "Rêver grand", sub: "élan, inspiration", q: "musique inspirante et épique pour rêver grand", c: "var(--leaf)" },
+    { k: "baroque", label: "Baroque", sub: "Bach, Vivaldi, Haendel", q: "musique baroque apaisante Bach Vivaldi Haendel", c: "var(--pink)" }
   ];
   let lastQuery = "";
   $("moodmusic").innerHTML = MUSIC_MOODS.map((m, i) =>
