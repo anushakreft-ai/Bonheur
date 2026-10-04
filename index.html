@@ -337,6 +337,7 @@ details.tight summary { font-weight: 700; color: var(--cobalt); }
 .rate { display: grid; gap: 6px; }
 .rate .lbl { font-size: 13px; font-weight: 700; color: var(--ink-soft); }
 .heart-pick { display: flex; gap: 2px; }
+.websearch .chip { text-decoration: none; padding: 6px 13px; font-size: 14px; }
 .heart-pick button { border: 0; background: none; font-size: 26px; line-height: 1; padding: 2px 3px; color: var(--sage); }
 .heart-pick button.on { color: var(--orange); }
 .lightbox { position: fixed; inset: 0; z-index: 60; background: rgba(20,24,30,.92); display: grid; grid-template-rows: 1fr auto; padding: calc(16px + env(safe-area-inset-top, 0px)) 16px calc(16px + env(safe-area-inset-bottom, 0px)); gap: 12px; }
@@ -640,7 +641,7 @@ body.sheet-open .home { visibility: hidden; }
         <div class="results" id="refuges"></div>
         <form id="f-refuge" style="display:grid;gap:8px">
           <label class="sr" for="refuge-name">Titre et artiste</label>
-          <input class="field" id="refuge-name" maxlength="100" placeholder="Titre – artiste">
+          <input class="field" id="refuge-name" maxlength="100" placeholder="Titre – artiste, ou colle un lien Spotify">
           <button class="btn alt small" type="submit" style="justify-self:start">Ajouter à mes refuges</button>
         </form>
       </div>
@@ -1157,6 +1158,12 @@ body.sheet-open .home { visibility: hidden; }
             <div class="heart-pick">${[1, 2, 3, 4, 5].map((n) => `<button type="button" class="${n <= imp(p) ? "on" : ""}" data-imp="${n}" aria-label="${n} sur 5">♥</button>`).join("")}</div></div>
           <div class="rate"><span class="lbl">Effort pour l'atteindre</span>
             <div class="seg">${Object.entries(EFFORTS).map(([key, v]) => `<button type="button" class="chip" style="--c:var(--cobalt);padding:5px 11px;font-size:13px" data-eff="${key}" aria-pressed="${(p.effort || "moyen") === key}">${v.label}</button>`).join("")}</div></div>
+          <div class="rate"><span class="lbl">Chercher des idées sur internet</span>
+            <div class="row websearch">
+              <a class="chip" style="--c:var(--cobalt)" target="_blank" rel="noopener" href="https://www.google.com/search?q=${encodeURIComponent(p.titre)}">Google</a>
+              <a class="chip" style="--c:var(--orange)" target="_blank" rel="noopener" href="https://www.pinterest.com/search/pins/?q=${encodeURIComponent(p.titre)}">Pinterest</a>
+              <a class="chip" style="--c:var(--ochre)" target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=${encodeURIComponent(p.titre)}">YouTube</a>
+            </div></div>
           <ul class="steps-list">
             ${p.etapes.map((s) => `<li class="${s.ok ? "ok" : ""}">
               <input type="checkbox" id="st-${s.id}" data-st="${s.id}" ${s.ok ? "checked" : ""} aria-label="Étape faite">
@@ -1479,30 +1486,33 @@ Si la pensée évoque une envie de se faire du mal ou de mourir, réponds avec d
 
   /* ================= musique (Spotify) ================= */
   const MUSIC_MOODS = [
-    { k: "energie", label: "Me réveiller", sub: "énergie, envie de bouger", q: "musique joyeuse et énergique pour bien commencer la journée", c: "var(--orange)" },
-    { k: "calme", label: "Me calmer", sub: "respirer, ralentir", q: "musique douce et apaisante pour se calmer", c: "var(--turq)" },
-    { k: "joie", label: "Danser", sub: "dans le salon, seule", q: "chansons feel good pour danser à la maison", c: "var(--ochre)" },
-    { k: "focus", label: "Me concentrer", sub: "travailler, créer", q: "musique instrumentale pour se concentrer", c: "var(--cobalt)" },
-    { k: "pleurer", label: "Laisser sortir", sub: "pleurer un bon coup", q: "chansons émouvantes pour laisser sortir ses émotions", c: "var(--pink)" },
-    { k: "reve", label: "Rêver grand", sub: "élan, inspiration", q: "musique inspirante et épique pour rêver grand", c: "var(--leaf)" },
-    { k: "baroque", label: "Baroque", sub: "Bach, Vivaldi, Haendel", q: "musique baroque apaisante Bach Vivaldi Haendel", c: "var(--pink)" }
+    { k: "energie", kw: "musique énergie matin", label: "Me réveiller", sub: "énergie, envie de bouger", q: "musique joyeuse et énergique pour bien commencer la journée", c: "var(--orange)" },
+    { k: "calme", kw: "musique calme relaxation", label: "Me calmer", sub: "respirer, ralentir", q: "musique douce et apaisante pour se calmer", c: "var(--turq)" },
+    { k: "joie", kw: "feel good danse", label: "Danser", sub: "dans le salon, seule", q: "chansons feel good pour danser à la maison", c: "var(--ochre)" },
+    { k: "focus", kw: "musique concentration instrumentale", label: "Me concentrer", sub: "travailler, créer", q: "musique instrumentale pour se concentrer", c: "var(--cobalt)" },
+    { k: "pleurer", kw: "chansons émouvantes", label: "Laisser sortir", sub: "pleurer un bon coup", q: "chansons émouvantes pour laisser sortir ses émotions", c: "var(--pink)" },
+    { k: "reve", kw: "musique épique inspirante", label: "Rêver grand", sub: "élan, inspiration", q: "musique inspirante et épique pour rêver grand", c: "var(--leaf)" },
+    { k: "baroque", kw: "musique baroque", label: "Baroque", sub: "Bach, Vivaldi, Haendel", q: "musique baroque apaisante Bach Vivaldi Haendel", c: "var(--pink)" }
   ];
   let lastQuery = "";
   $("moodmusic").innerHTML = MUSIC_MOODS.map((m, i) =>
     `<button type="button" class="mm" data-mm="${m.k}" style="${paint(m.c)};--r:${RADII[i % RADII.length]}"><b>${m.label}</b><small>${m.sub}</small></button>`).join("");
   $("moodmusic").addEventListener("click", (e) => {
     const b = e.target.closest("[data-mm]"); if (!b) return;
-    const m = MUSIC_MOODS.find((x) => x.k === b.dataset.mm); searchMusic(m.q, m.label);
+    const m = MUSIC_MOODS.find((x) => x.k === b.dataset.mm);
+    if (!mcp) { openOut(spotifySearchUrl(m.kw)); }
+    searchMusic(m.q, m.label, m.kw);
   });
   $("f-music").addEventListener("submit", (e) => { e.preventDefault(); const q = $("music-q").value.trim(); if (q) searchMusic(q, "Ta recherche"); });
   const spotifySearchUrl = (q) => "https://open.spotify.com/search/" + encodeURIComponent(q);
   let lastResults = [];
-  async function searchMusic(q, title) {
+  function openOut(url) { const a = document.createElement("a"); a.href = url; a.target = "_blank"; a.rel = "noopener"; document.body.appendChild(a); a.click(); a.remove(); }
+  async function searchMusic(q, title, kw) {
     lastQuery = q;
     $("music-panel").hidden = false; $("music-title").textContent = title; $("playlist-out").hidden = true;
     const box = $("music-results");
     if (!mcp) {
-      box.innerHTML = `<p class="hint">Spotify n'est pas relié ici. <a href="${spotifySearchUrl(q)}" target="_blank" rel="noopener">Ouvrir la recherche dans Spotify</a></p>`;
+      box.innerHTML = `<p class="hint">Spotify s'ouvre avec cette ambiance. S'il ne s'est pas ouvert : <a href="${spotifySearchUrl(kw || q)}" target="_blank" rel="noopener">ouvrir dans Spotify</a>.</p>`;
       $("playlist-row").hidden = true; return;
     }
     $("music-msg").textContent = "Je cherche…"; box.innerHTML = "";
@@ -1549,7 +1559,9 @@ Si la pensée évoque une envie de se faire du mal ou de mourir, réponds avec d
   });
   $("f-refuge").addEventListener("submit", (e) => {
     e.preventDefault(); const v = $("refuge-name").value.trim(); if (!v) return;
-    S.refuges.unshift({ id: uid(), nom: v, sous: "", url: "" }); $("refuge-name").value = ""; save(); renderRefuges();
+    const m = v.match(/https?:\/\/\S+/), url = m ? m[0] : "";
+    const nom = v.replace(url, "").replace(/\s+/g, " ").trim() || (url.includes("spotify") ? "Ma chanson Spotify" : "Mon lien musique");
+    S.refuges.unshift({ id: uid(), nom, sous: "", url }); $("refuge-name").value = ""; save(); renderRefuges();
   });
   $("playlist-go").onclick = async () => {
     if (!mcp || !lastQuery) return;
