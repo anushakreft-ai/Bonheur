@@ -1994,10 +1994,11 @@ Si la pensée évoque une envie de se faire du mal ou de mourir, réponds avec d
   });
 
   /* ================= pictos : lampe, racines, note, soleil ================= */
-  const LAMP = `<g fill="currentColor"><path d="M49 22C50 26 52 28 52 31H46C46 28 48 26 49 22Z"/><path d="M43 34H55V37H43ZM45 39H53C55 42 56 45 57 48H41C42 45 43 42 45 39Z"/><path d="M22 52C36 49 50 49 62 51C74 52 86 44 98 38C94 46 86 56 74 63C62 70 46 72 34 68C26 65 22 60 22 52Z"/><path d="M44 70H56C55 75 56 79 60 82H40C44 79 45 75 44 70Z"/><path d="M32 83H68V88H32Z"/></g><path d="M24 56C12 58 6 50 9 42C12 34 22 34 24 40C26 46 18 48 16 44" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round"/>`;
+  // aigle en vol, ailes déployées (picto de la sphère Rêves)
+  const EAGLE = `<path fill="currentColor" d="M50 43C46 43 44 46 43.5 49L30 43L3 25L10 34L2 36L11 40L4 44L14 46L9 51L21 50L18 55L41 58L43 65L35 81L44.5 77L50 84L55.5 77L65 81L57 65L59 58L82 55L79 50L91 51L86 46L96 44L89 40L98 36L90 34L97 25L70 43L56.5 49C56 46 54 43 50 43Z"/><path fill="currentColor" d="M44.5 46C42.5 40 45 33 51 32C56 31.5 59.5 34 61 37.5L65.5 40.5C64 41.5 62 41.5 60.5 41L59.5 43.5C58 47.5 54 49 50 49C47.5 49 45.5 48 44.5 46Z"/>`;
   const ROOTS = `<circle cx="50" cy="19" r="15" fill="currentColor"/><circle cx="35" cy="30" r="12" fill="currentColor"/><circle cx="65" cy="30" r="12" fill="currentColor"/><path fill="currentColor" d="M46 30L43 60H57L54 30Z"/><path d="M10 60H90" stroke="currentColor" stroke-width="5" stroke-linecap="round"/><g fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round"><path d="M50 60V92"/><path d="M48 64C40 70 28 72 20 86"/><path d="M52 64C60 70 72 72 80 86"/><path d="M49 72C44 78 38 82 34 96"/><path d="M51 72C56 78 62 82 66 96"/></g>`;
   const NOTE = `<path fill="currentColor" d="M38 18L84 8V66A14 14 0 1 1 74 53V28L48 34V76A14 14 0 1 1 38 63Z"/>`;
-  const ICONS = { netzach: LAMP, yesod: ROOTS, hod: NOTE, keter: SUN_FACE };
+  const ICONS = { netzach: EAGLE, yesod: ROOTS, hod: NOTE, keter: SUN_FACE };
   Object.entries(ICONS).forEach(([k, ic]) => {
     const head = document.querySelector(`#s-${k} .sheet-head`);
     if (head) head.insertAdjacentHTML("beforeend", `<svg class="head-ico" viewBox="0 0 100 100" aria-hidden="true">${ic}</svg>`);
