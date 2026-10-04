@@ -338,6 +338,8 @@ body { overflow: hidden; padding: 0 16px; margin: 0; }
 .sheet .panel h2 { font-size: 20px; }
 .sheet .field { background: rgba(255,255,255,.6); border-color: rgba(255,255,255,.7); padding: 9px 12px; }
 .sheet .lead { font-size: 15px; }
+#netz-music { scroll-margin-top: 170px; }
+.jump { justify-self: start; border: 0; border-radius: 99px; padding: 7px 14px; font-weight: 700; font-size: 14px; background: rgba(255,255,255,.55); color: var(--ink); box-shadow: inset 0 0 0 1.5px #2f7a45; }
 .sheet-body { max-width: 640px; margin: 0 auto; padding: 16px 16px 0; display: grid; gap: 18px; }
 .sheet-body > .title-block h2 { font-size: 24px; }
 details.tight summary { font-weight: 700; color: var(--cobalt); }
@@ -458,24 +460,23 @@ body.sheet-open .home { visibility: hidden; }
     <div class="sheet-head" style="--c:#8fc4bb;--t:var(--ink)">
       <button class="back" type="button" data-close aria-label="Revenir à l'arbre">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Arbre</button>
-      <div class="sheet-title"><span class="heb">Hokhmah · Sagesse</span><h2 id="h-chokhmah">Intuitions</h2><p>Mes rêves de nuit, mes envies, mes idées.</p></div>
+      <div class="sheet-title"><span class="heb">Hokhmah · Sagesse</span><h2 id="h-chokhmah">Intuitions</h2><p>L'éclair d'une idée, une envie qui naît.</p></div>
     </div>
     <div class="sheet-body">
       <div class="panel">
         <div class="title-block">
-          <h2>Carnet</h2>
-          <p class="lead">Rêves de la nuit, envies, pensées. Ce que tu écris reste à toi.</p>
+          <h2>Une intuition, une envie</h2>
+          <p class="lead">L'idée qui jaillit d'un coup : note-la avant qu'elle s'envole.</p>
         </div>
-        <div class="seg" id="type-pick" role="group" aria-label="Type de note"></div>
-        <label class="sr" for="note-text">Texte</label>
-        <textarea class="field" id="note-text"></textarea>
-        <div class="row"><button class="btn" id="note-save" type="button">Garder</button><span class="hint" id="note-msg" aria-live="polite"></span></div>
+        <form class="inline-form" id="f-intu">
+          <label class="sr" for="intu-in">Mon intuition</label>
+          <input class="field" id="intu-in" maxlength="200" placeholder="J'ai envie de… / Et si…">
+          <button class="btn" type="submit">Garder</button>
+        </form>
+        <p class="hint" id="intu-msg" aria-live="polite"></p>
+        <div class="entries" id="intu-list"></div>
+        <button class="linkbtn" type="button" data-open="hod" style="justify-self:start">Tout mon carnet est dans Mots ›</button>
       </div>
-      <div class="row between">
-        <h3>Mes notes</h3>
-        <div class="seg" id="filter" role="group" aria-label="Filtrer"></div>
-      </div>
-      <div class="entries" id="entries"></div>
     </div>
   </section>
 
@@ -648,9 +649,10 @@ body.sheet-open .home { visibility: hidden; }
     <div class="sheet-head" style="--c:#3f8a55;--t:#ffffff">
       <button class="back" type="button" data-close aria-label="Revenir à l'arbre">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Arbre</button>
-      <div class="sheet-title"><span class="heb">Netsah · Victoire</span><h2 id="h-netzach">Rêves</h2><p>Mes rêves, un petit pas à la fois.</p></div>
+      <div class="sheet-title"><span class="heb">Netsah · Victoire</span><h2 id="h-netzach">Rêves</h2><p>M'élever : mes rêves et la musique qui me porte.</p></div>
     </div>
     <div class="sheet-body">
+      <button class="jump" type="button" id="go-music">♪ La musique qui m'élève</button>
       <div id="nextstep-host"></div>
       <div class="vision" id="vision" hidden></div>
       <div class="panel">
@@ -682,18 +684,10 @@ body.sheet-open .home { visibility: hidden; }
         <div class="row"><button class="btn" id="dream-add" type="button">Planter ce rêve</button><span class="hint" id="dream-msg" aria-live="polite"></span></div>
       </details>
       <input type="file" id="photo-input" accept="image/*" multiple hidden>
-    </div>
-  </section>
+      <div id="netz-music"></div>
 
-  <section class="sheet" id="s-hod" role="dialog" aria-modal="true" aria-labelledby="h-hod" hidden>
-    <div class="sheet-head" style="--c:#f0d08a;--t:var(--ink)">
-      <button class="back" type="button" data-close aria-label="Revenir à l'arbre">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Arbre</button>
-      <div class="sheet-title"><span class="heb">Hod · Splendeur</span><h2 id="h-hod">Musique</h2><p>Ce qui m'élève et me fait vibrer.</p></div>
-    </div>
-    <div class="sheet-body">
       <div class="title-block">
-        <h2>Musique</h2>
+        <h2>La musique qui m'élève</h2>
         <p class="lead">La musique change l'humeur en trois minutes. Choisis ce dont tu as besoin.</p>
       </div>
       <div class="moodmusic" id="moodmusic"></div>
@@ -723,6 +717,31 @@ body.sheet-open .home { visibility: hidden; }
           <button class="btn alt small" type="submit" style="justify-self:start">Ajouter à mes refuges</button>
         </form>
       </div>
+    </div>
+  </section>
+
+  <section class="sheet" id="s-hod" role="dialog" aria-modal="true" aria-labelledby="h-hod" hidden>
+    <div class="sheet-head" style="--c:#f0d08a;--t:var(--ink)">
+      <button class="back" type="button" data-close aria-label="Revenir à l'arbre">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Arbre</button>
+      <div class="sheet-title"><span class="heb">Hod · Splendeur</span><h2 id="h-hod">Mots</h2><p>Écrire ce qui me traverse : rêves de nuit, envies, pensées.</p></div>
+    </div>
+    <div class="sheet-body">
+      <div class="panel">
+        <div class="title-block">
+          <h2>Carnet</h2>
+          <p class="lead">Rêves de la nuit, envies, pensées. Ce que tu écris reste à toi.</p>
+        </div>
+        <div class="seg" id="type-pick" role="group" aria-label="Type de note"></div>
+        <label class="sr" for="note-text">Texte</label>
+        <textarea class="field" id="note-text"></textarea>
+        <div class="row"><button class="btn" id="note-save" type="button">Garder</button><span class="hint" id="note-msg" aria-live="polite"></span></div>
+      </div>
+      <div class="row between">
+        <h3>Mes notes</h3>
+        <div class="seg" id="filter" role="group" aria-label="Filtrer"></div>
+      </div>
+      <div class="entries" id="entries"></div>
     </div>
   </section>
 
@@ -1435,7 +1454,7 @@ Réponds uniquement en JSON : {"etapes": ["..."], "obstacle": "...", "plan": "..
   }
   $("type-pick").addEventListener("click", (e) => { const b = e.target.closest("[data-k]"); if (b) { noteType = b.dataset.k; renderTypePick(); } });
   $("filter").addEventListener("click", (e) => { const b = e.target.closest("[data-f]"); if (b) { filter = b.dataset.f; renderTypePick(); renderEntries(); } });
-  const addNote = (type, texte) => { S.notes.unshift({ id: uid(), type, texte, date: new Date().toISOString() }); save(); renderEntries(); };
+  const addNote = (type, texte) => { S.notes.unshift({ id: uid(), type, texte, date: new Date().toISOString() }); save(); renderEntries(); if (typeof renderIntu === "function") renderIntu(); };
   $("note-save").onclick = () => {
     const v = $("note-text").value.trim();
     if (!v) { $("note-msg").textContent = "Écris quelques mots d'abord."; return; }
@@ -1804,7 +1823,7 @@ Si la pensée évoque une envie de se faire du mal ou de mourir, réponds avec d
     { k: "gevurah", heb: "Guevourah", mot: "Limites", x: 52, y: 236, fill: "#c4412a", txt: "#ffffff" },
     { k: "tiferet", heb: "Tiferet", mot: "Cœur", x: 150, y: 300, fill: "#e6bf35", txt: "#2b3440" },
     { k: "netzach", heb: "Netsah", mot: "Rêves", x: 248, y: 390, fill: "#2f7a45", txt: "#ffffff" },
-    { k: "hod", heb: "Hod", mot: "Musique", x: 52, y: 390, fill: "#d08a2c", txt: "#2b3440" },
+    { k: "hod", heb: "Hod", mot: "Mots", x: 52, y: 390, fill: "#d08a2c", txt: "#2b3440" },
     { k: "yesod", heb: "Yesod", mot: "Ancrage", x: 150, y: 452, fill: "#7a5ea8", txt: "#ffffff" },
     { k: "malkhut", heb: "Malkhout", mot: "Gestes", x: 150, y: 524, fill: "#a8452a", txt: "#ffffff", quarters: ["#c9a43a", "#5f7a3a", "#1f2f52", "#a8452a"] }
   ];
@@ -1814,7 +1833,8 @@ Si la pensée évoque une envie de se faire du mal ou de mourir, réponds avec d
     const t = dayKey(), notesToday = (type) => S.notes.some((n) => n.date && dayKey(new Date(n.date)) === t && type.includes(n.type));
     switch (k) {
       case "keter": return !!S.intentions[t] || !!S.decision[t];
-      case "chokhmah": return notesToday(["reve", "envie"]);
+      case "chokhmah": return notesToday(["envie"]);
+      case "hod": return notesToday(["reve", "envie", "pensee"]);
       case "binah": return notesToday(["pensee"]);
       case "chesed": return (S.gratitudes[t] || []).some((x) => x && x.trim());
       case "gevurah": return S.checkins.some((c) => dayKey(new Date(c.date)) === t);
@@ -1956,7 +1976,7 @@ Si la pensée évoque une envie de se faire du mal ou de mourir, réponds avec d
     try { history.replaceState(null, "", location.pathname + location.search); } catch (e) {}
     if (node) node.focus({ preventScroll: true });
   }
-  const go = (v) => openSheet({ jour: "malkhut", reves: "netzach", ancrage: "yesod", musique: "hod", bilan: "daat" }[v] || v);
+  const go = (v) => openSheet({ jour: "malkhut", reves: "netzach", ancrage: "yesod", musique: "netzach", bilan: "daat" }[v] || v);
   document.addEventListener("click", (e) => {
     const o = e.target.closest("[data-open]"); if (o) { openSheet(o.dataset.open); return; }
     if (e.target.closest("[data-close]")) closeSheet();
@@ -2000,7 +2020,9 @@ Si la pensée évoque une envie de se faire du mal ou de mourir, réponds avec d
   const EAGLE = `<mask id="eaglem" maskUnits="userSpaceOnUse" x="0" y="0" width="100" height="100"><image href="${EAGLE_MASK}" x="0" y="22.5" width="100" height="55"/></mask><rect x="0" y="22" width="100" height="56" fill="currentColor" mask="url(#eaglem)"/>`;
   const ROOTS = `<circle cx="50" cy="19" r="15" fill="currentColor"/><circle cx="35" cy="30" r="12" fill="currentColor"/><circle cx="65" cy="30" r="12" fill="currentColor"/><path fill="currentColor" d="M46 30L43 60H57L54 30Z"/><path d="M10 60H90" stroke="currentColor" stroke-width="5" stroke-linecap="round"/><g fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round"><path d="M50 60V92"/><path d="M48 64C40 70 28 72 20 86"/><path d="M52 64C60 70 72 72 80 86"/><path d="M49 72C44 78 38 82 34 96"/><path d="M51 72C56 78 62 82 66 96"/></g>`;
   const NOTE = `<path fill="currentColor" d="M38 18L84 8V66A14 14 0 1 1 74 53V28L48 34V76A14 14 0 1 1 38 63Z"/>`;
-  const ICONS = { netzach: EAGLE, yesod: ROOTS, hod: NOTE, keter: SUN_FACE };
+  const STAR = `<path fill="currentColor" d="M50 4L56 36L80 18L64 44L96 50L64 56L80 82L56 64L50 96L44 64L20 82L36 56L4 50L36 44L20 18L44 36Z"/>`;
+  const PLUME = `<path fill="currentColor" d="M86 6C56 8 32 26 24 56L18 78L14 92L22 92L28 76C34 74 42 70 48 64L40 62L54 56L46 52L62 44L54 40L72 30C80 22 84 14 86 6Z"/>`;
+  const ICONS = { netzach: EAGLE, yesod: ROOTS, hod: PLUME, chokhmah: STAR, keter: SUN_FACE };
   Object.entries(ICONS).forEach(([k, ic]) => {
     const head = document.querySelector(`#s-${k} .sheet-head`);
     if (head) head.insertAdjacentHTML("beforeend", `<svg class="head-ico" viewBox="0 0 100 100" aria-hidden="true">${ic.replaceAll("eaglem", "eaglem-head")}</svg>`);
@@ -2032,6 +2054,17 @@ Si la pensée évoque une envie de se faire du mal ou de mourir, réponds avec d
     const t = dayKey(), set = new Set(S.condition[t] || []), k = b.dataset.cond;
     set.has(k) ? set.delete(k) : set.add(k);
     S.condition[t] = [...set]; save(); renderCond();
+  });
+
+  $("go-music").onclick = () => $("netz-music").scrollIntoView({ behavior: "smooth" });
+  /* ================= intuitions (Hokhmah) ================= */
+  function renderIntu() {
+    const list = S.notes.filter((n) => n.type === "envie").slice(0, 6);
+    $("intu-list").innerHTML = list.map((n) => `<article class="entry"><div class="meta"><span>${new Date(n.date).toLocaleDateString("fr-CH", { day: "numeric", month: "long" })}</span></div><p>${esc(n.texte)}</p></article>`).join("");
+  }
+  $("f-intu").addEventListener("submit", (e) => {
+    e.preventDefault(); const v = $("intu-in").value.trim(); if (!v) return;
+    addNote("envie", v); $("intu-in").value = ""; $("intu-msg").textContent = "Gardée ✨"; renderIntu();
   });
 
   /* ================= aller mieux ================= */
@@ -2072,9 +2105,9 @@ Si la pensée évoque une envie de se faire du mal ou de mourir, réponds avec d
     else if (x.k === "souvenir") openSheet("chesed");
     else if (x.k === "baroque") {
       const m = MUSIC_MOODS.find((y) => y.k === "baroque");
-      if (mcp) { openSheet("hod"); searchMusic(m.q, m.label, m.kw); } else openOut(spotifySearchUrl(m.kw));
+      if (mcp) { openSheet("netzach"); setTimeout(() => $("netz-music").scrollIntoView({ behavior: "smooth" }), 150); searchMusic(m.q, m.label, m.kw); } else openOut(spotifySearchUrl(m.kw));
     } else if (x.k === "refuge") {
-      if (!S.refuges.length) { openSheet("hod"); return; }
+      if (!S.refuges.length) { openSheet("netzach"); setTimeout(() => $("netz-music").scrollIntoView({ behavior: "smooth" }), 150); return; }
       const r = S.refuges[Math.floor(Math.random() * S.refuges.length)];
       openOut(r.url || spotifySearchUrl(r.nom));
       $("care-msg").textContent = "« " + r.nom + " » s'ouvre dans Spotify.";
@@ -2142,7 +2175,7 @@ Si la pensée évoque une envie de se faire du mal ou de mourir, réponds avec d
   function renderAll() {
     renderMoods(); renderGrat(); renderNextStep(); renderGarden(); renderGestes(); renderDreams();
     renderTypePick(); renderEntries(); renderVoices(); renderPeople(); renderRefuges(); renderBilan(); armRappel();
-    renderIntention(); renderTree(); renderCare(); renderQualites(); renderDecision(); renderCond();
+    renderIntention(); renderTree(); renderCare(); renderQualites(); renderDecision(); renderCond(); renderIntu();
   }
   renderAll(); showThought(); renderSteps();
   const hash = location.hash.slice(1);
