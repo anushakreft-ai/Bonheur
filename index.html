@@ -1958,8 +1958,8 @@ Si la pensée évoque une envie de se faire du mal ou de mourir, réponds avec d
       g += `<g class="node" data-open="${n.k}" tabindex="0" role="button" aria-label="${n.heb}, ${n.mot}${done ? ", fait aujourd'hui" : ""}">
         ${n.dash ? `<circle cx="${x}" cy="${y}" r="${r}" fill="rgba(255,246,230,.82)" stroke="#d9a33a" stroke-width="9" stroke-dasharray="20 14"/>` : ""}
         <circle class="main" cx="${x}" cy="${y}" r="${r}" fill="rgba(255,255,255,0)"/>
-        ${ic ? (() => { const z = n.k === "netzach" ? 100 : n.k === "yesod" || n.k === "gevurah" ? 84 : 68; return `<svg x="${x - z / 2}" y="${y - (sub ? 86 : 78) - (z - 68) / 2}" width="${z}" height="${z}" viewBox="0 0 100 100" style="color:${n.k === "keter" ? "#c9952c" : n.txt}" aria-hidden="true">${ic.replaceAll("eaglem", "eaglem-tree")}</svg>`; })() : ""}
-        <text x="${x}" y="${y + (ic ? 30 : sub ? 4 : 15)}" text-anchor="middle" class="t-mot${light ? "" : " t-halo"}" fill="${n.txt}" style="font-size:${fs}px">${n.mot}</text>
+        ${ic ? (() => { const z = n.k === "netzach" ? 100 : n.k === "yesod" || n.k === "gevurah" ? 84 : n.k === "daat" ? 46 : 68; const iy = n.k === "daat" ? y - 54 : y - (sub ? 86 : 78) - (z - 68) / 2; return `<svg x="${x - z / 2}" y="${iy}" width="${z}" height="${z}" viewBox="0 0 100 100" style="color:${n.k === "keter" ? "#c9952c" : n.txt}" aria-hidden="true">${ic.replaceAll("eaglem", "eaglem-tree")}</svg>`; })() : ""}
+        <text x="${x}" y="${y + (n.k === "daat" ? 26 : ic ? 30 : sub ? 4 : 15)}" text-anchor="middle" class="t-mot${light ? "" : " t-halo"}" fill="${n.txt}" style="font-size:${n.k === "daat" ? 30 : fs}px">${n.mot}</text>
         ${sub ? `<text x="${x}" y="${y + (ic ? 66 : 46)}" text-anchor="middle" class="t-sub${light ? "" : " t-halo"}" fill="${n.txt}">${esc(sub)}</text>` : ""}
         <text x="${x}" y="${y + r + 44}" text-anchor="middle" class="t-heb">${n.heb}</text>
         ${done ? `<g transform="translate(${x + r * .74} ${y - r * .74})"><circle r="30" fill="#2b3440" stroke="#fbf1e2" stroke-width="5"/><path d="M-13 0l9 9 17-18" fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></g>` : ""}
@@ -2108,7 +2108,15 @@ Si la pensée évoque une envie de se faire du mal ou de mourir, réponds avec d
 <path d="M-19 -2.5C-16.5 -3.5 -15.5 -3.3 -14.2 -2.8C-13.8 4 -10 10.5 -4.5 14C-12 14.6 -17.5 10 -19.5 3C-20 1 -19.8 -1 -19 -2.5Z"/>
 <path d="M19 -2.5C16.5 -3.5 15.5 -3.3 14.2 -2.8C13.8 4 10 10.5 4.5 14C12 14.6 17.5 10 19.5 3C20 1 19.8 -1 19 -2.5Z"/>
 </g></g>`;
-  const ICONS = { gevurah: LOTUS, chesed: HANDS, netzach: EAGLE, yesod: ROOTS, hod: PLUME, chokhmah: STAR, keter: SUN_FACE };
+  // œil (Binah), clé dans l'arche (Daat), cœur rayonnant (Tiferet), trèfle à quatre feuilles (Malkhout)
+  const EYE = `<path fill="currentColor" fill-rule="evenodd" d="M4 50C18 26 34 18 50 18C66 18 82 26 96 50C82 74 66 82 50 82C34 82 18 74 4 50ZM50 30A20 20 0 1 0 50.1 30ZM50 40A10 10 0 1 1 49.9 40Z"/>`;
+  const KEYARCH = `<g fill="none" stroke="currentColor" stroke-width="5">
+<path d="M14 96V44A36 36 0 0 1 86 44V96"/><path d="M24 96V44A26 26 0 0 1 76 44V96"/></g>
+<g fill="currentColor"><path fill-rule="evenodd" d="M50 30A12 12 0 1 1 49.9 30ZM50 37A5 5 0 1 0 50.1 37Z"/>
+<rect x="46.5" y="52" width="7" height="40" rx="2"/><rect x="53" y="74" width="10" height="6" rx="1.5"/><rect x="53" y="84" width="7" height="6" rx="1.5"/></g>`;
+  const HEART = `<path fill="currentColor" d="M50 86C22 66 16 48 24 36C30 27 44 27 50 38C56 27 70 27 76 36C84 48 78 66 50 86Z"/><g stroke="currentColor" stroke-width="5" stroke-linecap="round"><path d="M50 6V16"/><path d="M20 14L26 22"/><path d="M80 14L74 22"/><path d="M6 36H14"/><path d="M86 36H94"/></g>`;
+  const CLOVER = `<g transform="rotate(0 50 46)"><path fill="currentColor" d="M50 46C46 40 34 32 36 22C38 15 46 15 50 22C54 15 62 15 64 22C66 32 54 40 50 46Z"/></g><g transform="rotate(90 50 46)"><path fill="currentColor" d="M50 46C46 40 34 32 36 22C38 15 46 15 50 22C54 15 62 15 64 22C66 32 54 40 50 46Z"/></g><g transform="rotate(180 50 46)"><path fill="currentColor" d="M50 46C46 40 34 32 36 22C38 15 46 15 50 22C54 15 62 15 64 22C66 32 54 40 50 46Z"/></g><g transform="rotate(270 50 46)"><path fill="currentColor" d="M50 46C46 40 34 32 36 22C38 15 46 15 50 22C54 15 62 15 64 22C66 32 54 40 50 46Z"/></g><path d="M50 50C52 64 58 76 66 90" stroke="currentColor" stroke-width="6" fill="none" stroke-linecap="round"/>`;
+  const ICONS = { binah: EYE, daat: KEYARCH, tiferet: HEART, malkhut: CLOVER, gevurah: LOTUS, chesed: HANDS, netzach: EAGLE, yesod: ROOTS, hod: PLUME, chokhmah: STAR, keter: SUN_FACE };
   Object.entries(ICONS).forEach(([k, ic]) => {
     const head = document.querySelector(`#s-${k} .sheet-head`);
     if (head) head.insertAdjacentHTML("beforeend", `<svg class="head-ico" viewBox="0 0 100 100" aria-hidden="true">${ic.replaceAll("eaglem", "eaglem-head")}</svg>`);
