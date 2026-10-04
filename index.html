@@ -344,6 +344,20 @@ body { overflow: hidden; padding: 0 16px; margin: 0; }
 .sheet .field { background: rgba(255,255,255,.6); border-color: rgba(255,255,255,.7); padding: 9px 12px; }
 .sheet .lead { font-size: 15px; }
 #netz-music { scroll-margin-top: 170px; }
+.eclair-top { display: grid; grid-template-columns: 92px 1fr; gap: 12px; align-items: start; }
+#eclair-mini { width: 92px; height: auto; position: sticky; top: 170px; }
+.eclair-step { background: rgba(255,250,243,.35); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,.5); border-radius: 20px; padding: 14px; display: grid; gap: 10px; min-width: 0; }
+.eclair-step .num { font: 400 13px var(--f-num); color: var(--ink-soft); letter-spacing: .05em; }
+.eclair-step .sph { display: inline-flex; align-items: center; gap: 8px; font-weight: 700; font-size: 13px; letter-spacing: .08em; text-transform: uppercase; }
+.eclair-step .sph i { width: 16px; height: 16px; border-radius: 50%; background: var(--c); box-shadow: 0 0 0 2px #dcb24e; }
+.eclair-step h3 { font-size: 21px; line-height: 1.2; }
+.eclair-step .help { font-size: 13px; color: var(--ink-soft); margin: 0; }
+.eclair-step textarea { min-height: 120px; font-size: 16px; }
+.eclair-sum { display: grid; gap: 8px; }
+.eclair-sum div { background: rgba(255,255,255,.5); border-radius: 14px; padding: 8px 12px; border-left: 5px solid var(--c); overflow-wrap: anywhere; }
+.eclair-sum b { font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-soft); display: block; }
+.btn-eclair { justify-self: start; border: 0; border-radius: 99px; padding: 8px 14px; font-weight: 700; font-size: 14px; background: linear-gradient(100deg, #10294f, #1f5a8a 45%, #c39233); color: #fff; }
+@media (max-width: 380px) { .eclair-top { grid-template-columns: 1fr; } #eclair-mini { position: static; width: 70px; justify-self: center; } }
 .jump { justify-self: start; border: 0; border-radius: 99px; padding: 7px 14px; font-weight: 700; font-size: 14px; background: rgba(255,255,255,.55); color: var(--ink); box-shadow: inset 0 0 0 1.5px #2f7a45; }
 .sheet-body { max-width: 640px; margin: 0 auto; padding: 16px 16px 0; display: grid; gap: 18px; }
 .sheet-body > .title-block h2 { font-size: 24px; }
@@ -874,6 +888,20 @@ body.sheet-open .home { visibility: hidden; }
     </div>
   </section>
 
+  <section class="sheet" id="s-eclair" role="dialog" aria-modal="true" aria-labelledby="h-eclair" hidden>
+    <div class="sheet-head" id="eclair-head" style="--c:#2f7a45;--t:#ffffff">
+      <button class="back" type="button" data-open="netzach" aria-label="Revenir à mes rêves">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Rêves</button>
+      <div class="sheet-title"><span class="heb" id="eclair-heb">Le chemin de l'Éclair</span><h2 id="h-eclair">Le chemin de l'Éclair</h2><p id="eclair-dream"></p></div>
+    </div>
+    <div class="sheet-body">
+      <div class="eclair-top">
+        <svg id="eclair-mini" viewBox="0 0 300 410" aria-hidden="true"></svg>
+        <div class="eclair-step" id="eclair-step"></div>
+      </div>
+    </div>
+  </section>
+
 <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Photo" hidden>
   <img id="lb-img" alt="">
   <div class="row lb-actions">
@@ -960,7 +988,7 @@ body.sheet-open .home { visibility: hidden; }
   ];
   const fresh = () => ({
     v: 4, gestes: DEFAULT_GESTES.slice(), faits: {}, notes: [], voix: [], checkins: [],
-    rappel: { on: false, min: 45 }, humeur: {}, gratitudes: {}, projets: [], refuges: [], pas: {}, souffle: "infinie", intentions: {}, ancre: {}, triReves: "commencer", qualites: [], decision: {}, condition: {}, inspirations: [], gratPhotos: []
+    rappel: { on: false, min: 45 }, humeur: {}, gratitudes: {}, projets: [], refuges: [], pas: {}, souffle: "infinie", intentions: {}, ancre: {}, triReves: "commencer", eclairActif: null, qualites: [], decision: {}, condition: {}, inspirations: [], gratPhotos: []
   });
   const migrate = (o) => {
     const s = Object.assign(fresh(), o || {});
@@ -1336,6 +1364,7 @@ body.sheet-open .home { visibility: hidden; }
             <div class="heart-pick">${[1, 2, 3, 4, 5].map((n) => `<button type="button" class="${n <= imp(p) ? "on" : ""}" data-imp="${n}" aria-label="${n} sur 5">♥</button>`).join("")}</div></div>
           <div class="rate"><span class="lbl">Effort pour l'atteindre</span>
             <div class="seg">${Object.entries(EFFORTS).map(([key, v]) => `<button type="button" class="chip" style="--c:var(--cobalt);padding:5px 11px;font-size:13px" data-eff="${key}" aria-pressed="${(p.effort || "moyen") === key}">${v.label}</button>`).join("")}</div></div>
+          <button class="btn-eclair" type="button" data-eclair="${p.id}">⚡ Le chemin de l'Éclair · ${eclairCount(p)}/10</button>
           <div class="rate"><span class="lbl">Ce rêve me fait grandir en…</span>
             ${S.qualites.length ? `<div class="seg">${S.qualites.map((q, i) => `<button type="button" class="qchip" style="${paint(COLORS[i % COLORS.length])};padding:5px 11px;font-size:13px" data-dq="${q.id}" aria-pressed="${(p.qualites || []).includes(q.id)}">${esc(q.nom)}</button>`).join("")}</div>`
               : `<p class="hint" style="margin:0">Ajoute d'abord tes qualités, juste au-dessus de la liste.</p>`}</div>
@@ -1517,6 +1546,7 @@ body.sheet-open .home { visibility: hidden; }
     if (d.toggle) { openDream = openDream === p.id ? null : p.id; confirmDream = null; renderDreams(); return; }
     if (d.addPhoto) { photoFor = p.id; $("photo-input").click(); return; }
     if (d.viewPhoto) { showPhoto(d.viewPhoto); return; }
+    if (d.eclair) { openEclair(p.id); return; }
     if (d.imp) { p.importance = +d.imp; save(); renderDreams(); return; }
     if (d.eff) { p.effort = d.eff; save(); renderDreams(); return; }
     if (d.dq) { p.qualites = p.qualites || []; p.qualites = p.qualites.includes(d.dq) ? p.qualites.filter((x) => x !== d.dq) : p.qualites.concat(d.dq); save(); renderDreams(); return; }
@@ -2057,8 +2087,19 @@ Si la pensée évoque une envie de se faire du mal ou de mourir, réponds avec d
     const t = dayKey();
     let g = `<defs><linearGradient id="fade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f2d9c2"/><stop offset="1" stop-color="#f2d9c2" stop-opacity="0"/></linearGradient></defs>
       <mask id="mbot" maskUnits="userSpaceOnUse" x="0" y="0" width="1414" height="2000"><rect width="1414" height="2000" fill="url(#gbot)"/></mask><linearGradient id="gbot" x1="0" y1="0" x2="0" y2="2000" gradientUnits="userSpaceOnUse"><stop offset=".86" stop-color="#fff"/><stop offset=".97" stop-color="#fff" stop-opacity="0"/></linearGradient>
-      <image href="${BG}" x="0" y="0" width="1414" height="2000" preserveAspectRatio="none" mask="url(#mbot)"/>
-`;
+      <image href="${BG}" x="0" y="0" width="1414" height="2000" preserveAspectRatio="none" mask="url(#mbot)"/>`;
+    try {
+      const ep = S.projets.find((x) => x.id === S.eclairActif && !x.fini);
+      if (ep) {
+        const n = ECLAIR.findIndex((e) => !((ep.eclair || {})[e.k] || "").trim()), upto = n < 0 ? ECLAIR.length : n;
+        if (upto > 0) {
+          const pts = ECLAIR.slice(0, Math.max(2, upto)).map((e) => POS[e.k].slice(0, 2).join(",")).join(" ");
+          g += `<polyline points="${pts}" fill="none" stroke="#fff3b0" stroke-width="34" stroke-opacity=".45" stroke-linejoin="round" stroke-linecap="round"/>
+            <polyline points="${pts}" fill="none" stroke="#f2c230" stroke-width="16" stroke-linejoin="round" stroke-linecap="round"/>
+            <polyline points="${pts}" fill="none" stroke="#fffbe6" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/>`;
+        }
+      }
+    } catch (e) { /* Éclair pas encore initialisé */ }
     SEPH.forEach((n) => {
       const [x, y, r] = POS[n.k], done = seStatus(n.k);
       let sub = "";
@@ -2262,6 +2303,102 @@ Si la pensée évoque une envie de se faire du mal ou de mourir, réponds avec d
   });
 
   $("go-music").onclick = () => $("netz-music").scrollIntoView({ behavior: "smooth" });
+  /* ================= le chemin de l'Éclair (Keter → Malkhout) ================= */
+  const ECLAIR = [
+    { k: "keter", q: "Qu'est-ce que je veux vraiment, au fond ?", h: "La volonté première. Écris-le simplement, comme une évidence." },
+    { k: "chokhmah", q: "Quelle image, quelle idée m'est venue en premier ?", h: "L'éclair d'intuition : la première image qui t'a donné envie." },
+    { k: "binah", q: "Pourquoi ce rêve compte-t-il pour moi ? À quoi ressemble-t-il concrètement ?", h: "Donne une forme à l'intuition : le sens, les contours." },
+    { k: "chesed", q: "Qu'est-ce que j'ai déjà ? Qui peut m'aider ?", h: "L'abondance : tes forces, tes ressources, les personnes autour de toi." },
+    { k: "gevurah", q: "À quoi est-ce que je dis non pour lui faire de la place ?", h: "Le discernement : ce que tu laisses de côté, avec douceur." },
+    { k: "tiferet", q: "Est-ce que ce rêve me rend vraiment heureuse ? Est-il juste pour moi ?", h: "Le cœur : vérifie l'harmonie entre ton envie et ce qui est bon pour toi." },
+    { k: "netzach", q: "Quel petit pas vais-je répéter chaque semaine ?", h: "La persévérance : un geste simple et régulier vaut mieux qu'un grand effort." },
+    { k: "hod", q: "Comment je l'écris : mon plan en quelques lignes", h: "Les mots donnent de la clarté. Quelques étapes, dans l'ordre." },
+    { k: "yesod", q: "Je l'imagine déjà réalisé : qu'est-ce que je ressens ?", h: "Le fondement : vis-le en imagination, avec tous tes sens." },
+    { k: "malkhut", q: "Quel geste concret je fais aujourd'hui ?", h: "Le royaume : une action qui tient en 10 minutes." }
+  ];
+  const eclairCount = (p) => ECLAIR.filter((e) => ((p.eclair || {})[e.k] || "").trim()).length;
+  let eclairDream = null, eclairStep = 0;
+  function openEclair(pid) {
+    const p = S.projets.find((x) => x.id === pid); if (!p) return;
+    eclairDream = pid; p.eclair = p.eclair || {};
+    const first = ECLAIR.findIndex((e) => !(p.eclair[e.k] || "").trim());
+    eclairStep = first < 0 ? ECLAIR.length : first;
+    S.eclairActif = pid; save();
+    openSheet("eclair"); renderEclair();
+  }
+  function renderEclairMini(p) {
+    const P = ECLAIR.map((e) => { const [x, y] = POS[e.k]; return [((x - 300) / 880) * 260 + 20, ((y - 230) / 1480) * 380 + 15]; });
+    let g = `<polyline points="${P.map((q) => q.join(",")).join(" ")}" fill="none" stroke="#dcb24e" stroke-opacity=".35" stroke-width="6" stroke-linejoin="round"/>`;
+    const lit = P.slice(0, Math.min(eclairStep + 1, ECLAIR.length));
+    if (lit.length > 1) g += `<polyline points="${lit.map((q) => q.join(",")).join(" ")}" fill="none" stroke="#f2c230" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/>`;
+    P.forEach((q, i) => {
+      const n0 = SEPH.find((s) => s.k === ECLAIR[i].k), ok = ((p.eclair || {})[ECLAIR[i].k] || "").trim(), cur = i === eclairStep;
+      g += `<circle cx="${q[0]}" cy="${q[1]}" r="${cur ? 19 : 15}" fill="${n0.fill}" stroke="${cur ? "#fff" : "#dcb24e"}" stroke-width="${cur ? 5 : 3}" data-estep="${i}" style="cursor:pointer"/>`;
+      if (ok) g += `<path d="M${q[0] - 6} ${q[1]}l4 4 8-9" fill="none" stroke="${n0.txt}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>`;
+    });
+    $("eclair-mini").innerHTML = g;
+  }
+  function renderEclair() {
+    const p = S.projets.find((x) => x.id === eclairDream); if (!p) return;
+    $("eclair-dream").textContent = p.titre;
+    renderEclairMini(p);
+    const box = $("eclair-step");
+    if (eclairStep >= ECLAIR.length) {
+      $("eclair-head").style.cssText = "--c:#10294f;--t:#ffffff";
+      $("eclair-heb").textContent = "L'Éclair est descendu jusqu'au concret";
+      box.innerHTML = `<h3>Ton chemin, de la Couronne au Royaume</h3>
+        <div class="eclair-sum">${ECLAIR.map((e) => { const n0 = SEPH.find((s) => s.k === e.k); const a = (p.eclair[e.k] || "").trim(); return a ? `<div style="--c:${n0.fill}"><b>${n0.heb} · ${n0.mot}</b>${esc(a)}</div>` : ""; }).join("")}</div>
+        <div class="row">
+          ${(p.eclair.malkhut || "").trim() ? `<button class="btn small" type="button" id="eclair-to-step">Ajouter ce geste à mes étapes</button>` : ""}
+          <button class="btn alt small" type="button" data-estep="0">Relire depuis le début</button>
+        </div><p class="hint" id="eclair-msg"></p>`;
+      const b = $("eclair-to-step");
+      if (b) b.onclick = () => {
+        const t = p.eclair.malkhut.trim().slice(0, 120);
+        if (!p.etapes.some((x) => x.txt === t)) p.etapes.unshift({ id: uid(), txt: t, ok: false });
+        if (!p.plan && (p.eclair.hod || "").trim()) p.plan = p.eclair.hod.trim();
+        if (!p.resultat && (p.eclair.yesod || "").trim()) p.resultat = p.eclair.yesod.trim();
+        if (!p.pourquoi && (p.eclair.binah || "").trim()) p.pourquoi = p.eclair.binah.trim().slice(0, 160);
+        save(); renderDreams(); renderNextStep(); $("eclair-msg").textContent = "Ajouté à ton rêve, avec ton plan ✨"; b.disabled = true;
+      };
+      return;
+    }
+    const e = ECLAIR[eclairStep], n0 = SEPH.find((s) => s.k === e.k);
+    $("eclair-head").style.cssText = `--c:${n0.fill};--t:${n0.txt}`;
+    $("eclair-heb").textContent = `${n0.heb} · ${n0.mot}`;
+    box.innerHTML = `<span class="num">ÉTAPE ${eclairStep + 1} / 10</span>
+      <span class="sph" style="--c:${n0.fill}"><i></i>${n0.heb} · ${n0.mot}</span>
+      <h3>${e.q}</h3><p class="help">${e.h}</p>
+      <label class="sr" for="eclair-in">Ma réponse</label>
+      <textarea class="field" id="eclair-in" placeholder="Écris librement…">${esc((p.eclair || {})[e.k] || "")}</textarea>
+      ${sampleFn ? `<div class="row"><button class="linkbtn" type="button" id="eclair-ai">Aide-moi à y réfléchir</button><span class="hint" id="eclair-ai-msg"></span></div>` : ""}
+      <div class="row between">
+        <button class="btn alt small" type="button" data-estep="${Math.max(0, eclairStep - 1)}" ${eclairStep ? "" : "disabled"}>‹ Précédente</button>
+        <button class="btn small" type="button" id="eclair-next">${eclairStep === 9 ? "Terminer ⚡" : "Suivante ›"}</button>
+      </div>`;
+    $("eclair-in").addEventListener("input", (ev) => { p.eclair[e.k] = ev.target.value; save(); });
+    $("eclair-next").onclick = () => { eclairStep++; renderEclair(); $("s-eclair").scrollTop = 0; };
+    const ai = $("eclair-ai");
+    if (ai) ai.onclick = async () => {
+      ai.disabled = true; $("eclair-ai-msg").textContent = "Je réfléchis…";
+      const before = ECLAIR.slice(0, eclairStep).filter((x) => (p.eclair[x.k] || "").trim()).map((x) => `- ${x.q} → ${p.eclair[x.k].trim()}`).join("\n");
+      try {
+        const r = await sampleFn(`Une personne chemine vers son rêve : « ${p.titre} ». Elle suit l'Arbre des Séphiroth du haut vers le bas (le chemin de l'Éclair).
+Ses réponses précédentes :
+${before || "(aucune)"}
+Étape actuelle : ${n0.heb} (${n0.mot}). Question : « ${e.q} ».
+Propose 3 pistes de réponse courtes (une ligne chacune), concrètes et personnelles, au tutoiement, en français de Suisse romande, ton doux et positif. Pas d'introduction.`);
+        const ta = $("eclair-in"); ta.value = (ta.value ? ta.value + "\n" : "") + r.text.trim(); p.eclair[e.k] = ta.value; save();
+        $("eclair-ai-msg").textContent = "Garde ce qui te parle, efface le reste.";
+      } catch (err) { $("eclair-ai-msg").textContent = "Pas de réponse cette fois."; }
+      ai.disabled = false;
+    };
+  }
+  $("s-eclair").addEventListener("click", (ev) => {
+    const b = ev.target.closest("[data-estep]"); if (!b || b.disabled) return;
+    eclairStep = +b.dataset.estep; renderEclair();
+  });
+
   /* ================= intuitions (Hokhmah) ================= */
   function renderIntu() {
     const list = S.notes.filter((n) => n.type === "envie").slice(0, 6);
