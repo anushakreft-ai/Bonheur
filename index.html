@@ -138,6 +138,23 @@ textarea.field { min-height: 110px; resize: vertical; font-family: var(--f-poem)
 
 /* ---- gratitude ---- */
 .grat { display: grid; gap: 8px; }
+.glass { background: rgba(255,250,243,.2); -webkit-backdrop-filter: blur(10px) saturate(1.1); backdrop-filter: blur(10px) saturate(1.1); border: 1px solid rgba(255,255,255,.45); border-radius: 20px; padding: 14px; display: grid; gap: 10px; min-width: 0; }
+.glass h3 { font-size: 18px; }
+.ideas { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; scroll-snap-type: x proximity; -webkit-overflow-scrolling: touch; margin-inline: -14px; padding-inline: 14px; scrollbar-width: none; }
+.ideas::-webkit-scrollbar { display: none; }
+.ideas button { flex: none; scroll-snap-align: start; border: 0; border-radius: 99px; padding: 8px 13px; font-weight: 600; font-size: 14px; background: rgba(255,255,255,.7); color: var(--ink); box-shadow: inset 0 0 0 1.5px var(--c); }
+.today-list { display: flex; flex-wrap: wrap; gap: 6px; }
+.today-list span { font-size: 13px; background: rgba(255,255,255,.55); border-radius: 99px; padding: 4px 10px; }
+.today-list button { border: 0; background: none; color: var(--ink-soft); font-size: 13px; padding: 0 0 0 4px; }
+.jarbox { display: grid; grid-template-columns: 150px 1fr; gap: 12px; align-items: center; }
+.jar-svg { width: 150px; height: auto; display: block; filter: drop-shadow(0 6px 10px rgba(60,40,20,.18)); }
+.jar-svg .slip { cursor: pointer; }
+.jar-side { display: grid; gap: 8px; min-width: 0; }
+.jar-count { font-family: var(--f-display); font-weight: 700; font-size: 17px; color: var(--ink); background: rgba(255,250,243,.55); border-radius: 12px; padding: 4px 10px; justify-self: start; }
+.jar-memo { margin: 0; font-family: var(--f-poem); font-size: 18px; line-height: 1.3; background: rgba(255,250,243,.6); border-radius: 14px; padding: 8px 12px; overflow-wrap: anywhere; }
+.jar-memo:empty { display: none; }
+.jar-memo small { display: block; font-family: var(--f-body); font-size: 12px; color: var(--ink-soft); margin-top: 4px; }
+#jar-next { justify-self: start; background: var(--ochre); color: #2b3440; }
 .grat-line { display: grid; grid-template-columns: 34px 1fr; gap: 8px; align-items: center; }
 .grat-line b { font-family: var(--f-num); font-weight: 400; font-size: 24px; color: var(--c); text-align: center; }
 .grat-line input { font-family: var(--f-poem); font-size: 17px; }
@@ -315,7 +332,12 @@ body { overflow: hidden; padding: 0 16px; margin: 0; }
 .sheet-title .heb { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; font-weight: 700; opacity: .75; }
 .sheet-title h2 { font-size: 30px; color: inherit; }
 .sheet-title p { margin: 0; font-family: var(--f-poem); font-size: 16px; opacity: .9; }
-.sheet-body > .title-block, .sheet-body > .row, .sheet-body > .sortbar, .sheet-body > .hint, .sheet-body > p { background: rgba(255,250,243,.78); border-radius: 18px; padding: 10px 14px; }
+.sheet-body > .title-block, .sheet-body > .row, .sheet-body > .sortbar, .sheet-body > .hint, .sheet-body > p { background: rgba(255,250,243,.35); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); border-radius: 18px; padding: 10px 14px; }
+.sheet .panel, .sheet .entry, .sheet .drow, .sheet .dream-detail { background: rgba(255,250,243,.2); -webkit-backdrop-filter: blur(10px) saturate(1.1); backdrop-filter: blur(10px) saturate(1.1); border-color: rgba(255,255,255,.45); }
+.sheet .panel { padding: 14px; border-radius: 20px; gap: 10px; }
+.sheet .panel h2 { font-size: 20px; }
+.sheet .field { background: rgba(255,255,255,.6); border-color: rgba(255,255,255,.7); padding: 9px 12px; }
+.sheet .lead { font-size: 15px; }
 .sheet-body { max-width: 640px; margin: 0 auto; padding: 16px 16px 0; display: grid; gap: 18px; }
 .sheet-body > .title-block h2 { font-size: 24px; }
 details.tight summary { font-weight: 700; color: var(--cobalt); }
@@ -541,15 +563,25 @@ body.sheet-open .home { visibility: hidden; }
       <div class="sheet-title"><span class="heb">Hessed · Bonté</span><h2 id="h-chesed">Gratitude</h2><p>Ce que je reçois et ce que je donne.</p></div>
     </div>
     <div class="sheet-body">
-      <div class="panel">
-        <div class="title-block">
-          <h2>Trois bonnes choses</h2>
-          <p class="lead">Même minuscules. Le café chaud, un sourire, la lumière sur le lac.</p>
+      <div class="jarbox">
+        <svg class="jar-svg" id="jar-svg" viewBox="0 0 200 230" role="img" aria-label="Mon bocal à bonheurs"></svg>
+        <div class="jar-side">
+          <div class="jar-count" id="jar-count"></div>
+          <p class="jar-memo" id="jar-memo"></p>
+          <button class="btn small" type="button" id="jar-next" hidden>Piocher un souvenir</button>
         </div>
-        <div class="grat" id="grat"></div>
-        <div class="row"><button class="btn" id="grat-save" type="button">Mettre dans le bocal</button><span class="hint" id="grat-msg" aria-live="polite"></span></div>
       </div>
-      <div class="jar" id="jar"></div>
+      <div class="glass">
+        <h3>Un moment agréable aujourd'hui ?</h3>
+        <div class="ideas" id="grat-ideas"></div>
+        <form class="inline-form" id="f-grat">
+          <label class="sr" for="grat-in">Mon moment agréable</label>
+          <input class="field" id="grat-in" maxlength="140" placeholder="Ou écris le tien…">
+          <button class="btn" type="submit">Dans le bocal</button>
+        </form>
+        <p class="hint" id="grat-msg" aria-live="polite"></p>
+        <div class="today-list" id="grat-today"></div>
+      </div>
     </div>
   </section>
 
@@ -1009,21 +1041,29 @@ body.sheet-open .home { visibility: hidden; }
     S.humeur[dayKey()] = +b.dataset.m; save(); renderMoods(); renderBilan();
   });
 
-  /* ================= gratitude ================= */
-  const GC = ["var(--orange)", "var(--turq)", "var(--ochre)"];
+  /* ================= gratitude : bocal à bonheurs ================= */
+  const GIDEAS = ["Un café chaud", "Un sourire reçu", "La lumière sur le lac", "Un moment avec ma fille", "Une bonne nouvelle", "Un fou rire", "Un repas savoureux", "Une chanson qui m'a portée",
+    "Un message d'une amie", "Le soleil sur ma peau", "Une promenade", "Un câlin", "Un travail bien fait", "Une sieste", "Une fleur, un arbre, le ciel", "Un geste gentil", "Me sentir en sécurité", "Un livre", "Une odeur que j'aime", "Ma santé"];
+  const GCOL = ["#e08a76", "#e3b04f", "#8fc4bb", "#f2c3b5", "#3f86c0", "#7a5ea8", "#2f7a45", "#c4412a"];
+  const todayGrat = () => (S.gratitudes[dayKey()] || []).filter((x) => x && x.trim());
   function renderGrat() {
-    const g = S.gratitudes[dayKey()] || ["", "", ""];
-    $("grat").innerHTML = [0, 1, 2].map((i) =>
-      `<div class="grat-line" style="--c:${GC[i]}"><b>${i + 1}</b>
-        <label class="sr" for="grat-${i}">Bonne chose ${i + 1}</label>
-        <input class="field" id="grat-${i}" maxlength="140" value="${esc(g[i] || "")}" placeholder="${["Aujourd'hui, j'ai aimé…", "J'ai de la chance d'avoir…", "Un petit moment doux…"][i]}"></div>`).join("");
+    const today = new Set(todayGrat().map((x) => x.toLowerCase()));
+    $("grat-ideas").innerHTML = GIDEAS.filter((x) => !today.has(x.toLowerCase())).map((x, i) => `<button type="button" style="--c:${GCOL[i % GCOL.length]}" data-gi="${esc(x)}">${esc(x)}</button>`).join("");
+    $("grat-today").innerHTML = todayGrat().map((x, i) => `<span>${esc(x)}<button type="button" data-gdel="${i}" aria-label="Retirer">×</button></span>`).join("");
+    renderJar();
   }
-  $("grat-save").onclick = () => {
-    const vals = [0, 1, 2].map((i) => $("grat-" + i).value.trim());
-    if (!vals.some(Boolean)) { $("grat-msg").textContent = "Écris au moins une chose."; return; }
-    S.gratitudes[dayKey()] = vals; save(); renderBilan();
-    $("grat-msg").textContent = vals.filter(Boolean).length === 3 ? "Trois de plus dans ton bocal." : "Dans le bocal.";
-  };
+  function addGrat(t) {
+    t = (t || "").trim(); if (!t) return;
+    const k = dayKey(); S.gratitudes[k] = todayGrat().concat(t);
+    save(); renderGrat(); renderBilan();
+    $("grat-msg").textContent = "Dans le bocal ✨";
+  }
+  $("grat-ideas").addEventListener("click", (e) => { const b = e.target.closest("[data-gi]"); if (b) addGrat(b.dataset.gi); });
+  $("f-grat").addEventListener("submit", (e) => { e.preventDefault(); addGrat($("grat-in").value); $("grat-in").value = ""; });
+  $("grat-today").addEventListener("click", (e) => {
+    const b = e.target.closest("[data-gdel]"); if (!b) return;
+    const arr = todayGrat(); arr.splice(+b.dataset.gdel, 1); S.gratitudes[dayKey()] = arr; save(); renderGrat(); renderBilan();
+  });
 
   /* ================= jardin + gestes ================= */
   const LEAF_SPOTS = [
@@ -1713,19 +1753,44 @@ Si la pensée évoque une envie de se faire du mal ou de mourir, réponds avec d
     renderJar();
   }
   let jarPick = null;
-  function renderJar() {
+  function allGrat() {
     const all = [];
-    Object.entries(S.gratitudes).forEach(([k, arr]) => (arr || []).forEach((t) => { if (t && t.trim()) all.push({ k, t: t.trim() }); }));
-    if (!all.length) {
-      $("jar").innerHTML = `<div class="eyebrow" style="color:var(--ink-soft)">Le bocal à bonheurs</div><p>Il se remplit avec tes trois bonnes choses du jour.</p><small>Quand tu as envie d'un sourire, viens y piocher un souvenir.</small>`;
-      return;
-    }
-    if (!jarPick || !all.some((x) => x.t === jarPick.t)) jarPick = all[Math.floor(Math.random() * all.length)];
-    const d = new Date(jarPick.k + "T12:00:00").toLocaleDateString("fr-CH", { day: "numeric", month: "long" });
-    $("jar").innerHTML = `<div class="eyebrow" style="color:var(--ink-soft)">Le bocal à bonheurs · ${all.length} souvenir${all.length > 1 ? "s" : ""}</div>
-      <p>« ${esc(jarPick.t)} »</p><small>${d}</small><button class="btn small" type="button" id="jar-next">Piocher un autre</button>`;
-    $("jar-next").onclick = () => { jarPick = all[Math.floor(Math.random() * all.length)]; renderJar(); };
+    Object.entries(S.gratitudes).sort((x, y) => x[0].localeCompare(y[0])).forEach(([k, arr]) => (arr || []).forEach((t) => { if (t && t.trim()) all.push({ k, t: t.trim() }); }));
+    return all;
   }
+  function renderJar() {
+    const all = allGrat(), n = all.length;
+    // petits papiers pliés qui remplissent le bocal, du fond vers le haut
+    let slips = "";
+    const shown = all.slice(-45);
+    shown.forEach((g, i) => {
+      const row = Math.floor(i / 5), col = i % 5;
+      const x = 56 + col * 22 + (row % 2) * 10 + ((i * 37) % 7) - 3, y = 200 - row * 15 - ((i * 13) % 5);
+      const r = ((i * 47) % 50) - 25, c = GCOL[i % GCOL.length];
+      slips += `<g class="slip" data-slip="${all.length - shown.length + i}" transform="translate(${x} ${y}) rotate(${r})"><rect x="-11" y="-7" width="22" height="14" rx="3" fill="${c}" stroke="rgba(255,255,255,.7)" stroke-width="1"/></g>`;
+    });
+    $("jar-svg").innerHTML = `
+      <defs><clipPath id="jarclip"><path d="M48 62C38 66 34 78 34 92V196C34 210 44 218 58 218H142C156 218 166 210 166 196V92C166 78 162 66 152 62Z"/></clipPath>
+      <linearGradient id="glassg" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset=".25" stop-color="#fff" stop-opacity=".12"/><stop offset=".8" stop-color="#fff" stop-opacity=".08"/><stop offset="1" stop-color="#fff" stop-opacity=".4"/></linearGradient></defs>
+      <path d="M48 62C38 66 34 78 34 92V196C34 210 44 218 58 218H142C156 218 166 210 166 196V92C166 78 162 66 152 62Z" fill="rgba(255,255,255,.18)"/>
+      <g clip-path="url(#jarclip)">${slips}</g>
+      <path d="M48 62C38 66 34 78 34 92V196C34 210 44 218 58 218H142C156 218 166 210 166 196V92C166 78 162 66 152 62Z" fill="url(#glassg)" stroke="rgba(255,255,255,.9)" stroke-width="3"/>
+      <path d="M46 98V184" stroke="#fff" stroke-width="4" stroke-linecap="round" opacity=".7"/>
+      <rect x="52" y="46" width="96" height="18" rx="5" fill="#d9a33a" stroke="#a87a22" stroke-width="2"/>
+      <path d="M62 30H138L148 46H52Z" fill="#e8c25a" stroke="#a87a22" stroke-width="2"/>
+      ${n ? "" : `<text x="100" y="150" text-anchor="middle" font-size="12" fill="#6b6f78" font-family="sans-serif">Encore vide</text>`}`;
+    $("jar-count").textContent = n ? `${n} bonheur${n > 1 ? "s" : ""} dans le bocal` : "Mon bocal à bonheurs";
+    $("jar-next").hidden = !n;
+    if (!n) { $("jar-memo").innerHTML = "Ajoute un moment agréable : il tombe dans le bocal."; return; }
+    if (!jarPick || !all.some((x) => x.t === jarPick.t && x.k === jarPick.k)) $("jar-memo").innerHTML = "Touche un papier ou pioche un souvenir.";
+    else showPick();
+  }
+  function showPick() {
+    const d = new Date(jarPick.k + "T12:00:00").toLocaleDateString("fr-CH", { day: "numeric", month: "long" });
+    $("jar-memo").innerHTML = `« ${esc(jarPick.t)} »<small>${d}</small>`;
+  }
+  $("jar-next").onclick = () => { const all = allGrat(); jarPick = all[Math.floor(Math.random() * all.length)]; showPick(); };
+  $("jar-svg").addEventListener("click", (e) => { const g = e.target.closest("[data-slip]"); if (!g) return; jarPick = allGrat()[+g.dataset.slip]; if (jarPick) showPick(); });
 
   /* ================= arbre des Séphiroth ================= */
   // couleurs traditionnelles des séphiroth (échelle de la Reine)
