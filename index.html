@@ -29,7 +29,7 @@
    Toujours en clair. Palette du plateau « jungle douce » : blanc chaud, rose poudré, sarcelle, moutarde, corail, points noirs */
 :root {
   --paper: #fbf6f1;
-  --card: #ffffff;
+  --card: rgba(255,255,255,.9);
   --ink: #2b3440;
   --ink-soft: #6b6f78;
   --cobalt: #2f7f7c;
@@ -305,7 +305,7 @@ body { overflow: hidden; padding: 0 16px; margin: 0; }
 #tree .t-heb { font: 700 34px var(--f-body); fill: #2b3440; letter-spacing: .06em; paint-order: stroke; stroke: #fbf1e2; stroke-width: 9px; stroke-linejoin: round; }
 
 /* ---- pages des sphères ---- */
-.sheet { position: fixed; inset: 0; z-index: 40; background: rgba(251,246,241,.9); -webkit-backdrop-filter: blur(2px); backdrop-filter: blur(2px); overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; padding-bottom: calc(28px + env(safe-area-inset-bottom, 0px)); animation: monte .28s ease both; }
+.sheet { position: fixed; inset: 0; z-index: 40; background: linear-gradient(rgba(251,246,241,.5), rgba(251,246,241,.25) 55%, rgba(251,246,241,.12)); overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; padding-bottom: calc(28px + env(safe-area-inset-bottom, 0px)); animation: monte .28s ease both; }
 .sheet-head { position: sticky; top: 0; z-index: 3; background: var(--c); color: var(--t); padding: calc(10px + env(safe-area-inset-top, 0px)) 16px 14px; border-radius: 0 0 26px 26px; display: grid; gap: 6px; box-shadow: 0 1px 0 var(--line); }
 .sheet-head > * { max-width: 640px; width: 100%; margin: 0 auto; }
 .back { border: 0; background: rgba(255,255,255,.6); color: #2b3440; border-radius: 99px; padding: 6px 12px 6px 6px; display: inline-flex; align-items: center; gap: 2px; font-weight: 700; font-size: 14px; width: auto !important; margin: 0 !important; justify-self: start; }
@@ -314,6 +314,7 @@ body { overflow: hidden; padding: 0 16px; margin: 0; }
 .sheet-title .heb { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; font-weight: 700; opacity: .75; }
 .sheet-title h2 { font-size: 30px; color: inherit; }
 .sheet-title p { margin: 0; font-family: var(--f-poem); font-size: 16px; opacity: .9; }
+.sheet-body > .title-block, .sheet-body > .row, .sheet-body > .sortbar, .sheet-body > .hint, .sheet-body > p { background: rgba(255,250,243,.78); border-radius: 18px; padding: 10px 14px; }
 .sheet-body { max-width: 640px; margin: 0 auto; padding: 16px 16px 0; display: grid; gap: 18px; }
 .sheet-body > .title-block h2 { font-size: 24px; }
 details.tight summary { font-weight: 700; color: var(--cobalt); }
