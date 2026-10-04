@@ -289,7 +289,7 @@ body { overflow: hidden; padding: 0 16px; margin: 0; }
 .quick { flex: none; border: 0; border-radius: 99px; background: var(--blush); color: var(--ink); display: inline-flex; gap: 6px; align-items: center; padding: 8px 14px 8px 10px; font-weight: 700; font-size: 14px; box-shadow: inset 0 0 0 2px var(--orange); margin-top: 18px; }
 .quick svg { width: 24px; height: 24px; color: var(--ochre); }
 .tree-wrap { position: fixed; inset: 0; z-index: 0; background: #e9cbb0 18% bottom / cover no-repeat; box-sizing: border-box; }
-#tree { overflow: hidden; -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 50px); mask-image: linear-gradient(to bottom, transparent 0, #000 50px); }
+#tree { overflow: hidden; -webkit- }
 #tree { width: 100%; height: 100%; display: block; }
 .home-head { position: relative; z-index: 2; }
 .home-head .eyebrow { white-space: nowrap; }
@@ -402,7 +402,7 @@ body.sheet-open .home { visibility: hidden; }
     <svg hidden aria-hidden="true"><g id="nav-sun"></g></svg>
   </header>
   <main class="tree-wrap">
-    <svg id="tree" viewBox="200 0 1014 2000" preserveAspectRatio="xMidYMax meet" role="group" aria-label="Arbre des Séphiroth : touche une sphère"></svg>
+    <svg id="tree" viewBox="200 0 1014 2000" preserveAspectRatio="xMidYMid meet" role="group" aria-label="Arbre des Séphiroth : touche une sphère"></svg>
   </main>
 </div>
 
@@ -1775,19 +1775,25 @@ Si la pensée évoque une envie de se faire du mal ou de mourir, réponds avec d
     hod: [380, 1137, 112], netzach: [1100, 1137, 112], yesod: [740, 1315, 110], malkhut: [740, 1640, 118]
   };
   function fitTree() {
-    // l'arbre commence sous l'en-tête et reste entier : on montre autant d'image que l'écran le permet
-    const head = document.querySelector(".home-head").getBoundingClientRect().bottom;
-    const top = Math.max(0, Math.round(head - 24));
-    document.querySelector(".tree-wrap").style.paddingTop = top + "px";
-    const w = Math.max(1014, Math.min(1414, 2000 * innerWidth / (innerHeight - top)));
-    // l'axe de l'arbre peint est à x = 740 (et non au milieu de l'image, 707) : on centre sur lui
-    $("tree").setAttribute("viewBox", `${(740 - w / 2).toFixed(0)} 0 ${w.toFixed(0)} 2000`);
+    // l'arbre (de Keter à « Malkhout », y 170 → 1810 dans l'image) est centré dans la hauteur de l'écran,
+    // et horizontalement sur son axe (x = 740) ; on dézoome si besoin pour qu'il ne passe pas sous l'en-tête
+    const W = innerWidth, H = innerHeight, TOP = 170, BOT = 1810, MID = (TOP + BOT) / 2;
+    const head = document.querySelector(".home-head").getBoundingClientRect().bottom + 6;
+    document.querySelector(".tree-wrap").style.paddingTop = "0px";
+    let w = 1014, y = 0, s = 1;
+    for (; w <= 1414; w += 10) {
+      s = W / w; y = MID - H / s / 2;
+      if ((TOP - y) * s >= head && (BOT - y) * s <= H - 6) break;
+    }
+    if (w > 1414) { w = 1414; s = W / w; y = TOP - head / s; }
+    $("tree").setAttribute("viewBox", `${(740 - w / 2).toFixed(1)} ${y.toFixed(1)} ${w} ${(H / s).toFixed(1)}`);
   }
   addEventListener("resize", fitTree);
   function renderTree() {
     const t = dayKey();
     let g = `<defs><linearGradient id="fade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f2d9c2"/><stop offset="1" stop-color="#f2d9c2" stop-opacity="0"/></linearGradient></defs>
-      <image href="${BG}" x="0" y="0" width="1414" height="2000" preserveAspectRatio="none"/>
+      <mask id="mbot" maskUnits="userSpaceOnUse" x="0" y="0" width="1414" height="2000"><rect width="1414" height="2000" fill="url(#gbot)"/></mask><linearGradient id="gbot" x1="0" y1="0" x2="0" y2="2000" gradientUnits="userSpaceOnUse"><stop offset=".86" stop-color="#fff"/><stop offset=".97" stop-color="#fff" stop-opacity="0"/></linearGradient>
+      <image href="${BG}" x="0" y="0" width="1414" height="2000" preserveAspectRatio="none" mask="url(#mbot)"/>
 `;
     SEPH.forEach((n) => {
       const [x, y, r] = POS[n.k], done = seStatus(n.k);
