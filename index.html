@@ -348,7 +348,17 @@ body { overflow: hidden; padding: 0 16px; margin: 0; }
 .sheet-body { max-width: 640px; margin: 0 auto; padding: 16px 16px 0; display: grid; gap: 18px; }
 .sheet-body > .title-block h2 { font-size: 24px; }
 details.tight summary { font-weight: 700; color: var(--cobalt); }
-.vision { display: grid; grid-template-columns: repeat(auto-fill, minmax(92px, 1fr)); gap: 6px; }
+.board { display: flex; flex-wrap: wrap; justify-content: center; padding: 8px 4px 4px; }
+.board:empty { display: none; }
+.board .pola { width: 31%; max-width: 150px; margin: -3px -2px; border: 0; padding: 5px 5px 18px; background: #fffdf8; border-radius: 3px; box-shadow: 0 5px 12px rgba(40,30,20,.22); transform: rotate(var(--rot)) translateY(var(--dy)); position: relative; transition: transform .2s; }
+.board .pola:hover, .board .pola:focus-visible { transform: rotate(0) scale(1.06); z-index: 2; }
+.board .pola img { width: 100%; aspect-ratio: 1; object-fit: cover; display: block; background: var(--blush); }
+.board .pola span { position: absolute; left: 4px; right: 4px; bottom: 2px; font: 600 10px var(--f-body); color: #4a3b2a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: center; background: none; padding: 0; }
+.board .pola i { position: absolute; top: -6px; right: -6px; width: 22px; height: 22px; border-radius: 50%; background: #e08a76; color: #fff; font-style: normal; font-size: 12px; display: grid; place-items: center; box-shadow: 0 2px 4px rgba(0,0,0,.2); }
+.draw { display: grid; gap: 10px; justify-items: center; background: rgba(255,250,243,.55); border-radius: 18px; padding: 12px; }
+.draw img { max-width: 100%; max-height: 46vh; border-radius: 6px; border: 6px solid #fffdf8; box-shadow: 0 8px 18px rgba(40,30,20,.25); transform: rotate(-1.5deg); }
+.draw p { margin: 0; font-family: var(--f-poem); font-size: 17px; text-align: center; }
+.vision-old { display: grid; }
 .vision button { border: 0; padding: 0; aspect-ratio: 1; border-radius: var(--r, 18px); overflow: hidden; background: var(--blush); position: relative; }
 .vision img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .vision span { position: absolute; left: 0; right: 0; bottom: 0; padding: 22px 12px 12px; background: linear-gradient(transparent, rgba(0,0,0,.55)); font-size: 11px; font-weight: 700; color: #fff; text-align: center; line-height: 1.15; }
@@ -469,6 +479,19 @@ body.sheet-open .home { visibility: hidden; }
       <div class="sheet-title"><span class="heb">Hokhmah · Sagesse</span><h2 id="h-chokhmah">Intuitions</h2><p>L'éclair d'une idée, une envie qui naît.</p></div>
     </div>
     <div class="sheet-body">
+      <div class="panel">
+        <div class="title-block">
+          <h2>Mon mur d'inspiration</h2>
+          <p class="lead">Des images en vrac qui te parlent : captures, photos, paysages, couleurs…</p>
+        </div>
+        <div class="board" id="insp-board"></div>
+        <div class="row">
+          <button class="btn small" type="button" id="insp-add">+ Ajouter des images</button>
+          <button class="btn alt small" type="button" data-draw="insp" id="insp-draw-go">✨ Une image au hasard</button>
+        </div>
+        <div id="insp-draw"></div>
+        <input type="file" id="insp-input" accept="image/*" multiple hidden>
+      </div>
       <div class="panel">
         <div class="title-block">
           <h2>Une intuition, une envie</h2>
@@ -660,7 +683,9 @@ body.sheet-open .home { visibility: hidden; }
     <div class="sheet-body">
       <button class="jump" type="button" id="go-music">♪ La musique qui m'élève</button>
       <div id="nextstep-host"></div>
-      <div class="vision" id="vision" hidden></div>
+      <div class="vision board" id="vision" hidden></div>
+      <div class="row" id="dream-draw-row" hidden><button class="btn alt small" type="button" data-draw="dream">✨ Une image au hasard</button></div>
+      <div id="dream-draw"></div>
       <div class="panel">
         <div class="title-block">
           <h3>Les qualités que je cultive</h3>
@@ -924,7 +949,7 @@ body.sheet-open .home { visibility: hidden; }
   ];
   const fresh = () => ({
     v: 4, gestes: DEFAULT_GESTES.slice(), faits: {}, notes: [], voix: [], checkins: [],
-    rappel: { on: false, min: 45 }, humeur: {}, gratitudes: {}, projets: [], refuges: [], pas: {}, souffle: "infinie", intentions: {}, ancre: {}, triReves: "commencer", qualites: [], decision: {}, condition: {}
+    rappel: { on: false, min: 45 }, humeur: {}, gratitudes: {}, projets: [], refuges: [], pas: {}, souffle: "infinie", intentions: {}, ancre: {}, triReves: "commencer", qualites: [], decision: {}, condition: {}, inspirations: []
   });
   const migrate = (o) => {
     const s = Object.assign(fresh(), o || {});
@@ -1265,9 +1290,9 @@ body.sheet-open .home { visibility: hidden; }
       `<button type="button" class="chip" style="--c:var(--leaf)" data-sort="${key}" aria-pressed="${key === k}">${v.label}</button>`).join("");
     $("sort-hint").textContent = S.projets.length > 1 ? SORTS[k].hint : "";
     // tableau de rêves
-    const pics = S.projets.filter((p) => !p.fini && (p.photos || []).length);
-    $("vision").hidden = !pics.length;
-    $("vision").innerHTML = pics.map((p, i) => `<button type="button" data-goto="${p.id}" style="--r:${RADII[i % RADII.length]}" aria-label="${esc(p.titre)}"><img data-photo="${p.photos[0]}" alt=""><span>${esc(p.titre)}</span></button>`).join("");
+    const items = dreamPool();
+    $("vision").hidden = !items.length; $("dream-draw-row").hidden = !items.length;
+    $("vision").innerHTML = boardHtml(items.slice(-12));
     if (!S.projets.length) {
       $("dreams").innerHTML = `<div class="empty">${svg("feuille")}<p>Aucun rêve planté pour l'instant. Commence par un seul, même un peu fou.</p></div>`;
       $("dream-new").open = true;
@@ -1363,6 +1388,62 @@ body.sheet-open .home { visibility: hidden; }
     }
     save(); renderDreams();
   });
+  /* ---------- images en vrac + tirage au hasard (Intuitions et Rêves) ---------- */
+  const rnd = (seed) => { let h = 0; for (const c of seed) h = (h * 31 + c.charCodeAt(0)) | 0; return ((h >>> 0) % 1000) / 1000; };
+  const inspPool = () => S.inspirations.map((x) => ({ pid: x.pid, label: "", coeur: x.coeur || 0, insp: x.id }));
+  const dreamPool = () => S.projets.filter((p) => !p.fini).flatMap((p) => (p.photos || []).map((pid) => ({ pid, label: p.titre, goto: p.id })))
+    .concat(S.inspirations.filter((x) => x.coeur > 0).map((x) => ({ pid: x.pid, label: "Inspiration", coeur: x.coeur, insp: x.id })));
+  function boardHtml(items) {
+    return items.map((it) => {
+      const r = rnd(it.pid), rot = (r * 14 - 7).toFixed(1), dy = ((rnd(it.pid + "y") * 10) - 5).toFixed(0);
+      return `<button type="button" class="pola" style="--rot:${rot}deg;--dy:${dy}px" ${it.goto ? `data-goto="${it.goto}"` : `data-view-photo="${it.pid}"`} aria-label="${esc(it.label || "Image d'inspiration")}">
+        <img data-photo="${it.pid}" alt="">${it.label ? `<span>${esc(it.label)}</span>` : ""}${it.coeur ? `<i>♥</i>` : ""}</button>`;
+    }).join("");
+  }
+  const lastDraw = {};
+  function drawImage(where) {
+    const pool = where === "insp" ? inspPool() : dreamPool(), box = $(where === "insp" ? "insp-draw" : "dream-draw");
+    if (!pool.length) { box.innerHTML = ""; return; }
+    let it = pool[Math.floor(Math.random() * pool.length)];
+    if (pool.length > 1 && lastDraw[where] === it.pid) it = pool[(pool.indexOf(it) + 1) % pool.length];
+    lastDraw[where] = it.pid;
+    box.innerHTML = `<div class="draw"><img data-photo="${it.pid}" alt="">
+      ${it.label && it.label !== "Inspiration" ? `<p>Pour : ${esc(it.label)}</p>` : `<p>Est-ce que cette image t'inspire aujourd'hui ?</p>`}
+      <div class="row" style="justify-content:center">
+        ${it.insp ? `<button class="btn small" type="button" data-like="${it.insp}" data-where="${where}">♥ Elle m'inspire</button>` : ""}
+        <button class="btn alt small" type="button" data-draw="${where}">Une autre</button>
+        <button class="linkbtn" type="button" data-draw-close="${where}">Fermer</button>
+      </div></div>`;
+    hydratePhotos(box);
+  }
+  document.addEventListener("click", (e) => {
+    const d = e.target.closest("[data-draw]"); if (d) { drawImage(d.dataset.draw); return; }
+    const c = e.target.closest("[data-draw-close]"); if (c) { $(c.dataset.drawClose === "insp" ? "insp-draw" : "dream-draw").innerHTML = ""; return; }
+    const l = e.target.closest("[data-like]");
+    if (l) {
+      const x = S.inspirations.find((y) => y.id === l.dataset.like); if (!x) return;
+      x.coeur = (x.coeur || 0) + 1; save(); renderInsp(); renderDreams();
+      l.textContent = "♥ Gardée dans mes rêves"; l.disabled = true;
+    }
+  });
+  function renderInsp() {
+    $("insp-board").innerHTML = boardHtml(inspPool().slice(-15));
+    $("insp-draw-go").hidden = !S.inspirations.length;
+    if (!S.inspirations.length) $("insp-board").innerHTML = "";
+    hydratePhotos($("s-chokhmah"));
+  }
+  $("insp-add").onclick = () => $("insp-input").click();
+  $("insp-input").addEventListener("change", async () => {
+    const files = [...$("insp-input").files]; $("insp-input").value = "";
+    for (const f of files.slice(0, 12)) {
+      try { const d = await shrink(f); const pid = uid(); await putPhoto(pid, d); S.inspirations.push({ id: uid(), pid, date: new Date().toISOString(), coeur: 0 }); }
+      catch (e) { toastMsg("Cette image n'a pas pu être lue. Essaie avec une autre."); }
+    }
+    save(); renderInsp();
+  });
+  $("insp-board").addEventListener("click", (e) => { const b = e.target.closest("[data-view-photo]"); if (b) showPhoto(b.dataset.viewPhoto); });
+  $("vision").addEventListener("click", (e) => { const b = e.target.closest("[data-view-photo]"); if (b) showPhoto(b.dataset.viewPhoto); });
+
   function showPhoto(pid) {
     lbPhoto = pid; lbConfirm = false; $("lb-img").removeAttribute("src");
     getPhoto(pid).then((d) => { if (d) $("lb-img").src = d; });
@@ -1373,7 +1454,8 @@ body.sheet-open .home { visibility: hidden; }
   $("lb-del").onclick = async () => {
     if (!lbConfirm) { lbConfirm = true; $("lb-del").textContent = "Oui, retirer pour de bon"; return; }
     S.projets.forEach((p) => { p.photos = (p.photos || []).filter((x) => x !== lbPhoto); });
-    await delPhoto(lbPhoto); save(); $("lightbox").hidden = true; renderDreams();
+    S.inspirations = S.inspirations.filter((x) => x.pid !== lbPhoto);
+    await delPhoto(lbPhoto); save(); $("lightbox").hidden = true; renderDreams(); renderInsp();
   };
   function toastMsg(t) {
     $("toast-host").innerHTML = `<div class="toast" role="status"><p>${esc(t)}</p><div class="row"><button class="btn small" type="button" data-a="tard">OK</button></div></div>`;
@@ -2232,7 +2314,8 @@ Si la pensée évoque une envie de se faire du mal ou de mourir, réponds avec d
   }
   const dump = async () => {
     const photos = {};
-    for (const p of S.projets) for (const pid of p.photos || []) { const d = await getPhoto(pid); if (d) photos[pid] = d; }
+    const pids = S.projets.flatMap((p) => p.photos || []).concat(S.inspirations.map((x) => x.pid));
+    for (const pid of pids) { const d = await getPhoto(pid); if (d) photos[pid] = d; }
     return JSON.stringify(Object.assign({ app: "zora", exporte: new Date().toISOString() }, S, { photos }));
   };
   const dataMsg = (t) => { $("data-msg").textContent = t; };
@@ -2269,7 +2352,7 @@ Si la pensée évoque une envie de se faire du mal ou de mourir, réponds avec d
   function renderAll() {
     renderMoods(); renderGrat(); renderNextStep(); renderGarden(); renderGestes(); renderDreams();
     renderTypePick(); renderEntries(); renderVoices(); renderPeople(); renderRefuges(); renderBilan(); armRappel();
-    renderIntention(); renderTree(); renderCare(); renderQualites(); renderDecision(); renderCond(); renderIntu();
+    renderIntention(); renderTree(); renderCare(); renderQualites(); renderDecision(); renderCond(); renderIntu(); renderInsp();
   }
   renderAll(); showThought(); renderSteps();
   const hash = location.hash.slice(1);
