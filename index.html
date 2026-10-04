@@ -980,9 +980,9 @@ body.sheet-open .home { visibility: hidden; }
   /* ================= humeur ================= */
   const MOODS = [
     { v: 1, label: "Tempête", c: "var(--cobalt)", svg: `<g fill="none" stroke="currentColor" stroke-width="9" stroke-linecap="round"><path d="M8 34H62A14 14 0 1 0 48 20"/><path d="M8 54H80A12 12 0 1 1 68 66"/><path d="M8 74H44"/></g>` },
-    { v: 2, label: "Orage", c: "var(--turq)", d: "M24 62A16 16 0 0 1 22 30A20 20 0 0 1 58 20A18 18 0 0 1 78 62ZM46 58H62L54 72H64L42 96L48 78H38Z" },
-    { v: 3, label: "Éclaircie", c: "var(--leaf)", d: "M58 30A22 22 0 1 1 57.9 30ZM20 80A16 16 0 0 1 22 52A20 20 0 0 1 58 50A16 16 0 0 1 76 80Z" },
-    { v: 4, label: "Soleil", c: "var(--orange)", d: "M50 18A32 32 0 1 1 49.9 18Z" },
+    { v: 2, label: "Nuageux", c: "#8a9099", svg: `<path fill="#b4b9c0" d="M40 52A14 14 0 0 1 42 26A18 18 0 0 1 74 20A16 16 0 0 1 90 52Z"/><path fill="#7c838d" d="M14 78A16 16 0 0 1 14 48A20 20 0 0 1 52 38A18 18 0 0 1 72 78Z"/>` },
+    { v: 3, label: "Brumeux", c: "#9fb3bb", svg: `<g fill="none" stroke="currentColor" stroke-width="8" stroke-linecap="round"><path d="M14 30H70"/><path d="M28 46H88"/><path d="M10 62H64"/><path d="M34 78H82"/></g>` },
+    { v: 4, label: "Éclaircie", c: "var(--ochre)", svg: `<circle cx="62" cy="38" r="22" fill="#e3b04f"/><g stroke="#e3b04f" stroke-width="6" stroke-linecap="round"><path d="M62 6V10"/><path d="M90 38H94"/><path d="M83 17L86 14"/><path d="M41 17L38 14"/></g><path fill="#a8cfe0" d="M18 84A16 16 0 0 1 18 54A20 20 0 0 1 56 46A18 18 0 0 1 76 84Z"/>` },
     { v: 5, label: "Rayonnant", c: "var(--ochre)", svg: SUN_FACE }
   ];
   function renderMoods() {
