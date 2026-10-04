@@ -1779,7 +1779,8 @@ Si la pensée évoque une envie de se faire du mal ou de mourir, réponds avec d
     const top = Math.max(0, Math.round(head - 24));
     document.querySelector(".tree-wrap").style.paddingTop = top + "px";
     const w = Math.max(1014, Math.min(1414, 2000 * innerWidth / (innerHeight - top)));
-    $("tree").setAttribute("viewBox", `${((1414 - w) / 2).toFixed(0)} 0 ${w.toFixed(0)} 2000`);
+    // l'axe de l'arbre peint est à x = 740 (et non au milieu de l'image, 707) : on centre sur lui
+    $("tree").setAttribute("viewBox", `${(740 - w / 2).toFixed(0)} 0 ${w.toFixed(0)} 2000`);
   }
   addEventListener("resize", fitTree);
   function renderTree() {
