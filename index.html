@@ -325,6 +325,12 @@ body { overflow: hidden; padding: 0 16px; margin: 0; }
 #tree .t-mot { font: 700 46px var(--f-display); }
 #tree .t-halo { paint-order: stroke; stroke: rgba(20,20,30,.5); stroke-width: 7px; stroke-linejoin: round; }
 #tree .t-sub { font: 700 32px var(--f-body); }
+#tree .chemin { animation: luit 3.2s ease-in-out infinite; }
+#tree .chemin.neuf { stroke-dasharray: 1; stroke-dashoffset: 1; animation: trace 1.4s ease-out forwards, luit 3.2s ease-in-out 1.4s infinite; }
+#tree .halo-tout { animation: luit 4s ease-in-out infinite; }
+@keyframes luit { 50% { opacity: .72; } }
+@keyframes trace { to { stroke-dashoffset: 0; } }
+@media (prefers-reduced-motion: reduce) { #tree .chemin, #tree .chemin.neuf, #tree .halo-tout { animation: none; stroke-dashoffset: 0; } }
 #tree .t-heb { font: 700 34px var(--f-body); fill: #2b3440; letter-spacing: .06em; paint-order: stroke; stroke: #fbf1e2; stroke-width: 9px; stroke-linejoin: round; }
 
 /* ---- pages des sphères ---- */
@@ -2083,11 +2089,29 @@ Si la pensée évoque une envie de se faire du mal ou de mourir, réponds avec d
     $("tree").setAttribute("viewBox", `${(740 - w / 2).toFixed(1)} ${y.toFixed(1)} ${w} ${(H / s).toFixed(1)}`);
   }
   addEventListener("resize", fitTree);
+  let cheminsVus = new Set(), jourAffiche = dayKey();
+  // à minuit, l'arbre s'éteint doucement pour le nouveau jour
+  setInterval(() => { if (dayKey() !== jourAffiche) { jourAffiche = dayKey(); renderTree(); } }, 60000);
   function renderTree() {
     const t = dayKey();
-    let g = `<defs><linearGradient id="fade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f2d9c2"/><stop offset="1" stop-color="#f2d9c2" stop-opacity="0"/></linearGradient></defs>
+    let g = `<defs><linearGradient id="fade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f2d9c2"/><stop offset="1" stop-color="#f2d9c2" stop-opacity="0"/></linearGradient>
+      <radialGradient id="halo"><stop offset="0" stop-color="#fff4c2" stop-opacity=".8"/><stop offset=".6" stop-color="#ffd76a" stop-opacity=".35"/><stop offset="1" stop-color="#ffd76a" stop-opacity="0"/></radialGradient></defs>
       <mask id="mbot" maskUnits="userSpaceOnUse" x="0" y="0" width="1414" height="2000"><rect width="1414" height="2000" fill="url(#gbot)"/></mask><linearGradient id="gbot" x1="0" y1="0" x2="0" y2="2000" gradientUnits="userSpaceOnUse"><stop offset=".86" stop-color="#fff"/><stop offset=".97" stop-color="#fff" stop-opacity="0"/></linearGradient>
       <image href="${BG}" x="0" y="0" width="1414" height="2000" preserveAspectRatio="none" mask="url(#mbot)"/>`;
+    // chemins du jour : le sentier s'allume quand ses deux sphères sont faites aujourd'hui
+    const faits = Object.fromEntries(SEPH.map((n) => [n.k, seStatus(n.k)]));
+    const lit = PATHS.filter(([a, b]) => faits[a] && faits[b]);
+    if (SEPH.filter((n) => n.k !== "daat").every((n) => faits[n.k]))
+      g = g.replace("<image ", `<circle class="halo-tout" cx="740" cy="960" r="820" fill="url(#halo)" pointer-events="none"/><image `);
+    lit.forEach(([a, b]) => {
+      const [xa, ya, ra] = POS[a], [xb, yb, rb] = POS[b], id = a + "-" + b, neuf = !cheminsVus.has(id) ? " neuf" : "";
+      const L = Math.hypot(xb - xa, yb - ya), ux = (xb - xa) / L, uy = (yb - ya) / L;   // de bord à bord des sphères
+      const d = `M${(xa + ux * (ra + 4)).toFixed(1)} ${(ya + uy * (ra + 4)).toFixed(1)}L${(xb - ux * (rb + 4)).toFixed(1)} ${(yb - uy * (rb + 4)).toFixed(1)}`;
+      g += `<path class="chemin${neuf}" pathLength="1" d="${d}" stroke="#fff1b8" stroke-width="40" stroke-opacity=".5" stroke-linecap="round" fill="none" pointer-events="none"/>
+        <path class="chemin${neuf}" pathLength="1" d="${d}" stroke="#f5c93e" stroke-width="16" stroke-linecap="round" fill="none" pointer-events="none"/>
+        <path class="chemin${neuf}" pathLength="1" d="${d}" stroke="#fffbe8" stroke-width="5" stroke-linecap="round" fill="none" pointer-events="none"/>`;
+    });
+    cheminsVus = new Set(lit.map(([a, b]) => a + "-" + b));
     try {
       const ep = S.projets.find((x) => x.id === S.eclairActif && !x.fini);
       if (ep) {
