@@ -230,6 +230,9 @@ details[open] summary { margin-bottom: 10px; }
 /* ---- respirer ---- */
 .breath { justify-items: center; }
 .inf { width: 100%; max-width: 360px; height: auto; display: block; touch-action: none; }
+.breath-types .chip { padding: 6px 11px; font-size: 13px; }
+.breath-desc { text-align: center; margin: 0; }
+.breath-timer { font: 400 15px var(--f-num); color: var(--ink-soft); min-height: 1.2em; }
 .inf-t { font: 700 15px var(--f-body); fill: #2b3440; letter-spacing: .04em; text-transform: uppercase; }
 .blob-wrap { width: min(240px, 66vw); aspect-ratio: 1; display: grid; place-items: center; position: relative; }
 .blob { width: 46%; aspect-ratio: 1; background: var(--turq); border-radius: 58% 42% 51% 49% / 46% 57% 43% 54%; transition: transform 4s ease-in-out, border-radius 4s ease-in-out; }
@@ -763,19 +766,14 @@ body.sheet-open .home { visibility: hidden; }
         <p class="hint" style="font-size:12px">Inspiré du <i>Livre des sagesses</i> (Le Jeu du Tao).</p>
       </div>
       <div class="panel breath">
-        <h2>Respiration infinie</h2>
-        <svg class="inf" viewBox="0 0 300 160" aria-hidden="true">
-          <path d="M150 80C120 40 40 28 40 80C40 132 120 120 150 80C180 40 260 28 260 80C260 132 180 120 150 80Z" fill="none" stroke="#a8cfcb" stroke-width="22" stroke-linejoin="round"/>
-          <path id="inf-in" d="M150 80C120 40 40 28 40 80C40 132 120 120 150 80" fill="none" stroke="#5fa8a3" stroke-width="22" stroke-dasharray="0 999" stroke-linecap="round"/>
-          <path id="inf-out" d="M150 80C180 40 260 28 260 80C260 132 180 120 150 80" fill="none" stroke="#e3b04f" stroke-width="22" stroke-dasharray="0 999" stroke-linecap="round"/>
-          <text x="82" y="84" text-anchor="middle" class="inf-t">Inspire</text>
-          <text x="218" y="84" text-anchor="middle" class="inf-t">Expire</text>
-          <ellipse cx="150" cy="80" rx="20" ry="11" fill="none" stroke="#e08a76" stroke-width="2.5" transform="rotate(-18 150 80)"/>
-          <circle id="inf-dot" cx="150" cy="80" r="11" fill="#fff" stroke="#2b3440" stroke-width="3"/>
-        </svg>
+        <h2>Respirer</h2>
+        <div class="seg breath-types" id="breath-types" role="group" aria-label="Type de respiration"></div>
+        <p class="hint breath-desc" id="breath-desc"></p>
+        <svg class="inf" id="breath-svg" viewBox="0 0 300 160" aria-hidden="true"></svg>
         <div class="breath-label" id="breath-label" aria-live="polite">Suis le point du doigt</div>
-        <button class="btn" id="breath-go" type="button">Respirer 1 minute</button>
-        <p class="hint">Départ au centre : inspire en faisant le tour de gauche (4 s), expire sur celui de droite (6 s). Va doucement.</p>
+        <div class="breath-timer" id="breath-timer"></div>
+        <button class="btn" id="breath-go" type="button">Commencer</button>
+        <p class="hint" id="breath-note"></p>
         <div hidden><div id="blob"></div><svg><path id="rays-path"/></svg></div>
       </div>
 
@@ -925,7 +923,7 @@ body.sheet-open .home { visibility: hidden; }
   ];
   const fresh = () => ({
     v: 4, gestes: DEFAULT_GESTES.slice(), faits: {}, notes: [], voix: [], checkins: [],
-    rappel: { on: false, min: 45 }, humeur: {}, gratitudes: {}, projets: [], refuges: [], pas: {}, intentions: {}, ancre: {}, triReves: "commencer", qualites: [], decision: {}, condition: {}
+    rappel: { on: false, min: 45 }, humeur: {}, gratitudes: {}, projets: [], refuges: [], pas: {}, souffle: "infinie", intentions: {}, ancre: {}, triReves: "commencer", qualites: [], decision: {}, condition: {}
   });
   const migrate = (o) => {
     const s = Object.assign(fresh(), o || {});
@@ -1497,37 +1495,83 @@ Réponds uniquement en JSON : {"etapes": ["..."], "obstacle": "...", "plan": "..
 
   /* ================= ancrage ================= */
   let breathRun = null;
-  // respiration infinie : le point parcourt le ∞ — boucle gauche = inspire (4 s), boucle droite = expire (6 s)
-  const IN_S = 4, OUT_S = 6;
-  let breathRaf = null;
-  function placeDot(t) {
-    const pin = $("inf-in"), pout = $("inf-out"), Lin = pin.getTotalLength(), Lout = pout.getTotalLength();
-    const c = t % (IN_S + OUT_S), inhale = c < IN_S, f = inhale ? c / IN_S : (c - IN_S) / OUT_S;
-    const path = inhale ? pin : pout, L = inhale ? Lin : Lout, pt = path.getPointAtLength(f * L);
-    $("inf-dot").setAttribute("cx", pt.x); $("inf-dot").setAttribute("cy", pt.y);
-    pin.setAttribute("stroke-dasharray", `${inhale ? f * Lin : 0} 999`);
-    pout.setAttribute("stroke-dasharray", `${inhale ? 0 : f * Lout} 999`);
-    return inhale;
+  /* ================= respirations guidées ================= */
+  // chaque phase : in (inspire), hold (garde), out (expire) ; la forme suit le nombre de phases (2 = ∞, 3 = triangle, 4 = carré)
+  const BREATHS = {
+    infinie: { nom: "Infinie", phases: [["in", 4], ["out", 6]], cycles: 6,
+      desc: "Inspire 4 s, expire 6 s. L'expiration longue calme le corps. Pour tous les jours." },
+    coherence: { nom: "Cohérence cardiaque", phases: [["in", 5], ["out", 5]], cycles: 30,
+      desc: "5 s / 5 s, 6 respirations par minute pendant 5 minutes. Idéal 3 fois par jour (matin, midi, fin d'après-midi)." },
+    "478": { nom: "4-7-8", phases: [["in", 4], ["hold", 7], ["out", 8]], cycles: 4,
+      desc: "Inspire par le nez 4 s, garde 7 s poumons pleins, expire lentement par la bouche 8 s. Avant un moment difficile ou pour s'endormir. 4 cycles." },
+    carre: { nom: "Carrée", phases: [["in", 4], ["hold", 4], ["out", 4], ["hold", 4]], cycles: 8,
+      desc: "4 s pour chaque côté : inspire, garde, expire, garde poumons vides. Pour retrouver concentration et sang-froid." },
+    soupir: { nom: "Soupir apaisant", phases: [["in", 2.5], ["in2", 1], ["out", 6]], cycles: 6,
+      desc: "Grande inspiration par le nez, puis une 2e petite pour remplir à fond, et une longue expiration par la bouche. Le plus rapide pour se calmer." },
+    energie: { nom: "Énergie douce", phases: [["in", 6], ["out", 4]], cycles: 6,
+      desc: "Inspire plus longtemps que tu n'expires (6 s / 4 s). Pour se réveiller en douceur, le matin." }
+  };
+  const PH = { in: ["Inspire", "#5fa8a3"], in2: ["Inspire encore un peu", "#3f8a85"], hold: ["Garde", "#7a5ea8"], out: ["Expire", "#e3b04f"] };
+  let breathType = (S.souffle && BREATHS[S.souffle]) ? S.souffle : "infinie", breathRaf = null;
+  function shapeSegments(n) {
+    if (n === 2) return ["M150 80C120 40 40 28 40 80C40 132 120 120 150 80", "M150 80C180 40 260 28 260 80C260 132 180 120 150 80"];
+    const pts = n === 3 ? [[150, 18], [232, 142], [68, 142]] : [[90, 20], [210, 20], [210, 140], [90, 140]];
+    // le triangle commence en bas à gauche pour que l'inspiration monte
+    const P = n === 3 ? [pts[2], pts[0], pts[1]] : [pts[3], pts[0], pts[1], pts[2]];
+    return P.map((p, i) => { const q = P[(i + 1) % P.length]; return `M${p[0]} ${p[1]}L${q[0]} ${q[1]}`; });
   }
+  function drawBreath() {
+    const b = BREATHS[breathType], segs = shapeSegments(b.phases.length);
+    $("breath-types").innerHTML = ["infinie", "coherence", "478", "carre", "soupir", "energie"].map((k) => [k, BREATHS[k]]).map(([k, v]) => `<button type="button" class="chip" style="--c:#7a5ea8;--t:#fff" data-bt="${k}" aria-pressed="${k === breathType}">${v.nom}</button>`).join("");
+    $("breath-desc").textContent = b.desc;
+    const tot = b.phases.reduce((a, p) => a + p[1], 0) * b.cycles;
+    $("breath-go").textContent = `Commencer · ${tot >= 60 ? Math.round(tot / 60) + " min" : Math.round(tot) + " s"}`;
+    $("breath-note").textContent = b.phases.some((p) => p[0] === "hold") ? "Si tu as la tête qui tourne, reprends une respiration normale. Garder l'air ne doit jamais forcer." : "";
+    const labels = b.phases.length === 2
+      ? `<text x="82" y="84" text-anchor="middle" class="inf-t">${PH[b.phases[0][0]][0]}</text><text x="218" y="84" text-anchor="middle" class="inf-t">${PH[b.phases[1][0]][0]}</text>`
+      : `<text x="150" y="${b.phases.length === 3 ? 108 : 84}" text-anchor="middle" class="inf-t" id="breath-center">Départ</text>`;
+    $("breath-svg").innerHTML = segs.map((d, i) => `<path d="${d}" fill="none" stroke="${PH[b.phases[i][0]][1]}" stroke-opacity=".35" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"/>`).join("")
+      + segs.map((d, i) => `<path id="bseg-${i}" d="${d}" fill="none" stroke="${PH[b.phases[i][0]][1]}" stroke-width="20" stroke-linecap="round" stroke-dasharray="0 9999"/>`).join("")
+      + labels + `<circle id="inf-dot" r="11" fill="#fff" stroke="#2b3440" stroke-width="3"/>`;
+    placeDot(0);
+  }
+  function placeDot(t) {
+    const b = BREATHS[breathType], cyc = b.phases.reduce((a, p) => a + p[1], 0);
+    let c = t % cyc, i = 0;
+    while (i < b.phases.length - 1 && c >= b.phases[i][1]) { c -= b.phases[i][1]; i++; }
+    const f = Math.min(1, c / b.phases[i][1]);
+    b.phases.forEach((_, j) => { const el = $("bseg-" + j); if (el) el.setAttribute("stroke-dasharray", `${j < i ? 9999 : j === i ? f * el.getTotalLength() : 0} 9999`); });
+    const seg = $("bseg-" + i), pt = seg.getPointAtLength(f * seg.getTotalLength());
+    $("inf-dot").setAttribute("cx", pt.x); $("inf-dot").setAttribute("cy", pt.y);
+    return { label: PH[b.phases[i][0]][0], left: Math.ceil(b.phases[i][1] - c) };
+  }
+  $("breath-types").addEventListener("click", (e) => {
+    const k = e.target.closest("[data-bt]"); if (!k) return;
+    if (breathRun) stopBreath();
+    breathType = k.dataset.bt; S.souffle = breathType; save(); drawBreath();
+  });
   $("breath-go").onclick = () => {
     if (breathRun) { stopBreath(); return; }
-    const label = $("breath-label"), t0 = performance.now();
+    const b = BREATHS[breathType], tot = b.phases.reduce((a, p) => a + p[1], 0) * b.cycles, t0 = performance.now();
     $("breath-go").textContent = "Arrêter"; breathRun = true;
     const frame = (now) => {
       if (!breathRun) return;
       const el = (now - t0) / 1000;
-      if (el >= 60) { stopBreath("C'est bien. Reviens quand tu veux."); S.ancre[dayKey()] = 1; save(); return; }
-      label.textContent = placeDot(el) ? "Inspire…" : "Expire…";
+      if (el >= tot) { stopBreath("C'est bien. Reviens quand tu veux."); S.ancre[dayKey()] = 1; save(); return; }
+      const st = placeDot(el);
+      $("breath-label").textContent = st.label + "…";
+      $("breath-timer").textContent = st.left + " s";
       breathRaf = requestAnimationFrame(frame);
     };
     breathRaf = requestAnimationFrame(frame);
   };
   function stopBreath(msg) {
     breathRun = null; cancelAnimationFrame(breathRaf);
-    placeDot(0); $("inf-in").setAttribute("stroke-dasharray", "0 999");
+    drawBreath();
     $("breath-label").textContent = msg || "Suis le point du doigt";
-    $("breath-go").textContent = "Respirer 1 minute";
+    $("breath-timer").textContent = "";
   }
+  drawBreath();
   const STEPS = [
     [5, "choses que tu vois", "var(--cobalt)"], [4, "choses que tu peux toucher", "var(--turq)"],
     [3, "sons que tu entends", "var(--ochre)"], [2, "odeurs que tu sens", "var(--orange)"], [1, "chose que tu goûtes", "var(--pink)"]
