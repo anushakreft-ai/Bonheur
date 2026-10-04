@@ -1958,7 +1958,7 @@ Si la pensée évoque une envie de se faire du mal ou de mourir, réponds avec d
       g += `<g class="node" data-open="${n.k}" tabindex="0" role="button" aria-label="${n.heb}, ${n.mot}${done ? ", fait aujourd'hui" : ""}">
         ${n.dash ? `<circle cx="${x}" cy="${y}" r="${r}" fill="rgba(255,246,230,.82)" stroke="#d9a33a" stroke-width="9" stroke-dasharray="20 14"/>` : ""}
         <circle class="main" cx="${x}" cy="${y}" r="${r}" fill="rgba(255,255,255,0)"/>
-        ${ic ? (() => { const z = n.k === "netzach" ? 100 : n.k === "yesod" ? 88 : 68; return `<svg x="${x - z / 2}" y="${y - (sub ? 86 : 78) - (z - 68) / 2}" width="${z}" height="${z}" viewBox="0 0 100 100" style="color:${n.k === "keter" ? "#c9952c" : n.txt}" aria-hidden="true">${ic.replaceAll("eaglem", "eaglem-tree")}</svg>`; })() : ""}
+        ${ic ? (() => { const z = n.k === "netzach" ? 100 : n.k === "yesod" || n.k === "gevurah" ? 84 : 68; return `<svg x="${x - z / 2}" y="${y - (sub ? 86 : 78) - (z - 68) / 2}" width="${z}" height="${z}" viewBox="0 0 100 100" style="color:${n.k === "keter" ? "#c9952c" : n.txt}" aria-hidden="true">${ic.replaceAll("eaglem", "eaglem-tree")}</svg>`; })() : ""}
         <text x="${x}" y="${y + (ic ? 30 : sub ? 4 : 15)}" text-anchor="middle" class="t-mot${light ? "" : " t-halo"}" fill="${n.txt}" style="font-size:${fs}px">${n.mot}</text>
         ${sub ? `<text x="${x}" y="${y + (ic ? 66 : 46)}" text-anchor="middle" class="t-sub${light ? "" : " t-halo"}" fill="${n.txt}">${esc(sub)}</text>` : ""}
         <text x="${x}" y="${y + r + 44}" text-anchor="middle" class="t-heb">${n.heb}</text>
@@ -2100,7 +2100,15 @@ Si la pensée évoque une envie de se faire du mal ou de mourir, réponds avec d
 <path d="M26.5 47H52.8V63C52.8 70 49 74 44 74H34C29.5 74 26.5 70 26.5 64Z"/>
 <path d="M29 64L17.5 49.5" stroke="currentColor" stroke-width="7.4" stroke-linecap="round"/>
 <path d="M33.5 71H49.6L48.6 100H36Z"/></g></g></g><circle cx="50" cy="14" r="5.5" fill="currentColor"/><g stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M58.5 14.0L63.0 14.0"/><path d="M56.0 20.0L57.8 21.8"/><path d="M50.0 22.5L50.0 27.0"/><path d="M44.0 20.0L42.2 21.8"/><path d="M41.5 14.0L37.0 14.0"/><path d="M44.0 8.0L42.2 6.2"/><path d="M50.0 5.5L50.0 1.0"/><path d="M56.0 8.0L57.8 6.2"/></g>`;
-  const ICONS = { chesed: HANDS, netzach: EAGLE, yesod: ROOTS, hod: PLUME, chokhmah: STAR, keter: SUN_FACE };
+  // lotus protégé par deux mains (picto de Guevourah, dessin original)
+  const LOTUS = `<g fill="currentColor"><path d="M3 27L12 17L17.5 21.5L43 18.2C47 17.6 50.5 18.6 53.5 20.8L70.5 33.2C72.4 34.6 71 36.8 68.6 36.2L51 31.5C49 31 47 31.3 45.4 31.8L35.5 35C30 36.6 25 35.6 21 32.6Z"/><g transform="rotate(180 50 50)"><path d="M3 27L12 17L17.5 21.5L43 18.2C47 17.6 50.5 18.6 53.5 20.8L70.5 33.2C72.4 34.6 71 36.8 68.6 36.2L51 31.5C49 31 47 31.3 45.4 31.8L35.5 35C30 36.6 25 35.6 21 32.6Z"/></g><g transform="translate(50 49) scale(1.05)">
+<path d="M0 -17C6 -11 7.5 -4 7.5 1C7.5 6 4 10 0 13C-4 10 -7.5 6 -7.5 1C-7.5 -4 -6 -11 0 -17Z"/>
+<path d="M-10 -9C-5.5 -9 -3.5 -8.5 -2.6 -8C-6.4 -3 -7 4 -3.2 12.6C-9 11 -12 5.5 -12 -0.5C-12 -4 -11.5 -7 -10 -9Z"/>
+<path d="M10 -9C5.5 -9 3.5 -8.5 2.6 -8C6.4 -3 7 4 3.2 12.6C9 11 12 5.5 12 -0.5C12 -4 11.5 -7 10 -9Z"/>
+<path d="M-19 -2.5C-16.5 -3.5 -15.5 -3.3 -14.2 -2.8C-13.8 4 -10 10.5 -4.5 14C-12 14.6 -17.5 10 -19.5 3C-20 1 -19.8 -1 -19 -2.5Z"/>
+<path d="M19 -2.5C16.5 -3.5 15.5 -3.3 14.2 -2.8C13.8 4 10 10.5 4.5 14C12 14.6 17.5 10 19.5 3C20 1 19.8 -1 19 -2.5Z"/>
+</g></g>`;
+  const ICONS = { gevurah: LOTUS, chesed: HANDS, netzach: EAGLE, yesod: ROOTS, hod: PLUME, chokhmah: STAR, keter: SUN_FACE };
   Object.entries(ICONS).forEach(([k, ic]) => {
     const head = document.querySelector(`#s-${k} .sheet-head`);
     if (head) head.insertAdjacentHTML("beforeend", `<svg class="head-ico" viewBox="0 0 100 100" aria-hidden="true">${ic.replaceAll("eaglem", "eaglem-head")}</svg>`);
