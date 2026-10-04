@@ -72,6 +72,8 @@ button:disabled { opacity: .5; cursor: default; }
 a { color: var(--cobalt); }
 
 /* ---- décor découpé ---- */
+.scene { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; background: #f3d9b4; }
+.scene svg { width: 100%; height: 100%; display: block; }
 .decor { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
 .decor svg { position: absolute; opacity: .9; }
 .decor .d1 { width: 180px; top: -40px; right: -50px; color: var(--turq); transform: rotate(18deg); }
@@ -280,6 +282,8 @@ body { overflow: hidden; padding: 0 16px; margin: 0; }
 .home { height: 100%; display: grid; grid-template-rows: auto minmax(0, 1fr); gap: 4px; padding-block: 12px 10px; }
 .home-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; padding: 0; }
 .home .brand { font-size: clamp(40px, 11vw, 56px); margin-top: 0; }
+.home .brand { text-shadow: 0 1px 0 rgba(255,255,255,.6); }
+.home .eyebrow { color: #4a3b2a; }
 .home .greeting { font-size: 16px; margin-top: 2px; max-width: 34ch; overflow-wrap: anywhere; }
 .quick { flex: none; border: 0; border-radius: 99px; background: var(--blush); color: var(--ink); display: inline-flex; gap: 6px; align-items: center; padding: 8px 14px 8px 10px; font-weight: 700; font-size: 14px; box-shadow: inset 0 0 0 2px var(--orange); margin-top: 18px; }
 .quick svg { width: 24px; height: 24px; color: var(--ochre); }
@@ -291,10 +295,10 @@ body { overflow: hidden; padding: 0 16px; margin: 0; }
 #tree .node:focus-visible circle.main { stroke: var(--ink); stroke-width: 3; }
 #tree .t-mot { font: 700 11.5px var(--f-display); }
 #tree .t-sub { font: 700 9px var(--f-body); opacity: .85; }
-#tree .t-heb { font: 600 9px var(--f-body); fill: var(--ink-soft); letter-spacing: .06em; }
+#tree .t-heb { font: 700 9px var(--f-body); fill: #2b3440; letter-spacing: .06em; paint-order: stroke; stroke: #fbf1e2; stroke-width: 3px; stroke-linejoin: round; }
 
 /* ---- pages des sphères ---- */
-.sheet { position: fixed; inset: 0; z-index: 40; background: var(--paper); overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; padding-bottom: calc(28px + env(safe-area-inset-bottom, 0px)); animation: monte .28s ease both; }
+.sheet { position: fixed; inset: 0; z-index: 40; background: rgba(251,246,241,.84); -webkit-backdrop-filter: blur(2px); backdrop-filter: blur(2px); overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; padding-bottom: calc(28px + env(safe-area-inset-bottom, 0px)); animation: monte .28s ease both; }
 .sheet-head { position: sticky; top: 0; z-index: 3; background: var(--c); color: var(--t); padding: calc(10px + env(safe-area-inset-top, 0px)) 16px 14px; border-radius: 0 0 26px 26px; display: grid; gap: 6px; box-shadow: 0 1px 0 var(--line); }
 .sheet-head > * { max-width: 640px; width: 100%; margin: 0 auto; }
 .back { border: 0; background: rgba(255,255,255,.6); color: #2b3440; border-radius: 99px; padding: 6px 12px 6px 6px; display: inline-flex; align-items: center; gap: 2px; font-weight: 700; font-size: 14px; width: auto !important; margin: 0 !important; justify-self: start; }
@@ -376,12 +380,8 @@ body.sheet-open .home { visibility: hidden; }
 }
 </style>
 
-<div class="decor" aria-hidden="true">
-  <svg class="d1" viewBox="0 0 100 100"><path fill="currentColor" d="M50 98C46 78 30 74 36 58C41 44 24 38 33 22C44 30 52 24 49 4C66 16 61 32 67 44C74 57 60 70 62 98Z"/></svg>
-  <svg class="d2" viewBox="0 0 100 100"><path fill="currentColor" d="M50 5C80 30 88 70 50 95C12 70 20 30 50 5Z"/></svg>
-  <svg class="d3" viewBox="0 0 100 100"><path id="star-d" fill="currentColor"/></svg>
-  <svg class="d4" viewBox="0 0 120 120" id="dots"></svg>
-</div>
+<div class="scene" id="scene" aria-hidden="true"></div>
+<div class="decor" aria-hidden="true" hidden><svg><path id="star-d"/></svg><svg id="dots"></svg></div>
 
 <div class="wrap home" id="home">
   <header class="home-head">
@@ -1720,17 +1720,17 @@ Si la pensée évoque une envie de se faire du mal ou de mourir, réponds avec d
 
   /* ================= arbre des Séphiroth ================= */
   const SEPH = [
-    { k: "keter", heb: "Keter", mot: "Intention", x: 150, y: 44, fill: "#ffffff", txt: "#2b3440", ring: "#e3b04f" },
-    { k: "chokhmah", heb: "Hokhmah", mot: "Intuitions", x: 248, y: 108, fill: "#8fc4bb", txt: "#2b3440" },
-    { k: "binah", heb: "Binah", mot: "Comprendre", x: 52, y: 108, fill: "#2f7f7c", txt: "#ffffff" },
-    { k: "daat", heb: "Daat", mot: "Bilan", x: 150, y: 170, fill: "#fbf6f1", txt: "#2b3440", dash: true },
-    { k: "chesed", heb: "Hessed", mot: "Gratitude", x: 248, y: 236, fill: "#f2c3b5", txt: "#2b3440" },
-    { k: "gevurah", heb: "Guevourah", mot: "Limites", x: 52, y: 236, fill: "#e08a76", txt: "#2b3440" },
-    { k: "tiferet", heb: "Tiferet", mot: "Cœur", x: 150, y: 300, fill: "#e3b04f", txt: "#2b3440" },
-    { k: "netzach", heb: "Netsah", mot: "Rêves", x: 248, y: 390, fill: "#3f8a55", txt: "#ffffff" },
-    { k: "hod", heb: "Hod", mot: "Musique", x: 52, y: 390, fill: "#f0d08a", txt: "#2b3440" },
-    { k: "yesod", heb: "Yesod", mot: "Ancrage", x: 150, y: 452, fill: "#a8cfe0", txt: "#2b3440" },
-    { k: "malkhut", heb: "Malkhout", mot: "Gestes", x: 150, y: 524, fill: "#b97a57", txt: "#ffffff" }
+    { k: "keter", heb: "Keter", mot: "Intention", x: 150, y: 44, fill: "#fff6e0", txt: "#2b3440" },
+    { k: "chokhmah", heb: "Hokhmah", mot: "Intuitions", x: 248, y: 108, fill: "#2a9d8f", txt: "#ffffff" },
+    { k: "binah", heb: "Binah", mot: "Comprendre", x: 52, y: 108, fill: "#1f3f6b", txt: "#ffffff" },
+    { k: "daat", heb: "Daat", mot: "Bilan", x: 150, y: 170, fill: "rgba(255,248,235,.75)", txt: "#2b3440", dash: true },
+    { k: "chesed", heb: "Hessed", mot: "Gratitude", x: 248, y: 236, fill: "#d9487e", txt: "#ffffff" },
+    { k: "gevurah", heb: "Guevourah", mot: "Limites", x: 52, y: 236, fill: "#c4562b", txt: "#ffffff" },
+    { k: "tiferet", heb: "Tiferet", mot: "Cœur", x: 150, y: 300, fill: "#f0b43c", txt: "#2b3440" },
+    { k: "netzach", heb: "Netsah", mot: "Rêves", x: 248, y: 390, fill: "#2e7d46", txt: "#ffffff" },
+    { k: "hod", heb: "Hod", mot: "Musique", x: 52, y: 390, fill: "#7a4aa8", txt: "#ffffff" },
+    { k: "yesod", heb: "Yesod", mot: "Ancrage", x: 150, y: 452, fill: "#3567b5", txt: "#ffffff" },
+    { k: "malkhut", heb: "Malkhout", mot: "Gestes", x: 150, y: 524, fill: "#9a3f2a", txt: "#ffffff" }
   ];
   const PATHS = "keter-chokhmah keter-binah keter-tiferet chokhmah-binah chokhmah-tiferet chokhmah-chesed binah-tiferet binah-gevurah chesed-gevurah chesed-tiferet chesed-netzach gevurah-tiferet gevurah-hod tiferet-netzach tiferet-yesod tiferet-hod netzach-hod netzach-yesod netzach-malkhut hod-yesod hod-malkhut yesod-malkhut".split(" ").map((x) => x.split("-"));
   const byK = Object.fromEntries(SEPH.map((n) => [n.k, n]));
@@ -1751,16 +1751,21 @@ Si la pensée évoque une envie de se faire du mal ou de mourir, réponds avec d
   }
   function renderTree() {
     const R = 29, t = dayKey();
-    let g = `<g stroke="#e3b04f" stroke-width="3" stroke-linecap="round" opacity=".75">` +
-      PATHS.map(([a, b]) => `<line x1="${byK[a].x}" y1="${byK[a].y}" x2="${byK[b].x}" y2="${byK[b].y}"/>`).join("") + `</g>`;
+    const lines = PATHS.map(([a, b]) => `<line x1="${byK[a].x}" y1="${byK[a].y}" x2="${byK[b].x}" y2="${byK[b].y}"/>`).join("");
+    let g = `<defs><radialGradient id="gloss" cx=".35" cy=".3" r=".75"><stop offset="0" stop-color="#fff" stop-opacity=".45"/><stop offset=".55" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".18"/></radialGradient></defs>
+      <g stroke="#7a5414" stroke-width="6" stroke-linecap="round" opacity=".35">${lines}</g>
+      <g stroke="#e2b04a" stroke-width="3.6" stroke-linecap="round">${lines}</g>
+      <g stroke="#fff3c9" stroke-width="1" stroke-linecap="round" opacity=".7">${lines}</g>`;
     SEPH.forEach((n) => {
       const done = seStatus(n.k);
       let sub = "";
       if (n.k === "malkhut") sub = `${(S.faits[t] || []).filter((id) => S.gestes.some((x) => x.id === id)).length}/${S.gestes.length}`;
       if (n.k === "tiferet" && S.humeur[t]) sub = MOODS[S.humeur[t] - 1].label;
       g += `<g class="node" data-open="${n.k}" tabindex="0" role="button" aria-label="${n.heb}, ${n.mot}${done ? ", fait aujourd'hui" : ""}">
-        <circle class="main" cx="${n.x}" cy="${n.y}" r="${R}" fill="${n.fill}" stroke="${n.dash ? "#6b6f78" : n.ring || "rgba(43,52,64,.12)"}" stroke-width="${n.dash || n.ring ? 2 : 1}" ${n.dash ? 'stroke-dasharray="4 4"' : ""}/>
-        ${ICONS[n.k] ? `<svg x="${n.x - 11}" y="${n.y - 24}" width="22" height="22" viewBox="0 0 100 100" style="color:${n.k === "keter" ? "#e3b04f" : n.txt}" aria-hidden="true">${ICONS[n.k]}</svg>` : ""}
+        <circle cx="${n.x + 1.5}" cy="${n.y + 2.5}" r="${R + 3}" fill="rgba(40,25,10,.22)"/>
+        <circle class="main" cx="${n.x}" cy="${n.y}" r="${R}" fill="${n.fill}" stroke="#d9a33a" stroke-width="4" ${n.dash ? 'stroke-dasharray="5 4"' : ""}/>
+        ${n.dash ? "" : `<circle cx="${n.x}" cy="${n.y}" r="${R}" fill="url(#gloss)" pointer-events="none"/><circle cx="${n.x}" cy="${n.y}" r="${R - 4.5}" fill="none" stroke="#fff4d6" stroke-width="1" opacity=".75" pointer-events="none"/>`}
+        ${ICONS[n.k] ? `<svg x="${n.x - 11}" y="${n.y - 24}" width="22" height="22" viewBox="0 0 100 100" style="color:${n.k === "keter" ? "#d9a33a" : n.txt}" aria-hidden="true">${ICONS[n.k]}</svg>` : ""}
         <text x="${n.x}" y="${n.y + (ICONS[n.k] ? 11 : sub ? 0 : 4)}" text-anchor="middle" class="t-mot" fill="${n.txt}"${n.mot.length > 9 ? ' style="font-size:9.6px"' : ""}>${n.mot}</text>
         ${sub ? `<text x="${n.x}" y="${n.y + 13}" text-anchor="middle" class="t-sub" fill="${n.txt}">${esc(sub)}</text>` : ""}
         <text x="${n.x}" y="${n.y + R + 12}" text-anchor="middle" class="t-heb">${n.heb}</text>
@@ -1771,6 +1776,61 @@ Si la pensée évoque une envie de se faire du mal ou de mourir, réponds avec d
     const it = S.intentions[t];
     $("greeting").textContent = it ? "« " + it + " »" : greetingText;
   }
+  /* ================= scène : horizon, soleil levant, mer, feuillages ================= */
+  function flower(x, y, r, col, rot = 0) {
+    let p = "";
+    for (let i = 0; i < 5; i++) { const a = (Math.PI * 2 * i) / 5 + rot; p += `<circle cx="${(x + Math.cos(a) * r * .62).toFixed(1)}" cy="${(y + Math.sin(a) * r * .62).toFixed(1)}" r="${(r * .48).toFixed(1)}" fill="${col}"/>`; }
+    return p + `<circle cx="${x}" cy="${y}" r="${(r * .22).toFixed(1)}" fill="#f6d27a"/>`;
+  }
+  function leaf(x, y, len, w, rot, fill, vein = "#d9a33a") {
+    return `<g transform="translate(${x} ${y}) rotate(${rot})"><path d="M0 0C${w} ${-len * .3} ${w * .7} ${-len * .8} 0 ${-len}C${-w * .7} ${-len * .8} ${-w} ${-len * .3} 0 0Z" fill="${fill}" stroke="${vein}" stroke-width="1.6"/><path d="M0 -4V${-len + 6}" stroke="${vein}" stroke-width="1.2"/></g>`;
+  }
+  function renderScene() {
+    const H = 600;   // horizon
+    let fl = "";
+    const cols = ["#e0457b", "#f07a5a", "#c2378f", "#7b3fb0", "#3a5cc8", "#e85d9a"];
+    [[24, 712, 14], [50, 702, 12], [38, 732, 13], [14, 740, 11], [64, 726, 11], [30, 758, 12], [56, 752, 10], [8, 770, 10]].forEach(([x, y, r], i) => { fl += flower(x, y, r, cols[i % cols.length], i); });
+    $("scene").innerHTML = `<svg viewBox="0 0 400 860" preserveAspectRatio="xMidYMid slice">
+      <defs>
+        <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f7ead2"/><stop offset=".45" stop-color="#f6d2a2"/><stop offset=".68" stop-color="#f3b27a"/><stop offset=".7" stop-color="#f3b27a"/></linearGradient>
+        <linearGradient id="sea" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6d9cc0"/><stop offset=".5" stop-color="#3f6f9a"/><stop offset="1" stop-color="#22426b"/></linearGradient>
+        <radialGradient id="glow" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#fff2c4" stop-opacity=".95"/><stop offset=".4" stop-color="#ffd98a" stop-opacity=".55"/><stop offset="1" stop-color="#ffd98a" stop-opacity="0"/></radialGradient>
+      </defs>
+      <rect width="400" height="${H}" fill="url(#sky)"/>
+      <circle cx="200" cy="${H}" r="170" fill="url(#glow)"/>
+      <circle cx="200" cy="${H}" r="46" fill="#fbe3a2"/>
+      <path d="M300 ${H}C320 ${H - 16} 345 ${H - 22} 372 ${H - 12}L400 ${H - 6}V${H}Z" fill="#3c5576" opacity=".75"/>
+      <rect y="${H}" width="400" height="${860 - H}" fill="url(#sea)"/>
+      <g stroke="#ffe1a0" stroke-linecap="round" opacity=".85">
+        <path d="M160 ${H + 12}H240" stroke-width="4"/><path d="M172 ${H + 30}H228" stroke-width="3.5"/><path d="M182 ${H + 48}H218" stroke-width="3"/><path d="M190 ${H + 66}H210" stroke-width="2.5"/>
+      </g>
+      <g fill="none" stroke="#d9a33a" stroke-width="6" opacity=".55">
+        <path d="M118 ${H}V250A82 82 0 0 1 282 250V${H}"/><path d="M100 ${H}V250A100 100 0 0 1 300 250V${H}"/><path d="M82 ${H}V250A118 118 0 0 1 318 250V${H}"/>
+      </g>
+      <path d="M0 300C26 330 30 380 16 420C10 440 4 452 0 458Z" fill="#24476b" stroke="#d9a33a" stroke-width="2.5"/>
+      <path d="M400 0H330C356 70 342 160 378 230C388 250 396 262 400 270Z" fill="#24476b" stroke="#d9a33a" stroke-width="2.5"/>
+      ${leaf(-2, 300, 70, 22, 40, "#e2b04a", "#a87a1e")}
+      ${leaf(4, 470, 60, 14, 58, "#a9c7c4")}
+      ${leaf(380, 150, 80, 22, -26, "#ead8b8")}
+      ${leaf(392, 210, 70, 20, -48, "#d9c09a")}
+      <path d="M0 ${H + 90}C30 ${H + 80} 60 ${H + 100} 86 ${H + 130}C66 ${H + 170} 34 ${H + 186} 0 ${H + 180}Z" fill="#24476b" stroke="#d9a33a" stroke-width="2"/>
+      ${fl}
+      <path d="M0 790C70 760 140 800 210 790C280 780 340 750 400 770V860H0Z" fill="#c4562b" stroke="#d9a33a" stroke-width="2"/>
+      <path d="M0 815C80 800 150 830 230 822C300 815 350 800 400 812V860H0Z" fill="#e9d3b0" stroke="#d9a33a" stroke-width="2"/>
+      <path d="M0 840C90 828 180 850 260 845C320 841 360 835 400 838V860H0Z" fill="#24476b" stroke="#d9a33a" stroke-width="2"/>
+      <g transform="translate(372 700)">
+        <path d="M0 80C-4 40 6 16 0 0" stroke="#2e7d46" stroke-width="4" fill="none"/>
+        ${[0, 90, 180, 270].map((r) => `<g transform="rotate(${r + 45})"><path d="M0 0C-12 -8 -26 -22 -19 -34C-14 -42 -3 -41 0 -32C3 -41 14 -42 19 -34C26 -22 12 -8 0 0Z" fill="#2e7d46" stroke="#d9a33a" stroke-width="1.6"/></g>`).join("")}
+      </g>
+    </svg>`;
+  }
+  renderScene();
+  // en-têtes des pages aux couleurs des sphères
+  SEPH.forEach((n) => {
+    const h = document.querySelector(`#s-${n.k} .sheet-head`); if (!h || n.dash) return;
+    h.style.setProperty("--c", n.fill); h.style.setProperty("--t", n.txt);
+  });
+
   let current = null;
   function openSheet(k) {
     const el = $("s-" + k); if (!el) return;
