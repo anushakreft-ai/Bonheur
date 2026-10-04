@@ -613,6 +613,17 @@ body.sheet-open .home { visibility: hidden; }
         <p class="hint" id="grat-msg" aria-live="polite"></p>
         <div class="today-list" id="grat-today"></div>
       </div>
+      <div class="glass">
+        <h3>Mes images de bonheur</h3>
+        <p class="hint" style="margin:0">Une photo d'un bon moment, un paysage, une personne aimée, une image qui fait sourire.</p>
+        <div class="board" id="grat-board"></div>
+        <div class="row">
+          <button class="btn small" type="button" id="grat-photo-add">+ Ajouter des images</button>
+          <button class="btn alt small" type="button" data-draw="grat" id="grat-draw-go" hidden>✨ Une image au hasard</button>
+        </div>
+        <div id="grat-draw"></div>
+        <input type="file" id="grat-photo-input" accept="image/*" multiple hidden>
+      </div>
     </div>
   </section>
 
@@ -949,7 +960,7 @@ body.sheet-open .home { visibility: hidden; }
   ];
   const fresh = () => ({
     v: 4, gestes: DEFAULT_GESTES.slice(), faits: {}, notes: [], voix: [], checkins: [],
-    rappel: { on: false, min: 45 }, humeur: {}, gratitudes: {}, projets: [], refuges: [], pas: {}, souffle: "infinie", intentions: {}, ancre: {}, triReves: "commencer", qualites: [], decision: {}, condition: {}, inspirations: []
+    rappel: { on: false, min: 45 }, humeur: {}, gratitudes: {}, projets: [], refuges: [], pas: {}, souffle: "infinie", intentions: {}, ancre: {}, triReves: "commencer", qualites: [], decision: {}, condition: {}, inspirations: [], gratPhotos: []
   });
   const migrate = (o) => {
     const s = Object.assign(fresh(), o || {});
@@ -1402,13 +1413,13 @@ body.sheet-open .home { visibility: hidden; }
   }
   const lastDraw = {};
   function drawImage(where) {
-    const pool = where === "insp" ? inspPool() : dreamPool(), box = $(where === "insp" ? "insp-draw" : "dream-draw");
+    const pool = where === "insp" ? inspPool() : where === "grat" ? gratPool() : dreamPool(), box = $(where + "-draw");
     if (!pool.length) { box.innerHTML = ""; return; }
     let it = pool[Math.floor(Math.random() * pool.length)];
     if (pool.length > 1 && lastDraw[where] === it.pid) it = pool[(pool.indexOf(it) + 1) % pool.length];
     lastDraw[where] = it.pid;
     box.innerHTML = `<div class="draw"><img data-photo="${it.pid}" alt="">
-      ${it.label && it.label !== "Inspiration" ? `<p>Pour : ${esc(it.label)}</p>` : `<p>Est-ce que cette image t'inspire aujourd'hui ?</p>`}
+      ${where === "grat" ? `<p>${it.label ? "« " + esc(it.label) + " » · " : ""}${it.date ? new Date(it.date).toLocaleDateString("fr-CH", { day: "numeric", month: "long" }) : ""}</p>` : it.label && it.label !== "Inspiration" ? `<p>Pour : ${esc(it.label)}</p>` : `<p>Est-ce que cette image t'inspire aujourd'hui ?</p>`}
       <div class="row" style="justify-content:center">
         ${it.insp ? `<button class="btn small" type="button" data-like="${it.insp}" data-where="${where}">♥ Elle m'inspire</button>` : ""}
         <button class="btn alt small" type="button" data-draw="${where}">Une autre</button>
@@ -1418,7 +1429,7 @@ body.sheet-open .home { visibility: hidden; }
   }
   document.addEventListener("click", (e) => {
     const d = e.target.closest("[data-draw]"); if (d) { drawImage(d.dataset.draw); return; }
-    const c = e.target.closest("[data-draw-close]"); if (c) { $(c.dataset.drawClose === "insp" ? "insp-draw" : "dream-draw").innerHTML = ""; return; }
+    const c = e.target.closest("[data-draw-close]"); if (c) { $(c.dataset.drawClose + "-draw").innerHTML = ""; return; }
     const l = e.target.closest("[data-like]");
     if (l) {
       const x = S.inspirations.find((y) => y.id === l.dataset.like); if (!x) return;
@@ -1426,6 +1437,23 @@ body.sheet-open .home { visibility: hidden; }
       l.textContent = "♥ Gardée dans mes rêves"; l.disabled = true;
     }
   });
+  const gratPool = () => S.gratPhotos.map((x) => ({ pid: x.pid, label: "", date: x.date }));
+  function renderGratPhotos() {
+    $("grat-board").innerHTML = S.gratPhotos.length ? boardHtml(gratPool().slice(-12).map((x) => Object.assign({}, x, { label: new Date(x.date).toLocaleDateString("fr-CH", { day: "numeric", month: "short" }) }))) : "";
+    $("grat-draw-go").hidden = !S.gratPhotos.length;
+    hydratePhotos($("s-chesed"));
+  }
+  $("grat-photo-add").onclick = () => $("grat-photo-input").click();
+  $("grat-photo-input").addEventListener("change", async () => {
+    const files = [...$("grat-photo-input").files]; $("grat-photo-input").value = "";
+    for (const f of files.slice(0, 12)) {
+      try { const d = await shrink(f); const pid = uid(); await putPhoto(pid, d); S.gratPhotos.push({ id: uid(), pid, date: new Date().toISOString() }); }
+      catch (e) { toastMsg("Cette image n'a pas pu être lue. Essaie avec une autre."); }
+    }
+    if (files.length) { const k = dayKey(); if (!(S.gratitudes[k] || []).some((x) => x && x.trim())) S.gratitudes[k] = (S.gratitudes[k] || []).concat("Une image de bonheur"); }
+    save(); renderGratPhotos(); renderGrat();
+  });
+  $("grat-board").addEventListener("click", (e) => { const b = e.target.closest("[data-view-photo]"); if (b) showPhoto(b.dataset.viewPhoto); });
   function renderInsp() {
     $("insp-board").innerHTML = boardHtml(inspPool().slice(-15));
     $("insp-draw-go").hidden = !S.inspirations.length;
@@ -1455,6 +1483,7 @@ body.sheet-open .home { visibility: hidden; }
     if (!lbConfirm) { lbConfirm = true; $("lb-del").textContent = "Oui, retirer pour de bon"; return; }
     S.projets.forEach((p) => { p.photos = (p.photos || []).filter((x) => x !== lbPhoto); });
     S.inspirations = S.inspirations.filter((x) => x.pid !== lbPhoto);
+    S.gratPhotos = S.gratPhotos.filter((x) => x.pid !== lbPhoto); renderGratPhotos();
     await delPhoto(lbPhoto); save(); $("lightbox").hidden = true; renderDreams(); renderInsp();
   };
   function toastMsg(t) {
@@ -2314,7 +2343,7 @@ Si la pensée évoque une envie de se faire du mal ou de mourir, réponds avec d
   }
   const dump = async () => {
     const photos = {};
-    const pids = S.projets.flatMap((p) => p.photos || []).concat(S.inspirations.map((x) => x.pid));
+    const pids = S.projets.flatMap((p) => p.photos || []).concat(S.inspirations.map((x) => x.pid), S.gratPhotos.map((x) => x.pid));
     for (const pid of pids) { const d = await getPhoto(pid); if (d) photos[pid] = d; }
     return JSON.stringify(Object.assign({ app: "zora", exporte: new Date().toISOString() }, S, { photos }));
   };
@@ -2352,7 +2381,7 @@ Si la pensée évoque une envie de se faire du mal ou de mourir, réponds avec d
   function renderAll() {
     renderMoods(); renderGrat(); renderNextStep(); renderGarden(); renderGestes(); renderDreams();
     renderTypePick(); renderEntries(); renderVoices(); renderPeople(); renderRefuges(); renderBilan(); armRappel();
-    renderIntention(); renderTree(); renderCare(); renderQualites(); renderDecision(); renderCond(); renderIntu(); renderInsp();
+    renderIntention(); renderTree(); renderCare(); renderQualites(); renderDecision(); renderCond(); renderIntu(); renderInsp(); renderGratPhotos();
   }
   renderAll(); showThought(); renderSteps();
   const hash = location.hash.slice(1);
