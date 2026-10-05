@@ -331,6 +331,37 @@ body { overflow: hidden; padding: 0 16px; margin: 0; }
 @keyframes luit { 50% { opacity: .72; } }
 @keyframes trace { to { stroke-dashoffset: 0; } }
 @media (prefers-reduced-motion: reduce) { #tree .chemin, #tree .chemin.neuf, #tree .halo-tout { animation: none; stroke-dashoffset: 0; } }
+#tree .spark { animation: luit 2.4s ease-in-out infinite; }
+.trav-card { border-left: 6px solid #c9a252; }
+.trav-kicker { font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #8a6a24; }
+.trav-q { font-size: 21px; line-height: 1.25; }
+.trav-rappel { margin: 0; padding: 8px 12px; border-radius: 14px; background: rgba(255,255,255,.5); font-style: italic; font-size: 15px; }
+.trav-strip { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; }
+.trav-strip > div { display: grid; justify-items: center; gap: 2px; opacity: .38; filter: grayscale(.8); }
+.trav-strip > div.ok { opacity: 1; filter: none; }
+.trav-strip > div.cur { opacity: 1; filter: none; }
+.trav-strip > div.cur .tresor { animation: luit 2.4s ease-in-out infinite; }
+.trav-strip span { font-size: 11px; font-weight: 700; color: var(--ink-soft); }
+.tresor { width: 38px; height: 38px; flex: none; }
+.tresor.big { width: 72px; height: 72px; justify-self: center; }
+.tresor.pop { width: 96px; height: 96px; justify-self: center; animation: pousse .8s cubic-bezier(.3,1.6,.5,1) both; }
+.trav-gift { text-align: center; justify-items: center; background: rgba(255,248,225,.75); }
+.trav-go { display: flex; gap: 10px; align-items: center; justify-content: space-between; padding: 8px 0; border-top: 1px solid rgba(0,0,0,.06); }
+.trav-go p { margin: 2px 0 0; }
+.trav-go .btn { white-space: nowrap; flex: none; }
+#trav-reset { justify-self: center; background: rgba(255,250,243,.75); border-radius: 99px; padding: 8px 14px; color: var(--ink); }
+.trav-world { border-radius: 16px; background: rgba(255,255,255,.35); padding: 6px 10px; }
+.trav-world summary { display: flex; align-items: center; gap: 8px; font-weight: 700; cursor: pointer; list-style: none; }
+.trav-world summary .tresor { width: 28px; height: 28px; }
+.trav-item { display: grid; gap: 4px; padding: 8px 0; border-top: 1px solid rgba(0,0,0,.06); overflow-wrap: anywhere; }
+.trav-item b { font-size: 14px; }
+.trav-item p { margin: 0; }
+.trav-item textarea { min-height: 64px; font-size: 15px; }
+.trav-item.tr { grid-template-columns: auto 1fr; gap: 10px; align-items: start; }
+.trav-tresors { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+.trav-tresors > div { display: grid; justify-items: center; gap: 4px; text-align: center; font-size: 14px; background: rgba(255,255,255,.45); border-radius: 16px; padding: 10px; overflow-wrap: anywhere; }
+.trav-tresors p { margin: 0; }
+#s-daat .btn-eclair { margin-bottom: 4px; }
 #tree .t-heb { font: 700 34px var(--f-body); fill: #2b3440; letter-spacing: .06em; paint-order: stroke; stroke: #fbf1e2; stroke-width: 9px; stroke-linejoin: round; }
 
 /* ---- pages des sphères ---- */
@@ -489,6 +520,7 @@ body.sheet-open .home { visibility: hidden; }
         <div class="row"><button class="btn" id="intention-save" type="button">Poser mon intention</button><span class="hint" id="intention-msg" aria-live="polite"></span></div>
         <div class="history" id="intention-history"></div>
       </div>
+      <div class="trav-slot"></div>
     </div>
   </section>
 
@@ -499,6 +531,7 @@ body.sheet-open .home { visibility: hidden; }
       <div class="sheet-title"><span class="heb">Hokhmah · Sagesse</span><h2 id="h-chokhmah">Intuitions</h2><p>L'éclair d'une idée, une envie qui naît.</p></div>
     </div>
     <div class="sheet-body">
+      <div class="trav-slot"></div>
       <div class="panel">
         <div class="title-block">
           <h2>Mon mur d'inspiration</h2>
@@ -536,6 +569,7 @@ body.sheet-open .home { visibility: hidden; }
       <div class="sheet-title"><span class="heb">Binah · Compréhension</span><h2 id="h-binah">Comprendre</h2><p>Regarder ce qui se passe, avec douceur.</p></div>
     </div>
     <div class="sheet-body">
+      <div class="trav-slot"></div>
       <div class="panel">
         <div class="eyebrow">Une pensée simple</div>
         <p class="thought" id="thought"></p>
@@ -570,6 +604,7 @@ body.sheet-open .home { visibility: hidden; }
         <h2>Mon bilan</h2>
         <p class="lead">Tes 7 derniers jours, pour voir ce qui te fait du bien.</p>
       </div>
+      <button class="btn-eclair" type="button" data-open="trav">Le récit de ma traversée ›</button>
       <div class="stats" id="stats"></div>
       <div class="panel">
         <h3>Ta météo sur 14 jours</h3>
@@ -614,6 +649,7 @@ body.sheet-open .home { visibility: hidden; }
       <div class="sheet-title"><span class="heb">Hessed · Bonté</span><h2 id="h-chesed">Gratitude</h2><p>Ce que je reçois et ce que je donne.</p></div>
     </div>
     <div class="sheet-body">
+      <div class="trav-slot"></div>
       <div class="jarbox">
         <svg class="jar-svg" id="jar-svg" viewBox="0 0 200 230" role="img" aria-label="Mon bocal à bonheurs"></svg>
         <div class="jar-side">
@@ -654,6 +690,7 @@ body.sheet-open .home { visibility: hidden; }
       <div class="sheet-title"><span class="heb">Guevourah · Force</span><h2 id="h-gevurah">Limites</h2><p>Les voix que j'écoute, et la place que je leur donne.</p></div>
     </div>
     <div class="sheet-body">
+      <div class="trav-slot"></div>
       <div class="panel">
         <h2>Là, maintenant, j'écoute…</h2>
         <div class="seg" id="voices" role="group" aria-label="Quelle voix"></div>
@@ -692,6 +729,7 @@ body.sheet-open .home { visibility: hidden; }
       <div class="sheet-title"><span class="heb">Tiferet · Beauté</span><h2 id="h-tiferet">Cœur</h2><p>Ma météo intérieure, au centre de tout.</p></div>
     </div>
     <div class="sheet-body">
+      <div class="trav-slot"></div>
       <div class="panel">
         <h2>Ta météo intérieure</h2>
         <div class="moods" id="moods" role="group" aria-label="Humeur du jour"></div>
@@ -712,6 +750,7 @@ body.sheet-open .home { visibility: hidden; }
       <div class="sheet-title"><span class="heb">Netsah · Victoire</span><h2 id="h-netzach">Rêves</h2><p>M'élever : mes rêves et la musique qui me porte.</p></div>
     </div>
     <div class="sheet-body">
+      <div class="trav-slot"></div>
       <button class="jump" type="button" id="go-music">♪ La musique qui m'élève</button>
       <div id="nextstep-host"></div>
       <div class="vision board" id="vision" hidden></div>
@@ -789,6 +828,7 @@ body.sheet-open .home { visibility: hidden; }
       <div class="sheet-title"><span class="heb">Hod · Splendeur</span><h2 id="h-hod">Mots</h2><p>Écrire ce qui me traverse : rêves de nuit, envies, pensées.</p></div>
     </div>
     <div class="sheet-body">
+      <div class="trav-slot"></div>
       <div class="panel">
         <div class="title-block">
           <h2>Carnet</h2>
@@ -814,6 +854,7 @@ body.sheet-open .home { visibility: hidden; }
       <div class="sheet-title"><span class="heb">Yesod · Fondement</span><h2 id="h-yesod">Ancrage</h2><p>Respirer, revenir ici, prendre racine.</p></div>
     </div>
     <div class="sheet-body">
+      <div class="trav-slot"></div>
       <div class="panel">
         <div class="title-block">
           <h2>Me mettre en condition</h2>
@@ -849,6 +890,7 @@ body.sheet-open .home { visibility: hidden; }
       <div class="sheet-title"><span class="heb">Malkhout · Royaume</span><h2 id="h-malkhut">Gestes</h2><p>Le corps, le concret, les petits gestes.</p></div>
     </div>
     <div class="sheet-body">
+      <div class="trav-slot"></div>
       <div class="panel">
         <div class="garden-art" id="garden"></div>
         <div class="row between">
@@ -906,6 +948,15 @@ body.sheet-open .home { visibility: hidden; }
         <div class="eclair-step" id="eclair-step"></div>
       </div>
     </div>
+  </section>
+
+  <section class="sheet" id="s-trav" role="dialog" aria-modal="true" aria-labelledby="h-trav" hidden>
+    <div class="sheet-head" style="--c:#10294f;--t:#ffffff">
+      <button class="back" type="button" data-close aria-label="Revenir à l'arbre">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Arbre</button>
+      <div class="sheet-title"><span class="heb">Terre · Eau · Feu · Air · Lumière</span><h2 id="h-trav">La Traversée</h2><p id="trav-sub"></p></div>
+    </div>
+    <div class="sheet-body" id="trav-body"></div>
   </section>
 
 <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Photo" hidden>
@@ -994,7 +1045,7 @@ body.sheet-open .home { visibility: hidden; }
   ];
   const fresh = () => ({
     v: 4, gestes: DEFAULT_GESTES.slice(), faits: {}, notes: [], voix: [], checkins: [],
-    rappel: { on: false, min: 45 }, humeur: {}, gratitudes: {}, projets: [], refuges: [], pas: {}, souffle: "infinie", intentions: {}, ancre: {}, triReves: "commencer", eclairActif: null, qualites: [], decision: {}, condition: {}, inspirations: [], gratPhotos: []
+    rappel: { on: false, min: 45 }, humeur: {}, gratitudes: {}, projets: [], refuges: [], pas: {}, souffle: "infinie", intentions: {}, ancre: {}, triReves: "commencer", eclairActif: null, qualites: [], traversee: null, traversees: [], decision: {}, condition: {}, inspirations: [], gratPhotos: []
   });
   const migrate = (o) => {
     const s = Object.assign(fresh(), o || {});
@@ -1015,6 +1066,64 @@ body.sheet-open .home { visibility: hidden; }
     }
     return s;
   };
+  /* ================= la Traversée : données (Terre → Eau → Feu → Air → Lumière) ================= */
+  const TRAV = [
+    { k: "terre", de: "de la Terre", titre: "Ta quête", tresorNom: "la pierre", qt: "Qu'as-tu pris dans le monde de la Terre ?", qs: [
+      ["t1", "malkhut", "Que cherches-tu ?"],
+      ["t2", "malkhut", "Comment est né ton désir ?"],
+      ["t3", "malkhut", "Pourquoi cette quête maintenant ?"],
+      ["t4", "malkhut", "Imagine ta quête accomplie : que vois-tu ?"],
+      ["t5", "malkhut", "Qu'est-ce que cela t'apporterait ?"],
+      ["t6", "malkhut", "Qu'est-ce que cela apporterait aux autres ?"],
+      ["t7", "malkhut", "As-tu vu des signes reliés à ta quête ?"]] },
+    { k: "eau", de: "de l'Eau", titre: "Tes ressources", tresorNom: "le coquillage", qt: "Qu'as-tu appris dans le monde de l'Eau ?", qs: [
+      ["e1", "binah", "Quelles sont tes armes ?"],
+      ["e2", "hod", "Quel est ton meilleur souvenir ?"],
+      ["e3", "hod", "Quel était ton jeu favori ?"],
+      ["e4", "binah", "Que pense de ta quête la personne qui compte le plus pour toi ?"],
+      ["e5", "chesed", "Qu'as-tu réussi dont tu es fière ?"],
+      ["e6", "chesed", "Sur quoi peux-tu compter pour réussir ta quête ?"],
+      ["e7", "chesed", "Sur qui peux-tu compter pour réussir ta quête ?"]] },
+    { k: "feu", de: "du Feu", titre: "Les épreuves", tresorNom: "la braise", intro: "Ici, on regarde ce qui freine, pour mieux le traverser.", qt: "Qu'as-tu pris dans le monde du Feu ?", qs: [
+      ["f1", "gevurah", "Quelles sont tes peurs ?"],
+      ["f2", "gevurah", "Qu'est-ce qui t'empêche de réussir ta quête aujourd'hui ?"],
+      ["f3", "gevurah", "Quels obstacles viennent des autres ?"],
+      ["f4", "gevurah", "Quels obstacles viennent de toi ?"],
+      ["f5", "chokhmah", "As-tu vu des signes négatifs liés à ta quête ?"],
+      ["f6", "chokhmah", "Quelles solutions as-tu déjà essayées ?"],
+      ["f7", "netzach", "Y a-t-il un risque pour toi à réussir ta quête ?"]] },
+    { k: "air", de: "de l'Air", titre: "L'élévation", tresorNom: "la plume", qt: "Qu'as-tu pris dans le monde de l'Air ?", qs: [
+      ["a1", "tiferet", "Es-tu prête à payer le prix ?"],
+      ["a2", "tiferet", "En quoi ta quête dépasse-t-elle ta propre histoire ?"],
+      ["a3", "yesod", "Si tu concentrais toutes tes pensées sur ta quête, qu'en résulterait-il ?"],
+      ["a4", "yesod", "À quelle sorte de magie dois-tu faire appel ?"],
+      ["a5", "tiferet", "Quelle relation entretiens-tu avec l'invisible ?"],
+      ["a6", "tiferet", "Reviens à ta quête accomplie : comment as-tu surmonté les obstacles ?"],
+      ["a7", "yesod", "Quel rituel quotidien peux-tu adopter pour réussir ta quête ?"]] }
+  ];
+  const TRESOR_SVG = {
+    terre: `<ellipse cx="24" cy="29" rx="17" ry="11" fill="#a68d72"/><ellipse cx="21" cy="26" rx="10" ry="5" fill="#c4ab8e"/><path d="M11 30c7 4 19 4 26-1" stroke="#7d6650" stroke-width="2" fill="none" stroke-linecap="round"/>`,
+    eau: `<path d="M24 41 8 20Q24 3 40 20Z" fill="#f6d3c2" stroke="#c98a6e" stroke-width="2" stroke-linejoin="round"/><path d="M24 41 13 15M24 41 18 10M24 41V8M24 41 30 10M24 41 35 15" stroke="#c98a6e" stroke-width="1.6"/><path d="M19 41h10l-2 4h-6z" fill="#c98a6e"/>`,
+    feu: `<path d="M24 43c-8 0-12-6-12-12 0-8 8-10 8-21 6 4 7 10 7 13 2-2 3-5 3-7 5 5 7 10 7 15 0 6-4 12-13 12z" fill="#e0703f"/><path d="M24 43c-4 0-6-3-6-6 0-4 4-6 5-10 3 3 7 6 7 10 0 3-2 6-6 6z" fill="#f6d27a"/>`,
+    air: `<path d="M39 7C23 9 13 21 12 37c9-2 21-10 27-30z" fill="#e6eef6" stroke="#7d98b3" stroke-width="2" stroke-linejoin="round"/><path d="M9 43 33 13" stroke="#7d98b3" stroke-width="2.2" stroke-linecap="round"/><path d="M17 33l9-2M20 27l9-3M24 21l8-3" stroke="#7d98b3" stroke-width="1.4" stroke-linecap="round"/>`,
+    lumiere: `<circle cx="24" cy="24" r="18" fill="#fff4c2" opacity=".7"/><path d="M24 7l4.6 11.4L41 19.4l-9.6 7.8 3.2 12.4L24 32.8l-10.6 6.8 3.2-12.4-9.6-7.8 12.4-1z" fill="#f2c94c" stroke="#c9a252" stroke-width="1.5" stroke-linejoin="round"/>`
+  };
+  const tresorSvg = (k, cls = "") => `<svg class="tresor ${cls}" viewBox="0 0 48 48" aria-hidden="true">${TRESOR_SVG[k]}</svg>`;
+  const travDone = (t, id) => !!((t.rep[id] && t.rep[id].t.trim()) || t.pass.includes(id));
+  const travPending = (m, k) => { const t = S.traversee; return TRAV[m].qs.filter((q) => (!k || q[1] === k) && !travDone(t, q[0])); };
+  // une réponse donnée aujourd'hui coche la sphère où elle a été posée
+  function travToday(k) {
+    const t = S.traversee; if (!t) return false; const d = dayKey();
+    if (Object.values(t.rep).some((r) => r.date === d && r.sph === k)) return true;
+    return k === "keter" && (Object.values(t.tresors).some((r) => r.date === d) || (t.decision && t.decision.date === d));
+  }
+  // étincelle sur l'arbre : là où la traversée attend une réponse
+  function travSpark(k) {
+    const t = S.traversee; if (!t || t.fin) return false;
+    if (t.monde > 3) return k === "keter";
+    if (!travPending(t.monde).length) return k === "keter";
+    return travPending(t.monde, k).length > 0;
+  }
   const LS = "petits-gestes-v1";
   let S = fresh();
   try { const raw = localStorage.getItem(LS); if (raw) S = migrate(JSON.parse(raw)); } catch (e) {}
@@ -2043,7 +2152,8 @@ Si la pensée évoque une envie de se faire du mal ou de mourir, réponds avec d
   ];
   const PATHS = "keter-chokhmah keter-binah keter-tiferet chokhmah-binah chokhmah-tiferet chokhmah-chesed binah-tiferet binah-gevurah chesed-gevurah chesed-tiferet chesed-netzach gevurah-tiferet gevurah-hod tiferet-netzach tiferet-yesod tiferet-hod netzach-hod netzach-yesod netzach-malkhut hod-yesod hod-malkhut yesod-malkhut".split(" ").map((x) => x.split("-"));
   const byK = Object.fromEntries(SEPH.map((n) => [n.k, n]));
-  function seStatus(k) {
+  function seStatus(k) { return seStatus0(k) || travToday(k); }
+  function seStatus0(k) {
     const t = dayKey(), notesToday = (type) => S.notes.some((n) => n.date && dayKey(new Date(n.date)) === t && type.includes(n.type));
     switch (k) {
       case "keter": return !!S.intentions[t] || !!S.decision[t];
@@ -2138,6 +2248,7 @@ Si la pensée évoque une envie de se faire du mal ou de mourir, réponds avec d
         <text x="${x}" y="${y + (n.k === "daat" ? 26 : ic ? 30 : sub ? 4 : 15)}" text-anchor="middle" class="t-mot${light ? "" : " t-halo"}" fill="${n.txt}" style="font-size:${n.k === "daat" ? 30 : fs}px">${n.mot}</text>
         ${sub ? `<text x="${x}" y="${y + (ic ? 66 : 46)}" text-anchor="middle" class="t-sub${light ? "" : " t-halo"}" fill="${n.txt}">${esc(sub)}</text>` : ""}
         <text x="${x}" y="${y + r + 44}" text-anchor="middle" class="t-heb">${n.heb}</text>
+        ${travSpark(n.k) ? `<g class="spark" transform="translate(${x - r * .74} ${y - r * .74})" pointer-events="none"><circle r="30" fill="#10294f" stroke="#f5d77a" stroke-width="4"/><path d="M0-19l5 14 14 5-14 5-5 14-5-14-14-5 14-5z" fill="#f5d77a"/></g>` : ""}
         ${done ? `<g transform="translate(${x + r * .74} ${y - r * .74})"><circle r="30" fill="#2b3440" stroke="#fbf1e2" stroke-width="5"/><path d="M-13 0l9 9 17-18" fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></g>` : ""}
       </g>`;
     });
@@ -2219,6 +2330,7 @@ Si la pensée évoque une envie de se faire du mal ou de mourir, réponds avec d
     const el = $("s-" + k); if (!el) return;
     document.querySelectorAll(".sheet").forEach((x) => { x.hidden = x !== el; });
     el.hidden = false; el.scrollTop = 0; current = k;
+    if (k === "trav") renderTravSheet(); else renderTravSlot(k);
     document.body.classList.add("sheet-open");
     try { history.replaceState(null, "", "#" + k); } catch (e) {}
   }
@@ -2433,6 +2545,183 @@ Propose 3 pistes de réponse courtes (une ligne chacune), concrètes et personne
     const b = ev.target.closest("[data-estep]"); if (!b || b.disabled) return;
     eclairStep = +b.dataset.estep; renderEclair();
   });
+
+  /* ================= la Traversée : affichage ================= */
+  let travCadeau = null;   // monde dont le trésor vient d'être reçu (petite célébration)
+  const travMonde = (t) => (t.monde > 3 ? "la Lumière" : "le monde " + TRAV[t.monde].de);
+  function travStrip(t) {
+    return `<div class="trav-strip">${TRAV.map((M, i) => `<div class="${t.tresors[M.k] ? "ok" : ""} ${t.monde === i ? "cur" : ""}">${tresorSvg(M.k)}<span>${M.de.replace(/^(de la |de l'|du )/, "")}</span></div>`).join("")}
+      <div class="${t.fin ? "ok" : ""} ${t.monde === 4 ? "cur" : ""}">${tresorSvg("lumiere")}<span>Lumière</span></div></div>`;
+  }
+  function keterTravCard() {
+    const t = S.traversee;
+    if (!t || t.fin) return `<div class="panel trav-card"><span class="trav-kicker">La Traversée</span>
+      <h3>${t && t.fin ? "Ta traversée est accomplie ✨" : "Un voyage intérieur"}</h3>
+      <p class="hint">À travers la Terre, l'Eau, le Feu et l'Air, jusqu'à la Lumière. Une question à la fois, dans les sphères de chaque élément.</p>
+      <div class="row"><button class="btn small" type="button" data-open="trav">${t && t.fin ? "Voir le récit · en commencer une autre" : "Commencer ma traversée"}</button></div></div>`;
+    const wait = t.monde < 4 && !travPending(t.monde).length;
+    return `<div class="panel trav-card"><span class="trav-kicker">Ma traversée</span><h3>${esc(t.titre)}</h3>${travStrip(t)}
+      <p class="hint">${t.monde > 3 ? "Tu es arrivée à la Lumière : il reste une dernière question." : wait ? `Le monde ${TRAV[t.monde].de} est traversé : ${TRAV[t.monde].tresorNom} t'attend.` : `En chemin dans le monde ${TRAV[t.monde].de} · ${TRAV[t.monde].qs.length - travPending(t.monde).length}/${TRAV[t.monde].qs.length}`}</p>
+      <div class="row"><button class="btn small" type="button" data-open="trav">${wait || t.monde > 3 ? "Continuer ✨" : "Voir ma traversée"}</button></div></div>`;
+  }
+  function renderTravSlot(k) {
+    const slot = document.querySelector(`#s-${k} .trav-slot`); if (!slot) return;
+    if (k === "keter") { slot.innerHTML = keterTravCard(); return; }
+    const t = S.traversee;
+    if (!t || t.fin || t.monde > 3) { slot.innerHTML = ""; return; }
+    const M = TRAV[t.monde];
+    if (!M.qs.some((q) => q[1] === k)) { slot.innerHTML = ""; return; }
+    const pend = travPending(t.monde, k), all = travPending(t.monde), total = M.qs.length;
+    const head = `<span class="trav-kicker">Traversée · Monde ${M.de} · ${total - all.length}/${total}</span>`;
+    if (!pend.length) {
+      const others = [...new Set(all.map((q) => q[1]))];
+      slot.innerHTML = `<div class="panel trav-card">${head}${others.length
+        ? `<p class="hint">Ici, c'est fait ✨ Ta traversée t'attend aussi dans : ${others.map((o) => `<button class="linkbtn" type="button" data-open="${o}">${byK[o].mot}</button>`).join(" · ")}</p>`
+        : `<p>Le monde ${M.de} est traversé ✨</p><div class="row"><button class="btn small" type="button" data-open="trav">Recevoir ${M.tresorNom}</button></div>`}</div>`;
+      return;
+    }
+    const q = pend[0], draft = (t.draft || {})[q[0]] || "";
+    const rappel = q[0] === "a6" && t.rep.t4 && t.rep.t4.t.trim() ? `<p class="trav-rappel">Au début, dans la Terre, tu imaginais : « ${esc(t.rep.t4.t.trim())} »</p>` : "";
+    slot.innerHTML = `<div class="panel trav-card">${head}${M.intro ? `<p class="hint">${M.intro}</p>` : ""}
+      <h3 class="trav-q">${q[2]}</h3>${rappel}
+      <label class="sr" for="trav-in-${k}">Ma réponse</label>
+      <textarea class="field" id="trav-in-${k}" data-trav-draft="${q[0]}" placeholder="Écris librement…">${esc(draft)}</textarea>
+      <div class="row"><button class="btn small" type="button" data-trav-save="${q[0]}">Garder</button>
+        ${q[0] === "a7" ? `<button class="btn small" type="button" data-trav-save="${q[0]}" data-geste="1">Garder et en faire un geste</button>` : ""}
+        <button class="btn alt small" type="button" data-trav-pass="${q[0]}">Pas pour l'instant</button></div>
+      ${sampleFn ? `<div class="row"><button class="linkbtn" type="button" data-trav-ai="${q[0]}">Aide-moi à y réfléchir</button><span class="hint" data-trav-aimsg></span></div>` : ""}
+      ${pend.length > 1 ? `<p class="hint">Encore ${pend.length - 1} question${pend.length > 2 ? "s" : ""} ici. Une par jour suffit.</p>` : ""}</div>`;
+  }
+  const travQ = (id) => { for (const M of TRAV) { const q = M.qs.find((x) => x[0] === id); if (q) return q; } return null; };
+  function travRecit(t, edit) {
+    return TRAV.map((M, i) => {
+      if (i > t.monde) return "";
+      const items = M.qs.filter((q) => travDone(t, q[0])).map((q) => {
+        const r = (t.rep[q[0]] || {}).t || "";
+        return `<div class="trav-item"><b>${q[2]}</b>${edit ? `<textarea class="field" data-trav-edit="${q[0]}" placeholder="Pas encore de réponse">${esc(r)}</textarea>` : `<p>${r ? esc(r) : "<i>passée</i>"}</p>`}</div>`;
+      }).join("");
+      const tr = t.tresors[M.k] ? `<div class="trav-item tr">${tresorSvg(M.k)}<div><b>${M.qt}</b><p>${esc(t.tresors[M.k].t)}</p></div></div>` : "";
+      return items || tr ? `<details class="trav-world" ${i === Math.min(t.monde, 3) && edit ? "open" : ""}><summary>${tresorSvg(M.k)} Monde ${M.de} · ${M.titre}</summary>${items}${tr}</details>` : "";
+    }).join("") + (t.decision ? `<div class="trav-item tr">${tresorSvg("lumiere")}<div><b>Que décides-tu maintenant ?</b><p>${esc(t.decision.t)}</p></div></div>` : "");
+  }
+  function renderTravSheet() {
+    const t = S.traversee, box = $("trav-body"), sheet = $("s-trav");
+    const img = t && !t.fin && t.monde < 4 && typeof ELEM_IMG !== "undefined" ? ELEM_IMG[TRAV[t.monde].k] : null;
+    sheet.style.backgroundImage = img ? `linear-gradient(rgba(251,246,241,.55), rgba(251,246,241,.3) 55%, rgba(251,246,241,.08)), url("${img}")` : "";
+    sheet.style.backgroundSize = "cover"; sheet.style.backgroundPosition = "center bottom";
+    $("trav-sub").textContent = t && !t.fin ? t.titre : "Un voyage intérieur, de la Terre à la Lumière";
+    const archives = (S.traversees || []).length ? `<div class="panel"><h3>Mes traversées passées</h3>${S.traversees.map((a) => `<details class="trav-world"><summary>${tresorSvg(a.fin ? "lumiere" : "terre")} ${esc(a.titre)} <span class="hint">· ${new Date(a.debut).toLocaleDateString("fr-CH")}</span></summary>${travRecit(a, false)}</details>`).join("")}</div>` : "";
+    if (!t || t.fin) {
+      const reves = S.projets.filter((p) => !p.fini);
+      box.innerHTML = `${t && t.fin ? `<div class="panel trav-card"><span class="trav-kicker">Traversée accomplie</span><h3>${esc(t.titre)}</h3>${travStrip(t)}${travRecit(t, false)}</div>` : ""}
+        <div class="panel trav-card"><span class="trav-kicker">Nouvelle traversée</span>
+          <h3>Quelle est ta quête ?</h3>
+          <p class="hint">Tu remonteras l'arbre : la Terre (ta quête), l'Eau (tes ressources), le Feu (les épreuves), l'Air (l'élévation), jusqu'à la Lumière. Chaque monde t'offre un trésor.</p>
+          <label class="sr" for="trav-titre">Ma quête</label>
+          <input class="field" id="trav-titre" maxlength="90" placeholder="Ce que je cherche…">
+          ${reves.length ? `<p class="hint">Ou pars d'un de tes rêves :</p><div class="seg">${reves.map((p) => `<button type="button" class="chip" data-trav-reve="${p.id}">${esc(p.titre)}</button>`).join("")}</div>` : ""}
+          <div class="row"><button class="btn" type="button" id="trav-start">Commencer ma traversée</button><span class="hint" id="trav-msg"></span></div>
+        </div>${archives}`;
+      return;
+    }
+    let cur = "";
+    if (travCadeau !== null) {
+      const G = TRAV[travCadeau], N = TRAV[travCadeau + 1];
+      cur += `<div class="panel trav-gift">${tresorSvg(G.k, "pop")}<h3>Tu as reçu ${G.tresorNom}</h3>
+        <p class="hint">${N ? `Le monde ${N.de} s'ouvre : ${[...new Set(N.qs.map((q) => byK[q[1]].mot))].join(", ")}. Une étincelle ✦ te montre où aller sur l'arbre.` : "Tu arrives à la Lumière."}</p></div>`;
+      travCadeau = null;
+    }
+    if (t.monde < 4) {
+      const M = TRAV[t.monde], all = travPending(t.monde);
+      if (all.length) {
+        const bySph = {}; all.forEach((q) => (bySph[q[1]] = bySph[q[1]] || []).push(q));
+        cur += `<div class="panel trav-card"><span class="trav-kicker">Monde ${M.de} · ${M.titre} · ${M.qs.length - all.length}/${M.qs.length}</span>
+          ${M.intro ? `<p class="hint">${M.intro}</p>` : ""}
+          ${Object.entries(bySph).map(([k, qs]) => `<div class="trav-go"><div><b>${byK[k].mot}</b><p class="hint">${qs.map((q) => q[2]).join(" · ")}</p></div><button class="btn small" type="button" data-open="${k}">Y aller ›</button></div>`).join("")}</div>`;
+      } else {
+        cur += `<div class="panel trav-card"><span class="trav-kicker">Le monde ${M.de} est traversé</span>${tresorSvg(M.k, "big")}
+          <h3>${M.qt}</h3><label class="sr" for="trav-tresor">Ma réponse</label>
+          <textarea class="field" id="trav-tresor" placeholder="Écris librement…"></textarea>
+          <div class="row"><button class="btn" type="button" id="trav-tresor-go">Recevoir ${M.tresorNom}</button><span class="hint" id="trav-msg"></span></div></div>`;
+      }
+    } else {
+      cur += `<div class="panel trav-card"><span class="trav-kicker">La Lumière</span>
+        <div class="trav-tresors">${TRAV.map((M) => `<div>${tresorSvg(M.k)}<p>${esc((t.tresors[M.k] || {}).t || "")}</p></div>`).join("")}</div>
+        <h3>Que décides-tu maintenant ?</h3><label class="sr" for="trav-decision">Ma décision</label>
+        <textarea class="field" id="trav-decision" placeholder="Je décide…">${esc((t.decision || {}).t || "")}</textarea>
+        <div class="row"><button class="btn small" type="button" id="trav-finish">Terminer ma traversée ✨</button>
+          <button class="btn alt small" type="button" id="trav-intent">En faire mon intention du jour</button></div><span class="hint" id="trav-msg"></span></div>`;
+    }
+    box.innerHTML = `<div class="panel trav-card"><span class="trav-kicker">Ma traversée</span><h3>${esc(t.titre)}</h3>${travStrip(t)}</div>
+      ${cur}<div class="panel"><h3>Le récit de ma traversée</h3><p class="hint">Tu peux relire et compléter tes réponses, même celles passées.</p>${travRecit(t, true) || `<p class="hint">Tes réponses apparaîtront ici.</p>`}</div>
+      <button class="linkbtn" type="button" id="trav-reset">Mettre cette traversée de côté et en commencer une autre</button>${archives}`;
+  }
+  // actions
+  document.addEventListener("input", (e) => {
+    const t = S.traversee; if (!t) return;
+    const d = e.target.closest("[data-trav-draft]");
+    if (d) { t.draft = t.draft || {}; t.draft[d.dataset.travDraft] = d.value; save(); return; }
+    const ed = e.target.closest("[data-trav-edit]");
+    if (ed) { const id = ed.dataset.travEdit, q = travQ(id); const old = t.rep[id];
+      t.rep[id] = { t: ed.value, date: old ? old.date : dayKey(), sph: old ? old.sph : q[1] };
+      if (ed.value.trim()) t.pass = t.pass.filter((x) => x !== id); save(); }
+  });
+  document.addEventListener("click", async (e) => {
+    const t = S.traversee, el = e.target;
+    const rv = el.closest("[data-trav-reve]");
+    if (rv) { const p = S.projets.find((x) => x.id === rv.dataset.travReve); if (p) $("trav-titre").value = p.titre; $("trav-titre").dataset.reve = rv.dataset.travReve; return; }
+    if (el.closest("#trav-start")) {
+      const v = $("trav-titre").value.trim(); if (!v) { $("trav-msg").textContent = "Écris d'abord ce que tu cherches."; return; }
+      if (t) (S.traversees = S.traversees || []).unshift(t);
+      S.traversee = { id: uid(), titre: v, reveId: $("trav-titre").dataset.reve || null, debut: new Date().toISOString(), monde: 0, rep: {}, pass: [], tresors: {}, draft: {}, decision: null, fin: null };
+      save(); renderTravSheet(); renderTravSlot("keter"); return;
+    }
+    if (!t) return;
+    const sv = el.closest("[data-trav-save]");
+    if (sv) {
+      const id = sv.dataset.travSave, q = travQ(id), ta = document.querySelector(`[data-trav-draft="${id}"]`), v = ta ? ta.value.trim() : "";
+      if (!v) { ta && ta.focus(); return; }
+      t.rep[id] = { t: v, date: dayKey(), sph: q[1] }; delete (t.draft || {})[id];
+      if (sv.dataset.geste) { S.gestes.push({ id: uid(), label: v.slice(0, 48), icon: "feuille" }); renderGestes(); renderGarden(); }
+      save(); renderTravSlot(q[1]);
+      if (sv.dataset.geste) showMsgIn(q[1], "Ton rituel a rejoint tes gestes du jour 🍀");
+      return;
+    }
+    const ps = el.closest("[data-trav-pass]");
+    if (ps) { const id = ps.dataset.travPass; if (!t.pass.includes(id)) t.pass.push(id); save(); renderTravSlot(travQ(id)[1]); return; }
+    const ai = el.closest("[data-trav-ai]");
+    if (ai && sampleFn) {
+      const id = ai.dataset.travAi, q = travQ(id), msg = ai.parentElement.querySelector("[data-trav-aimsg]"), ta = document.querySelector(`[data-trav-draft="${id}"]`);
+      ai.disabled = true; msg.textContent = "Je réfléchis…";
+      const before = TRAV.flatMap((M) => M.qs).filter((x) => t.rep[x[0]] && t.rep[x[0]].t.trim()).slice(-8).map((x) => `- ${x[2]} → ${t.rep[x[0]].t.trim()}`).join("\n");
+      try {
+        const r = await sampleFn(`Une personne fait « la Traversée » : un voyage intérieur à travers la Terre, l'Eau, le Feu et l'Air, autour de sa quête : « ${t.titre} ».
+Ses réponses récentes :
+${before || "(aucune)"}
+Question actuelle : « ${q[2]} ».
+Propose 3 pistes de réflexion courtes (une ligne chacune), au tutoiement, en français de Suisse romande, ton doux et positif. Ce sont des pistes pour l'aider à trouver sa propre réponse, pas des réponses à sa place. Pas d'introduction.`);
+        ta.value = (ta.value ? ta.value + "\n" : "") + r.text.trim(); t.draft[id] = ta.value; save();
+        msg.textContent = "Garde ce qui te parle, efface le reste.";
+      } catch (err) { msg.textContent = "Pas de réponse cette fois."; }
+      ai.disabled = false; return;
+    }
+    if (el.closest("#trav-tresor-go")) {
+      const v = $("trav-tresor").value.trim(); if (!v) { $("trav-msg").textContent = "Écris ce que tu emportes avec toi."; return; }
+      t.tresors[TRAV[t.monde].k] = { t: v, date: dayKey() }; travCadeau = t.monde; t.monde++;
+      save(); renderTravSheet(); $("s-trav").scrollTop = 0; return;
+    }
+    if (el.closest("#trav-intent") || el.closest("#trav-finish")) {
+      const v = $("trav-decision").value.trim(); if (!v) { $("trav-msg").textContent = "Écris d'abord ta décision."; return; }
+      t.decision = { t: v, date: dayKey() };
+      if (el.closest("#trav-intent")) { S.intentions[dayKey()] = v.slice(0, 90); save(); $("trav-msg").textContent = "C'est ton intention du jour ✨"; return; }
+      t.fin = new Date().toISOString(); save(); renderTravSheet(); $("s-trav").scrollTop = 0; return;
+    }
+    if (el.closest("#trav-reset")) {
+      if (!confirm("Mettre cette traversée de côté ? Elle restera dans tes traversées passées.")) return;
+      (S.traversees = S.traversees || []).unshift(t); S.traversee = null; save(); renderTravSheet(); return;
+    }
+  });
+  function showMsgIn(k, txt) { const s = document.querySelector(`#s-${k} .trav-slot .panel`); if (s) s.insertAdjacentHTML("beforeend", `<p class="hint">${txt}</p>`); }
 
   /* ================= intuitions (Hokhmah) ================= */
   function renderIntu() {
