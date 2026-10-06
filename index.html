@@ -453,6 +453,9 @@ body { overflow: hidden; padding: 0 16px; margin: 0; }
 #greeting.greeting { font: 400 22px/1.15 "Over the Rainbow", "Snell Roundhand", cursive; color: #1f3a66; margin: 4px 0 0; max-width: 62vw; text-shadow: 0 1px 0 rgba(255,255,255,.6); }
 @media (prefers-reduced-motion: reduce) { .manuscrit.ecrit { animation: none; } }
 .hist-pli summary { cursor: pointer; font-size: 14px; color: var(--ink-soft); list-style: none; }
+.hist-pli.jours { justify-self: start; background: rgba(255,250,243,.8); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); border-radius: 18px; padding: 8px 14px; }
+.hist-pli.jours[open] { justify-self: stretch; }
+.hist-pli.jours summary { color: var(--ink); font-weight: 700; }
 .hist-pli summary::before { content: "▸ "; } .hist-pli[open] summary::before { content: "▾ "; }
 .hist-pli .history { margin-top: 8px; }
 .demele .dm-step { display: grid; gap: 8px; }
