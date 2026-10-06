@@ -428,7 +428,7 @@ body { overflow: hidden; padding: 0 16px; margin: 0; }
 .ge-date::before, .ge-date::after { content: ""; flex: 1; height: 1px; background: #c9a25a; opacity: .7; }
 .ge { display: grid; gap: 0; }
 .ge-lab { font: italic 400 15px "Philosopher", Georgia, serif; color: #7a5a34; }
-.ge-txt { font: 400 24px/1.3 "Over the Rainbow", cursive; color: #33363b; overflow-wrap: anywhere; }
+.ge-txt { font: 400 24px/1.3 "Over the Rainbow", cursive; color: #33363b; overflow-wrap: anywhere; margin: 0; }
 #livre-print { display: none; }
 @media print {
   @page { margin: 18mm 16mm; }
@@ -2966,17 +2966,31 @@ Propose 3 pistes de réflexion courtes (une ligne chacune), au tutoiement, en fr
     });
     return L.sort((a, b) => String(b.date).localeCompare(String(a.date)));
   }
-  const grimNotes = () => livre().filter((n) => grimFiltre === "tout" || n.el === grimFiltre);
+  // ordre du livre : jour par jour ; dans une journée, l'intention d'abord puis chaque sorte d'écrit regroupée
+  const RANG = (l) => l === "Intention" ? 0 : l === "Gratitude" ? 1 : l.startsWith("Traversée") || l.startsWith("Trésor") ? 9 : 5;
+  function ordonner(L, asc) {
+    const jr = (n) => dayKey(new Date(n.date));
+    return L.slice().sort((a, b) => {
+      const d = jr(a).localeCompare(jr(b)); if (d) return asc ? d : -d;
+      const r = RANG(a.label) - RANG(b.label); if (r) return r;
+      const l = a.label.localeCompare(b.label); if (l) return l;
+      return String(a.date).localeCompare(String(b.date));
+    });
+  }
+  const grimNotes = (asc) => ordonner(livre().filter((n) => grimFiltre === "tout" || n.el === grimFiltre), asc);
   // les écrits s'enchaînent sur la page, chacun finit par « … » ; les pages se forment selon la place
   const suspension = (t) => String(t || "").trim().replace(/[\s.!…,;:]+$/, "") + "…";
   const jourLong = (d) => new Date(d).toLocaleDateString("fr-CH", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+  // les écrits d'un même jour et d'une même sorte s'enchaînent dans un seul paragraphe, l'étiquette n'apparaît qu'une fois
   function ecritsHtml(items) {
-    let last = "", h = "";
+    let lastJ = "", h = "", run = null;
+    const flush = () => { if (run) h += `<div class="ge"><span class="ge-lab">${esc(run.label)}</span><p class="ge-txt">${run.t.map((x) => esc(suspension(x))).join(" ")}</p></div>`; run = null; };
     items.forEach((n) => {
       const j = dayKey(new Date(n.date));
-      if (j !== last) { h += `<div class="ge-date">${jourLong(n.date)}</div>`; last = j; }
-      h += `<div class="ge"><span class="ge-lab">${esc(n.label)}</span><span class="ge-txt">${esc(suspension(n.texte))}</span></div>`;
+      if (j !== lastJ) { flush(); h += `<div class="ge-date">${jourLong(n.date)}</div>`; lastJ = j; }
+      if (run && run.label === n.label) run.t.push(n.texte); else { flush(); run = { label: n.label, t: [n.texte] }; }
     });
+    flush();
     return h;
   }
   let grimPages = [];
@@ -3007,7 +3021,7 @@ Propose 3 pistes de réflexion courtes (une ligne chacune), au tutoiement, en fr
   const grimGo = (d) => { const i = grimIdx + d; if (i < 0 || i >= grimPages.length) return; grimIdx = i; renderGrimoire(d); };
   // imprimer ou enregistrer en PDF : tout le livre (filtre en cours), du plus ancien au plus récent
   $("grim-print").onclick = () => {
-    const list = grimNotes().slice().reverse();
+    const list = grimNotes(true);
     if (!list.length) return;
     const titre = grimFiltre === "tout" ? "" : " · " + ELN[grimFiltre];
     $("livre-print").innerHTML = `<div class="lp-titre"><h1>Le livre de Zora</h1><p>${titre ? ELN[grimFiltre] + " · " : ""}du ${jourLong(list[0].date)} au ${jourLong(list[list.length - 1].date)}</p></div>${ecritsHtml(list)}`;
