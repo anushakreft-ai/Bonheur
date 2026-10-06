@@ -338,6 +338,8 @@ body { overflow: hidden; padding: 0 16px; margin: 0; }
 .trav-card { border-left: 6px solid #c9a252; }
 .trav-kicker { font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #8a6a24; }
 .trav-q { font-size: 21px; line-height: 1.25; }
+.trav-sph { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-soft); }
+.trav-sph i { width: 14px; height: 14px; border-radius: 50%; background: var(--c); box-shadow: 0 0 0 2px #dcb24e; }
 .trav-rappel { margin: 0; padding: 8px 12px; border-radius: 14px; background: rgba(255,255,255,.5); font-style: italic; font-size: 15px; }
 .trav-strip { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; }
 .trav-strip > div { display: grid; justify-items: center; gap: 2px; opacity: .38; filter: grayscale(.8); }
@@ -415,6 +417,10 @@ body { overflow: hidden; padding: 0 16px; margin: 0; }
 .grim-sep { height: 14px; background: radial-gradient(circle at 50% 50%, #b48a4c 2.5px, transparent 3px) center / 14px 14px no-repeat, linear-gradient(#c9a25a, #c9a25a) center / 70% 1px no-repeat; }
 .grim-text { font: 400 19px/1.55 "Philosopher", Georgia, serif; white-space: pre-wrap; overflow-wrap: anywhere; margin: 0; }
 .grim-text::first-letter { float: left; font: 700 52px/0.9 "Philosopher", Georgia, serif; color: #9c2f1f; margin: 4px 8px 0 0; text-shadow: 1px 1px 0 #e3c27a; }
+.grim-type { max-width: 100%; text-align: center; text-transform: none; letter-spacing: .02em; font-size: 13px; }
+.grim-main { font: 400 30px/1.3 "Over the Rainbow", cursive; color: #1f3a66; text-align: center; }
+.grim-main::first-letter { float: none; font: inherit; color: inherit; margin: 0; text-shadow: none; }
+.grim-el { justify-self: end; margin-top: auto; font: 700 11px var(--f-body); letter-spacing: .14em; text-transform: uppercase; color: var(--c); }
 .grim-empty { text-align: center; font: 400 18px/1.5 "Philosopher", Georgia, serif; color: #7a5a34; margin-top: 30%; }
 .grim-cover { position: absolute; inset: 0; border: 0; border-radius: 4px 12px 12px 4px; transform-origin: left center; transition: transform 1.1s cubic-bezier(.6,.05,.3,1), opacity .4s 0.8s; backface-visibility: hidden; z-index: 2; overflow: hidden;
   background: radial-gradient(60% 45% at 52% 48%, rgba(150,200,225,.55), transparent 70%), radial-gradient(30% 25% at 30% 30%, rgba(30,70,100,.35), transparent), radial-gradient(35% 30% at 70% 72%, rgba(20,60,90,.35), transparent),
@@ -449,6 +455,12 @@ body { overflow: hidden; padding: 0 16px; margin: 0; }
 .hist-pli summary { cursor: pointer; font-size: 14px; color: var(--ink-soft); list-style: none; }
 .hist-pli summary::before { content: "▸ "; } .hist-pli[open] summary::before { content: "▾ "; }
 .hist-pli .history { margin-top: 8px; }
+.demele .dm-step { display: grid; gap: 8px; }
+.demele .dm-step > b { font-size: 15px; }
+.demele .seg .chip { padding: 5px 11px; font-size: 14px; }
+.dm-phrase { font: 400 19px/1.45 var(--f-poem); background: rgba(255,250,240,.7); border-left: 5px solid #2f7f9c; border-radius: 14px; padding: 12px 14px; }
+.dm-recul { font-size: 14px; color: var(--ink-soft); background: rgba(255,255,255,.45); border-radius: 14px; padding: 8px 12px; margin: 0; }
+.dm-recul ul { margin: 4px 0 0; padding-left: 18px; }
 .jump { justify-self: start; border: 0; border-radius: 99px; padding: 7px 14px; font-weight: 700; font-size: 14px; background: rgba(255,255,255,.55); color: var(--ink); box-shadow: inset 0 0 0 1.5px #2f7a45; }
 .sheet-body { max-width: 640px; margin: 0 auto; padding: 16px 16px 0; display: grid; gap: 18px; }
 .sheet-body > .title-block h2 { font-size: 24px; }
@@ -632,7 +644,25 @@ body.sheet-open .home { visibility: hidden; }
     </div>
     <div class="sheet-body">
       <div class="trav-slot"></div>
-      <div class="panel">
+      <div class="panel demele">
+        <div class="title-block">
+          <h2>Démêler ce que je vis</h2>
+          <p class="lead">Quatre petits pas pour comprendre ce qui se passe en toi, et prendre soin de toi.</p>
+        </div>
+        <div class="dm-step"><b>1. Ce qui s'est passé</b>
+          <label class="sr" for="dm-fait">Ce qui s'est passé</label>
+          <textarea class="field" id="dm-fait" placeholder="Les faits, en une phrase. Ex. ma collègue n'a pas répondu à mon message."></textarea></div>
+        <div class="dm-step"><b>2. Ce que je ressens</b><div class="seg" id="dm-emo"></div><div id="dm-recul"></div></div>
+        <div class="dm-step"><b>3. Ce dont j'ai besoin</b><div class="seg" id="dm-bes"></div></div>
+        <div class="dm-step"><b>4. Un petit pas pour moi</b>
+          <label class="sr" for="dm-pas">Un petit pas</label>
+          <input class="field" id="dm-pas" maxlength="120" placeholder="Ce que je peux faire maintenant, même tout petit."></div>
+        <div class="dm-phrase" id="dm-phrase" hidden></div>
+        <div class="row"><button class="btn" id="dm-save" type="button">Garder dans mon livre</button><span class="hint" id="dm-msg" aria-live="polite"></span></div>
+        <div id="dm-trav"></div>
+      </div>
+      <div id="binah-trav"></div>
+      <div class="panel" hidden>
         <div class="eyebrow">Une pensée simple</div>
         <p class="thought" id="thought"></p>
         <div class="row"><button class="btn alt small" id="thought-next" type="button">Une autre</button></div>
@@ -653,6 +683,7 @@ body.sheet-open .home { visibility: hidden; }
         <div class="answer" id="reframe-out" style="--c:var(--turq);--t:#2b3440" hidden><p></p></div>
         <div class="row" id="reframe-keep" hidden><button class="btn alt small" type="button">Garder dans le carnet</button></div>
       </div>
+      <details class="hist-pli jours" data-hist="binah"><summary>Les jours passés</summary><div class="history"></div></details>
     </div>
   </section>
 
@@ -743,6 +774,7 @@ body.sheet-open .home { visibility: hidden; }
         <div id="grat-draw"></div>
         <input type="file" id="grat-photo-input" accept="image/*" multiple hidden>
       </div>
+      <details class="hist-pli jours" data-hist="chesed"><summary>Les jours passés</summary><div class="history"></div></details>
     </div>
   </section>
 
@@ -803,6 +835,7 @@ body.sheet-open .home { visibility: hidden; }
         <svg viewBox="0 0 100 100" aria-hidden="true"><path fill="currentColor" d="M50 8C70 40 82 55 82 70A32 32 0 0 1 18 70C18 55 30 40 50 8Z"/></svg>
         <span><strong>Ça pourrait aller mieux</strong><small>Des petites choses qui font du bien</small></span>
       </button>
+      <details class="hist-pli jours" data-hist="tiferet"><summary>Les jours passés</summary><div class="history"></div></details>
     </div>
   </section>
 
@@ -881,6 +914,7 @@ body.sheet-open .home { visibility: hidden; }
           <button class="btn alt small" type="submit" style="justify-self:start">Ajouter à mes refuges</button>
         </form>
       </div>
+      <details class="hist-pli jours" data-hist="netzach"><summary>Les jours passés</summary><div class="history"></div></details>
     </div>
   </section>
 
@@ -944,6 +978,7 @@ body.sheet-open .home { visibility: hidden; }
         <p class="lead">Pour revenir ici, maintenant. Touche chaque ligne quand c'est fait.</p>
         <div class="steps" id="steps"></div>
       </div>
+      <details class="hist-pli jours" data-hist="yesod"><summary>Les jours passés</summary><div class="history"></div></details>
     </div>
   </section>
 
@@ -985,6 +1020,7 @@ body.sheet-open .home { visibility: hidden; }
         </div>
         <p class="hint">Les rappels apparaissent tant que l'app est ouverte.</p>
       </details>
+      <details class="hist-pli jours" data-hist="malkhut"><summary>Les jours passés</summary><div class="history"></div></details>
     </div>
   </section>
 
@@ -1231,9 +1267,7 @@ body.sheet-open .home { visibility: hidden; }
   // étincelle sur l'arbre : là où la traversée attend une réponse
   function travSpark(k) {
     const t = S.traversee; if (!t || t.fin) return false;
-    if (t.monde > 3) return k === "daat";
-    if (!travPending(t.monde).length) return k === "daat";
-    return travPending(t.monde, k).length > 0;
+    return k === "daat";
   }
   const LS = "petits-gestes-v1";
   let S = fresh();
@@ -2444,6 +2478,7 @@ Si la pensée évoque une envie de se faire du mal ou de mourir, réponds avec d
     const el = $("s-" + k); if (!el) return;
     document.querySelectorAll(".sheet").forEach((x) => { x.hidden = x !== el; });
     el.hidden = false; el.scrollTop = 0; current = k;
+    renderHist(k); if (k === "binah") renderDemele();
     if (k === "trav") renderTravSheet(); else if (k === "grimoire") { $("grim-book").classList.remove("ouvert"); grimIdx = 0; renderGrimoire(); } else renderTravSlot(k);
     document.body.classList.add("sheet-open");
     try { history.replaceState(null, "", "#" + k); } catch (e) {}
@@ -2661,7 +2696,7 @@ Propose 3 pistes de réponse courtes (une ligne chacune), concrètes et personne
   });
 
   /* ================= la Traversée : affichage ================= */
-  let travCadeau = null;   // monde dont le trésor vient d'être reçu (petite célébration)
+  let travCadeau = null, travMsg = "";   // monde dont le trésor vient d'être reçu (petite célébration)
   const travMonde = (t) => (t.monde > 3 ? "la Lumière" : "le monde " + TRAV[t.monde].de);
   function travStrip(t) {
     return `<div class="trav-strip">${TRAV.map((M, i) => `<div class="${t.tresors[M.k] ? "ok" : ""} ${t.monde === i ? "cur" : ""}">${tresorSvg(M.k)}<span>${M.de.replace(/^(de la |de l'|du )/, "")}</span></div>`).join("")}
@@ -2680,6 +2715,7 @@ Propose 3 pistes de réponse courtes (une ligne chacune), concrètes et personne
   }
   function renderTravSlot(k) {
     const slot = document.querySelector(`#s-${k} .trav-slot`); if (!slot) return;
+    slot.innerHTML = ""; return;   // les questions vivent désormais toutes dans la Traversée (Daat)
     if (k === "keter") { slot.innerHTML = keterTravCard(); return; }
     const t = S.traversee;
     if (!t || t.fin || t.monde > 3) { slot.innerHTML = ""; return; }
@@ -2748,10 +2784,21 @@ Propose 3 pistes de réponse courtes (une ligne chacune), concrètes et personne
     if (t.monde < 4) {
       const M = TRAV[t.monde], all = travPending(t.monde);
       if (all.length) {
-        const bySph = {}; all.forEach((q) => (bySph[q[1]] = bySph[q[1]] || []).push(q));
-        cur += `<div class="panel trav-card"><span class="trav-kicker">Monde ${M.de} · ${M.titre} · ${M.qs.length - all.length}/${M.qs.length}</span>
+        const q = all[0], k = q[1], n = byK[k], draft = (t.draft || {})[q[0]] || "";
+        const rappel = q[0] === "a6" && t.rep.t4 && t.rep.t4.t.trim() ? `<p class="trav-rappel">Au début, dans la Terre, tu imaginais : « ${esc(t.rep.t4.t.trim())} »</p>` : "";
+        cur += `<div class="panel trav-card"><span class="trav-kicker">Monde ${M.de} · ${M.titre} · ${M.qs.length - all.length + 1}/${M.qs.length}</span>
           ${M.intro ? `<p class="hint">${M.intro}</p>` : ""}
-          ${Object.entries(bySph).map(([k, qs]) => `<div class="trav-go"><div><b>${byK[k].mot}</b><p class="hint">${qs.map((q) => q[2]).join(" · ")}</p></div><button class="btn small" type="button" data-open="${k}">Y aller ›</button></div>`).join("")}</div>`;
+          <span class="trav-sph" style="--c:${n.fill}"><i></i>${n.heb} · ${n.mot}</span>
+          <h3 class="trav-q">${q[2]}</h3>${rappel}
+          <label class="sr" for="trav-in">Ma réponse</label>
+          <textarea class="field" id="trav-in" data-trav-draft="${q[0]}" placeholder="Écris librement…">${esc(draft)}</textarea>
+          <div class="row"><button class="btn small" type="button" data-trav-save="${q[0]}">Garder</button>
+            ${q[0] === "a7" ? `<button class="btn small" type="button" data-trav-save="${q[0]}" data-geste="1">Garder et en faire un geste</button>` : ""}
+            <button class="btn alt small" type="button" data-trav-pass="${q[0]}">Pas pour l'instant</button></div>
+          ${sampleFn ? `<div class="row"><button class="linkbtn" type="button" data-trav-ai="${q[0]}">Aide-moi à y réfléchir</button><span class="hint" data-trav-aimsg></span></div>` : ""}
+          ${travMsg ? `<p class="hint">${travMsg}</p>` : ""}
+          <p class="hint">Une question par jour suffit. Ta réponse allume la sphère ${n.mot} sur l'arbre.</p></div>`;
+        travMsg = "";
       } else {
         cur += `<div class="panel trav-card"><span class="trav-kicker">Le monde ${M.de} est traversé</span>${tresorSvg(M.k, "big")}
           <h3>${M.qt}</h3><label class="sr" for="trav-tresor">Ma réponse</label>
@@ -2797,12 +2844,12 @@ Propose 3 pistes de réponse courtes (une ligne chacune), concrètes et personne
       if (!v) { ta && ta.focus(); return; }
       t.rep[id] = { t: v, date: dayKey(), sph: q[1] }; delete (t.draft || {})[id];
       if (sv.dataset.geste) { S.gestes.push({ id: uid(), label: v.slice(0, 48), icon: "feuille" }); renderGestes(); renderGarden(); }
-      save(); renderTravSlot(q[1]);
-      if (sv.dataset.geste) showMsgIn(q[1], "Ton rituel a rejoint tes gestes du jour 🍀");
+      travMsg = sv.dataset.geste ? "Ton rituel a rejoint tes gestes du jour 🍀" : "Gardé dans ta traversée et dans ton livre ✨";
+      save(); renderTravSheet();
       return;
     }
     const ps = el.closest("[data-trav-pass]");
-    if (ps) { const id = ps.dataset.travPass; if (!t.pass.includes(id)) t.pass.push(id); save(); renderTravSlot(travQ(id)[1]); return; }
+    if (ps) { const id = ps.dataset.travPass; if (!t.pass.includes(id)) t.pass.push(id); save(); renderTravSheet(); return; }
     const ai = el.closest("[data-trav-ai]");
     if (ai && sampleFn) {
       const id = ai.dataset.travAi, q = travQ(id), msg = ai.parentElement.querySelector("[data-trav-aimsg]"), ta = document.querySelector(`[data-trav-draft="${id}"]`);
@@ -2839,21 +2886,40 @@ Propose 3 pistes de réflexion courtes (une ligne chacune), au tutoiement, en fr
 
   /* ================= le grimoire : relire le carnet, page après page ================= */
   let grimFiltre = "tout", grimIdx = 0;
-  const grimNotes = () => S.notes.filter((n) => grimFiltre === "tout" || n.type === grimFiltre);
+  const ELC = { terre: "#9a6b3a", eau: "#2f7f9c", feu: "#c4552e", air: "#7d98b3", lumiere: "#b8902e" };
+  const ELN = { terre: "Terre", eau: "Eau", feu: "Feu", air: "Air", lumiere: "Lumière" };
+  const jour = (k) => k + "T20:00:00";
+  // tout ce qui a été écrit dans les sphères et la Traversée, du plus récent au plus ancien
+  function livre() {
+    const L = [];
+    S.notes.forEach((n) => L.push({ date: n.date, el: n.type === "envie" ? "feu" : "eau", label: n.src === "demele" ? "Démêler" : n.type === "reve" ? "Rêve de nuit" : n.type === "envie" ? "Envie" : "Pensée", texte: n.texte }));
+    Object.entries(S.gratitudes || {}).forEach(([k, arr]) => (arr || []).filter((x) => x && x.trim()).forEach((x) => L.push({ date: jour(k), el: "eau", label: "Gratitude", texte: x })));
+    Object.entries(S.intentions || {}).forEach(([k, v]) => v && L.push({ date: k + "T07:00:00", el: "lumiere", label: "Intention", texte: v, main: 1 }));
+    (S.checkins || []).forEach((c) => { const v = VOICES[c.voix]; if (v) L.push({ date: c.date, el: "feu", label: "Ma voix", texte: v.label + (c.qui ? " (" + c.qui + ")" : "") }); });
+    [S.traversee, ...(S.traversees || [])].filter(Boolean).forEach((t) => {
+      TRAV.forEach((M) => {
+        M.qs.forEach((q) => { const r = t.rep[q[0]]; if (r && r.t.trim()) L.push({ date: jour(r.date), el: M.k, label: "Traversée · " + q[2], texte: r.t }); });
+        const tr = t.tresors[M.k]; if (tr) L.push({ date: jour(tr.date), el: M.k, label: "Trésor · " + M.qt, texte: tr.t });
+      });
+      if (t.decision) L.push({ date: jour(t.decision.date), el: "lumiere", label: "Traversée · Que décides-tu maintenant ?", texte: t.decision.t });
+    });
+    return L.sort((a, b) => String(b.date).localeCompare(String(a.date)));
+  }
+  const grimNotes = () => livre().filter((n) => grimFiltre === "tout" || n.el === grimFiltre);
   function renderGrimoire(dir) {
-    $("grim-filter").innerHTML = [["tout", "Toutes les pages", "#1f4867"], ...Object.entries(TYPES).map(([k, t]) => [k, { reve: "Rêves de nuit", envie: "Envies", pensee: "Pensées" }[k] || t.label, t.c])]
+    $("grim-filter").innerHTML = [["tout", "Toutes les pages", "#1f4867"], ...Object.entries(ELN).map(([k, l]) => [k, l, ELC[k]])]
       .map(([k, l, c]) => `<button type="button" class="chip" style="${paint(c)};padding:5px 11px;font-size:13px" data-gf="${k}" aria-pressed="${k === grimFiltre}">${l}</button>`).join("");
     const list = grimNotes(), pg = $("grim-page");
     grimIdx = Math.max(0, Math.min(grimIdx, list.length - 1));
     if (!list.length) {
-      pg.innerHTML = `<p class="grim-empty">Ton livre attend ses premiers mots.<br><br>Écris dans Mots ou dans Comprendre : chaque note devient une page.</p>`;
+      pg.innerHTML = `<p class="grim-empty">Ton livre attend ses premiers mots.<br><br>Tout ce que tu écris dans les sphères et dans ta Traversée devient une page.</p>`;
       $("grim-count").textContent = ""; $("grim-prev").disabled = $("grim-next").disabled = true; return;
     }
-    const n = list[grimIdx], t = TYPES[n.type] || { label: "Note", c: "#7a4a2c" };
+    const n = list[grimIdx], t = { label: n.label, c: ELC[n.el] };
     const d = new Date(n.date);
     pg.innerHTML = `<div class="grim-date">${d.toLocaleDateString("fr-CH", { weekday: "long", day: "numeric", month: "long", year: "numeric" })}</div>
       <span class="grim-type" style="--c:${t.c}">${t.label}</span><div class="grim-sep"></div>
-      <p class="grim-text">${esc(n.texte || "")}</p>`;
+      <p class="grim-text${n.main ? " grim-main" : ""}">${esc(n.texte || "")}</p><div class="grim-el" style="--c:${t.c}">${ELN[n.el]}</div>`;
     pg.scrollTop = 0;
     if (dir) { pg.classList.remove("tourne", "tourne-g"); void pg.offsetWidth; pg.classList.add(dir > 0 ? "tourne" : "tourne-g"); }
     $("grim-count").textContent = `${grimIdx + 1} / ${list.length}`;
@@ -2869,6 +2935,66 @@ Propose 3 pistes de réflexion courtes (une ligne chacune), au tutoiement, en fr
   { let x0 = null; const st = $("grim-stage");
     st.addEventListener("touchstart", (e) => { x0 = e.touches[0].clientX; }, { passive: true });
     st.addEventListener("touchend", (e) => { if (x0 === null) return; const dx = e.changedTouches[0].clientX - x0; x0 = null; if (Math.abs(dx) > 50 && $("grim-book").classList.contains("ouvert")) grimGo(dx < 0 ? 1 : -1); }); }
+
+  /* ================= Comprendre : démêler ce que je vis ================= */
+  const EMOS = ["joie", "gratitude", "sérénité", "tristesse", "colère", "peur", "inquiétude", "fatigue", "frustration", "solitude", "confusion", "découragement"];
+  const DIFF = new Set(["tristesse", "colère", "peur", "inquiétude", "fatigue", "frustration", "solitude", "confusion", "découragement"]);
+  const BESOINS = ["repos", "calme", "reconnaissance", "lien", "soutien", "liberté", "sécurité", "clarté", "sens", "douceur", "mouvement", "temps pour moi"];
+  const dmSel = { emo: new Set(), bes: new Set() };
+  const et = (a) => a.length < 2 ? a.join("") : a.slice(0, -1).join(", ") + " et " + a[a.length - 1];
+  const de = (w) => (/^[aeiouéèêhy]/i.test(w) ? "d'" : "de ") + w;
+  function dmPhrase() {
+    const lc = (x) => x.charAt(0).toLowerCase() + x.slice(1);
+    const f = $("dm-fait").value.trim().replace(/[.!]+$/, ""), e = [...dmSel.emo], b = [...dmSel.bes], p = $("dm-pas").value.trim().replace(/[.!]+$/, "");
+    let t = f ? "Quand " + lc(f) : "";
+    if (e.length) t += (t ? ", je ressens : " : "Je ressens : ") + et(e);
+    if (b.length) t += (e.length ? ", parce que j'ai besoin " : t ? ", j'ai besoin " : "J'ai besoin ") + et(b.map(de));
+    if (t) t += ".";
+    if (p) t += (t ? " " : "") + "Alors je vais " + lc(p) + ".";
+    return t;
+  }
+  function renderDemele() {
+    $("dm-emo").innerHTML = EMOS.map((x, i) => `<button type="button" class="chip" style="${paint(COLORS[i % COLORS.length])}" data-emo="${x}" aria-pressed="${dmSel.emo.has(x)}">${x}</button>`).join("");
+    $("dm-bes").innerHTML = BESOINS.map((x, i) => `<button type="button" class="chip" style="${paint(COLORS[(i + 3) % COLORS.length])}" data-bes="${x}" aria-pressed="${dmSel.bes.has(x)}">${x}</button>`).join("");
+    const dur = [...dmSel.emo].some((x) => DIFF.has(x));
+    $("dm-recul").innerHTML = dur ? `<div class="dm-recul">Pour prendre un peu de recul :<ul><li>Est-ce vraiment sûr ?</li><li>Que dirais-tu à une amie qui vit la même chose ?</li><li>Qu'en penseras-tu dans un an ?</li></ul></div>` : "";
+    const ph = dmPhrase(); $("dm-phrase").hidden = !ph; $("dm-phrase").textContent = ph;
+    const t = S.traversee;
+    $("dm-trav").innerHTML = (dmSel.emo.has("peur") || dmSel.emo.has("inquiétude")) && t && !t.fin ? `<button class="linkbtn" type="button" data-open="trav">✦ Explorer cela dans ta Traversée ›</button>` : "";
+    $("binah-trav").innerHTML = t && !t.fin ? `<button class="btn-grim" type="button" data-open="trav">✦ Une question de ta Traversée t'attend ›</button>` : "";
+  }
+  $("s-binah").addEventListener("click", (e) => {
+    const a = e.target.closest("[data-emo]"), b = e.target.closest("[data-bes]");
+    if (a) { const x = a.dataset.emo; dmSel.emo.has(x) ? dmSel.emo.delete(x) : dmSel.emo.add(x); renderDemele(); }
+    if (b) { const x = b.dataset.bes; dmSel.bes.has(x) ? dmSel.bes.delete(x) : dmSel.bes.add(x); renderDemele(); }
+  });
+  ["dm-fait", "dm-pas"].forEach((id) => $(id).addEventListener("input", () => { const ph = dmPhrase(); $("dm-phrase").hidden = !ph; $("dm-phrase").textContent = ph; }));
+  $("dm-save").onclick = () => {
+    const ph = dmPhrase(); if (!ph) { $("dm-msg").textContent = "Commence par une des quatre étapes."; return; }
+    S.notes.unshift({ id: uid(), type: "pensee", src: "demele", texte: ph, date: new Date().toISOString() });
+    save(); renderEntries(); $("dm-fait").value = ""; $("dm-pas").value = ""; dmSel.emo.clear(); dmSel.bes.clear(); renderDemele();
+    $("dm-msg").textContent = "Gardé dans ton livre ✨";
+  };
+
+  /* ================= les jours passés, dans chaque sphère ================= */
+  function histJour(k, d) {
+    switch (k) {
+      case "chesed": return (S.gratitudes[d] || []).filter((x) => x && x.trim()).join(" · ");
+      case "tiferet": return S.humeur[d] ? MOODS[S.humeur[d] - 1].label : "";
+      case "netzach": return S.pas[d] ? S.pas[d] + (S.pas[d] > 1 ? " pas" : " pas") + " vers tes rêves" : "";
+      case "yesod": { const c = (S.condition[d] || []).map((x) => (COND.find((y) => y.k === x) || {}).t).filter(Boolean); return [S.ancre[d] ? "Respiration" : "", ...c].filter(Boolean).join(" · "); }
+      case "malkhut": return (S.faits[d] || []).map((id) => (S.gestes.find((g) => g.id === id) || {}).label).filter(Boolean).join(" · ");
+      case "binah": return S.notes.filter((n) => n.type === "pensee" && n.date && dayKey(new Date(n.date)) === d).map((n) => n.texte.length > 90 ? n.texte.slice(0, 88) + "…" : n.texte).join(" · ");
+    }
+    return "";
+  }
+  function renderHist(k) {
+    const box = document.querySelector(`[data-hist="${k}"] .history`); if (!box) return;
+    const rows = [];
+    for (let i = 1; i <= 7; i++) { const dt = new Date(); dt.setDate(dt.getDate() - i); const d = dayKey(dt), v = histJour(k, d);
+      if (v) rows.push(`<div style="--c:var(--ochre)"><i></i><span>${dt.toLocaleDateString("fr-CH", { weekday: "short", day: "numeric", month: "short" })} · ${esc(v)}</span></div>`); }
+    box.innerHTML = rows.join("") || `<p class="hint">Rien encore ces 7 derniers jours.</p>`;
+  }
 
   /* ================= intuitions (Hokhmah) ================= */
   function renderIntu() {
