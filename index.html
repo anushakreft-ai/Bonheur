@@ -398,10 +398,10 @@ body { overflow: hidden; padding: 0 16px; margin: 0; }
 .eclair-sum b { font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-soft); display: block; }
 .btn-eclair { justify-self: start; border: 0; border-radius: 99px; padding: 8px 14px; font-weight: 700; font-size: 14px; background: linear-gradient(100deg, #10294f, #1f5a8a 45%, #c39233); color: #fff; }
 @media (max-width: 380px) { .eclair-top { grid-template-columns: 1fr; } #eclair-mini { position: static; width: 70px; justify-self: center; } }
-.btn-grim { justify-self: start; display: inline-flex; align-items: center; gap: 8px; border: 0; border-radius: 99px; padding: 8px 15px 8px 10px; font-weight: 700; font-size: 14px; background: linear-gradient(100deg, #4a2a1c, #7a4a2c); color: #f6e7c4; box-shadow: 0 3px 10px rgba(74,42,28,.3); }
+.btn-grim { justify-self: start; display: inline-flex; align-items: center; gap: 8px; border: 0; border-radius: 99px; padding: 8px 15px 8px 10px; font-weight: 700; font-size: 14px; background: linear-gradient(100deg, #1d4462, #2f6688); color: #f6e2a8; box-shadow: 0 3px 10px rgba(20,50,75,.3); }
 .btn-grim svg { width: 22px; height: 22px; }
 .grim-filter { justify-content: center; }
-.grim-stage { perspective: 1600px; display: grid; justify-items: center; padding: 6px 0 4px; }
+.grim-stage { perspective: 1600px; display: grid; justify-items: center; padding: 6px 0 34px; }
 .grim-book { position: relative; width: min(100%, 360px); aspect-ratio: 3 / 4.1; }
 .grim-page { position: absolute; inset: 0; border-radius: 6px 16px 16px 6px; padding: 26px 24px 22px 30px; overflow-y: auto; display: grid; align-content: start; gap: 12px;
   background: radial-gradient(120% 90% at 50% 40%, #fbf1d9 0%, #f2e1b9 62%, #dcc08a 100%); color: #3b2a1c;
@@ -416,13 +416,16 @@ body { overflow: hidden; padding: 0 16px; margin: 0; }
 .grim-text { font: 400 19px/1.55 "Philosopher", Georgia, serif; white-space: pre-wrap; overflow-wrap: anywhere; margin: 0; }
 .grim-text::first-letter { float: left; font: 700 52px/0.9 "Philosopher", Georgia, serif; color: #9c2f1f; margin: 4px 8px 0 0; text-shadow: 1px 1px 0 #e3c27a; }
 .grim-empty { text-align: center; font: 400 18px/1.5 "Philosopher", Georgia, serif; color: #7a5a34; margin-top: 30%; }
-.grim-cover { position: absolute; inset: 0; border: 0; border-radius: 6px 16px 16px 6px; transform-origin: left center; transition: transform 1.1s cubic-bezier(.6,.05,.3,1), opacity .4s 0.8s; backface-visibility: hidden; z-index: 2;
-  background: radial-gradient(90% 70% at 50% 45%, #7a3a24, #4a2116 70%, #2e140d), #4a2116; color: #e9c77b; display: grid; place-content: center; gap: 6px; text-align: center;
-  box-shadow: inset 0 0 0 10px #3a1a10, inset 0 0 0 12px #c9a252, inset 0 0 0 20px transparent, inset 6px 0 14px rgba(0,0,0,.5), 0 14px 30px rgba(30,15,8,.45); }
-.grim-cover::before { content: ""; position: absolute; inset: 22px; border: 1.5px solid rgba(201,162,82,.7); border-radius: 4px 10px 10px 4px; pointer-events: none; }
+.grim-cover { position: absolute; inset: 0; border: 0; border-radius: 4px 12px 12px 4px; transform-origin: left center; transition: transform 1.1s cubic-bezier(.6,.05,.3,1), opacity .4s 0.8s; backface-visibility: hidden; z-index: 2; overflow: hidden;
+  background: radial-gradient(60% 45% at 52% 48%, rgba(150,200,225,.55), transparent 70%), radial-gradient(30% 25% at 30% 30%, rgba(30,70,100,.35), transparent), radial-gradient(35% 30% at 70% 72%, rgba(20,60,90,.35), transparent),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.55' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .05  0 0 0 0 .15  0 0 0 0 .25  0 0 0 .35 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
+    radial-gradient(120% 100% at 50% 50%, #3f7d9e, #24506f 60%, #163650); color: #f1d38a; display: grid; place-content: center; gap: 2px; text-align: center;
+  box-shadow: inset -3px 0 6px rgba(0,0,0,.35), inset 4px 0 10px rgba(0,0,0,.4), 0 14px 30px rgba(10,25,40,.45); }
+.cv-art { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.grim-book::after { content: ""; position: absolute; z-index: 1; left: 34%; bottom: -30px; width: 13px; height: 44px; background: linear-gradient(90deg, #b07a4c, #e8bb8a 45%, #a46d3e); clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 80%, 0 100%); }
 .grim-orn { width: 92px; height: 92px; justify-self: center; margin-bottom: 8px; background: radial-gradient(circle, #f2d58a 0 8px, transparent 9px), conic-gradient(from 0deg, #c9a252 0 6%, transparent 6% 12.5%, #c9a252 12.5% 18.5%, transparent 18.5% 25%, #c9a252 25% 31%, transparent 31% 37.5%, #c9a252 37.5% 43.5%, transparent 43.5% 50%, #c9a252 50% 56%, transparent 56% 62.5%, #c9a252 62.5% 68.5%, transparent 68.5% 75%, #c9a252 75% 81%, transparent 81% 87.5%, #c9a252 87.5% 93.5%, transparent 93.5%); border-radius: 50%; -webkit-mask: radial-gradient(circle, #000 0 44px, transparent 45px); mask: radial-gradient(circle, #000 0 44px, transparent 45px); }
-.grim-title { font: 700 40px "Philosopher", Georgia, serif; letter-spacing: .04em; text-shadow: 0 2px 0 #2a120a; }
-.grim-name { font: 400 18px "Philosopher", Georgia, serif; font-style: italic; opacity: .85; }
+.grim-title { position: relative; font: 700 40px "Philosopher", Georgia, serif; letter-spacing: .04em; background: linear-gradient(180deg, #fbe6a2, #d9a640 60%, #b07d26); -webkit-background-clip: text; background-clip: text; color: transparent; filter: drop-shadow(0 2px 0 rgba(8,28,46,.6)); }
+.grim-name { position: relative; font: 400 18px "Philosopher", Georgia, serif; font-style: italic; color: #f1d38a; text-shadow: 0 1px 0 rgba(8,28,46,.6); }
 .grim-clasp { position: absolute; right: -6px; top: 50%; width: 22px; height: 54px; transform: translateY(-50%); border-radius: 6px; background: linear-gradient(90deg, #8a6a2a, #e6c46e, #8a6a2a); box-shadow: 0 2px 6px rgba(0,0,0,.4); }
 .grim-book.ouvert .grim-cover { transform: rotateY(-165deg); opacity: 0; pointer-events: none; }
 .grim-nav { justify-content: center; }
@@ -631,7 +634,7 @@ body.sheet-open .home { visibility: hidden; }
         <label class="sr" for="thought-answer">Ta réponse</label>
         <textarea class="field" id="thought-answer" placeholder="Si tu veux, écris ta réponse ici…"></textarea>
         <div class="row"><button class="btn" id="thought-save" type="button">Garder dans le carnet</button><span class="hint" id="thought-msg" aria-live="polite"></span></div>
-        <button class="btn-grim" type="button" data-open="grimoire"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4.5C4 3.7 4.7 3 5.5 3H19v15H5.5C4.7 18 4 18.7 4 19.5z" fill="#7a3a24" stroke="#e9c77b" stroke-width="1.4"/><path d="M4 19.5C4 20.3 4.7 21 5.5 21H19v-3" fill="none" stroke="#e9c77b" stroke-width="1.4"/><circle cx="12" cy="10" r="3" fill="none" stroke="#e9c77b" stroke-width="1.3"/></svg>Relire mon livre</button>
+        <button class="btn-grim" type="button" data-open="grimoire"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4.5C4 3.7 4.7 3 5.5 3H19v15H5.5C4.7 18 4 18.7 4 19.5z" fill="#24506f" stroke="#e9c77b" stroke-width="1.4"/><path d="M4 19.5C4 20.3 4.7 21 5.5 21H19v-3" fill="none" stroke="#e9c77b" stroke-width="1.4"/><circle cx="12" cy="10" r="3" fill="none" stroke="#e9c77b" stroke-width="1.3"/></svg>Relire mon livre</button>
       </div>
 
       <div class="panel" id="reframe-panel" hidden>
@@ -894,7 +897,7 @@ body.sheet-open .home { visibility: hidden; }
         <textarea class="field" id="note-text"></textarea>
         <div class="row"><button class="btn" id="note-save" type="button">Garder</button><span class="hint" id="note-msg" aria-live="polite"></span></div>
       </div>
-      <button class="btn-grim" type="button" data-open="grimoire"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4.5C4 3.7 4.7 3 5.5 3H19v15H5.5C4.7 18 4 18.7 4 19.5z" fill="#7a3a24" stroke="#e9c77b" stroke-width="1.4"/><path d="M4 19.5C4 20.3 4.7 21 5.5 21H19v-3" fill="none" stroke="#e9c77b" stroke-width="1.4"/><circle cx="12" cy="10" r="3" fill="none" stroke="#e9c77b" stroke-width="1.3"/></svg>Ouvrir mon livre</button>
+      <button class="btn-grim" type="button" data-open="grimoire"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4.5C4 3.7 4.7 3 5.5 3H19v15H5.5C4.7 18 4 18.7 4 19.5z" fill="#24506f" stroke="#e9c77b" stroke-width="1.4"/><path d="M4 19.5C4 20.3 4.7 21 5.5 21H19v-3" fill="none" stroke="#e9c77b" stroke-width="1.4"/><circle cx="12" cy="10" r="3" fill="none" stroke="#e9c77b" stroke-width="1.3"/></svg>Ouvrir mon livre</button>
       <div class="row between">
         <h3>Mes notes</h3>
         <div class="seg" id="filter" role="group" aria-label="Filtrer"></div>
@@ -1016,7 +1019,7 @@ body.sheet-open .home { visibility: hidden; }
   </section>
 
   <section class="sheet" id="s-grimoire" role="dialog" aria-modal="true" aria-labelledby="h-grim" hidden>
-    <div class="sheet-head" style="--c:#4a2a1c;--t:#f6e7c4">
+    <div class="sheet-head" style="--c:#1f4867;--t:#f6e2a8">
       <button class="back" type="button" data-close aria-label="Revenir à l'arbre">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Arbre</button>
       <div class="sheet-title"><span class="heb">Hod · Les mots gardés</span><h2 id="h-grim">Le livre de Zora</h2><p>Relire ce que j'ai écrit, page après page.</p></div>
@@ -1027,7 +1030,27 @@ body.sheet-open .home { visibility: hidden; }
         <div class="grim-book" id="grim-book">
           <div class="grim-page" id="grim-page" aria-live="polite"></div>
           <button class="grim-cover" id="grim-cover" type="button" aria-label="Ouvrir le livre">
-            <span class="grim-orn"></span><span class="grim-name">Le livre</span><span class="grim-title">de Zora</span><span class="grim-clasp"></span>
+            <svg class="cv-art" viewBox="0 0 300 410" preserveAspectRatio="none" aria-hidden="true">
+  <defs><linearGradient id="cv-or" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fbe6a2"/><stop offset=".45" stop-color="#e2b24f"/><stop offset="1" stop-color="#a8741f"/></linearGradient><g id="cv-coin">
+  <path d="M6 70C6 36 36 6 70 6" fill="none" stroke="url(#cv-or)" stroke-width="3.2" stroke-linecap="round"/>
+  <path d="M12 12C30 15 44 28 40 48C30 38 20 30 12 12Z" fill="url(#cv-or)"/>
+  <path d="M15 82C12 58 26 44 42 47C51 49 50 61 42 61C36 61 36 53 41 53" fill="none" stroke="url(#cv-or)" stroke-width="2.6" stroke-linecap="round"/>
+  <path d="M82 15C58 12 44 26 47 42C49 51 61 50 61 42C61 36 53 36 53 41" fill="none" stroke="url(#cv-or)" stroke-width="2.6" stroke-linecap="round"/>
+  <path d="M22 96C20 84 24 74 32 70C30 80 28 88 22 96Z M96 22C84 20 74 24 70 32C80 30 88 28 96 22Z" fill="url(#cv-or)"/>
+  <path d="M40 30C48 22 58 20 66 24C58 26 50 28 40 30Z M30 40C22 48 20 58 24 66C26 58 28 50 30 40Z" fill="url(#cv-or)" opacity=".9"/>
+  <circle cx="58" cy="58" r="3.5" fill="url(#cv-or)"/><circle cx="104" cy="12" r="2.4" fill="url(#cv-or)"/><circle cx="12" cy="104" r="2.4" fill="url(#cv-or)"/>
+</g><g id="cv-emb" fill="none" stroke="rgba(10,30,50,.38)" stroke-width="2.4" stroke-linecap="round">
+  <path d="M0 0C-6 -14 -22 -18 -32 -10C-40 -3 -34 8 -26 6C-20 4 -22 -4 -27 -3"/><path d="M0 0C6 -14 22 -18 32 -10C40 -3 34 8 26 6C20 4 22 -4 27 -3"/>
+  <path d="M0 4V-26M-6 -20L0 -30 6 -20"/><path d="M-34 4C-46 6 -56 2 -62 -6M34 4C46 6 56 2 62 -6"/><circle cx="0" cy="8" r="3" fill="rgba(10,30,50,.38)" stroke="none"/>
+</g></defs>
+  <rect x="0" y="0" width="15" height="410" fill="rgba(5,22,38,.55)"/><rect x="0" y="40" width="15" height="2" fill="url(#cv-or)" opacity=".85"/><rect x="0" y="46" width="15" height="2" fill="url(#cv-or)" opacity=".85"/><rect x="0" y="120" width="15" height="2" fill="url(#cv-or)" opacity=".85"/><rect x="0" y="126" width="15" height="2" fill="url(#cv-or)" opacity=".85"/><rect x="0" y="200" width="15" height="2" fill="url(#cv-or)" opacity=".85"/><rect x="0" y="206" width="15" height="2" fill="url(#cv-or)" opacity=".85"/><rect x="0" y="280" width="15" height="2" fill="url(#cv-or)" opacity=".85"/><rect x="0" y="286" width="15" height="2" fill="url(#cv-or)" opacity=".85"/><rect x="0" y="362" width="15" height="2" fill="url(#cv-or)" opacity=".85"/><rect x="0" y="368" width="15" height="2" fill="url(#cv-or)" opacity=".85"/>
+  <path d="M68 24H270L286 40V370L270 386H68L40 358V52Z" fill="rgba(120,175,205,.10)" stroke="rgba(8,28,46,.55)" stroke-width="2"/>
+  <path d="M72 31H266L279 44V366L266 379H72L47 354V56Z" fill="none" stroke="rgba(8,28,46,.5)" stroke-width="5" stroke-dasharray="2 3"/>
+  <path d="M31 112V300M281 112V300" stroke="#d9a843" stroke-width="1.2" stroke-dasharray="1.5 3"/><circle cx="31" cy="118" r="3.1" fill="url(#cv-or)"/><circle cx="31" cy="138" r="3.1" fill="url(#cv-or)"/><circle cx="31" cy="158" r="3.1" fill="url(#cv-or)"/><circle cx="31" cy="178" r="3.1" fill="url(#cv-or)"/><circle cx="31" cy="198" r="3.1" fill="url(#cv-or)"/><circle cx="31" cy="218" r="3.1" fill="url(#cv-or)"/><circle cx="31" cy="238" r="3.1" fill="url(#cv-or)"/><circle cx="31" cy="258" r="3.1" fill="url(#cv-or)"/><circle cx="31" cy="278" r="3.1" fill="url(#cv-or)"/><circle cx="31" cy="298" r="3.1" fill="url(#cv-or)"/><circle cx="281" cy="118" r="3.1" fill="url(#cv-or)"/><circle cx="281" cy="138" r="3.1" fill="url(#cv-or)"/><circle cx="281" cy="158" r="3.1" fill="url(#cv-or)"/><circle cx="281" cy="178" r="3.1" fill="url(#cv-or)"/><circle cx="281" cy="198" r="3.1" fill="url(#cv-or)"/><circle cx="281" cy="218" r="3.1" fill="url(#cv-or)"/><circle cx="281" cy="238" r="3.1" fill="url(#cv-or)"/><circle cx="281" cy="258" r="3.1" fill="url(#cv-or)"/><circle cx="281" cy="278" r="3.1" fill="url(#cv-or)"/><circle cx="281" cy="298" r="3.1" fill="url(#cv-or)"/>
+  <use href="#cv-emb" transform="translate(163 78)"/><use href="#cv-emb" transform="translate(163 334) scale(1 -1)"/>
+  <use href="#cv-coin" transform="translate(18 6)"/><use href="#cv-coin" transform="translate(294 6) scale(-1 1)"/>
+  <use href="#cv-coin" transform="translate(18 404) scale(1 -1)"/><use href="#cv-coin" transform="translate(294 404) scale(-1 -1)"/>
+</svg><span class="grim-name">Le livre</span><span class="grim-title">de Zora</span>
           </button>
         </div>
       </div>
@@ -2811,7 +2834,7 @@ Propose 3 pistes de réflexion courtes (une ligne chacune), au tutoiement, en fr
   let grimFiltre = "tout", grimIdx = 0;
   const grimNotes = () => S.notes.filter((n) => grimFiltre === "tout" || n.type === grimFiltre);
   function renderGrimoire(dir) {
-    $("grim-filter").innerHTML = [["tout", "Toutes les pages", "#7a4a2c"], ...Object.entries(TYPES).map(([k, t]) => [k, { reve: "Rêves de nuit", envie: "Envies", pensee: "Pensées" }[k] || t.label, t.c])]
+    $("grim-filter").innerHTML = [["tout", "Toutes les pages", "#1f4867"], ...Object.entries(TYPES).map(([k, t]) => [k, { reve: "Rêves de nuit", envie: "Envies", pensee: "Pensées" }[k] || t.label, t.c])]
       .map(([k, l, c]) => `<button type="button" class="chip" style="${paint(c)};padding:5px 11px;font-size:13px" data-gf="${k}" aria-pressed="${k === grimFiltre}">${l}</button>`).join("");
     const list = grimNotes(), pg = $("grim-page");
     grimIdx = Math.max(0, Math.min(grimIdx, list.length - 1));
