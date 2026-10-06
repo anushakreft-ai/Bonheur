@@ -497,6 +497,21 @@ body { overflow: hidden; padding: 0 16px; margin: 0; }
   background: rgba(255,250,243,.92); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); box-shadow: 0 8px 24px rgba(30,40,60,.25); animation: monte .3s ease both; }
 .save-banner p { margin: 0; font-size: 15px; }
 body.sheet-open .save-banner { display: none; }
+.oracle { text-align: center; justify-items: center; }
+.pieces { display: flex; gap: 14px; justify-content: center; }
+.pieces svg { width: 58px; height: 58px; filter: drop-shadow(0 3px 4px rgba(80,55,15,.3)); }
+.pieces.lance svg { animation: piece .9s cubic-bezier(.3,.7,.4,1) both; }
+.pieces.lance svg:nth-child(2) { animation-delay: .08s; } .pieces.lance svg:nth-child(3) { animation-delay: .16s; }
+@keyframes piece { 0% { transform: translateY(0) rotateY(0); } 40% { transform: translateY(-46px) rotateY(540deg); } 100% { transform: translateY(0) rotateY(1080deg); } }
+.hexa { width: 120px; height: auto; display: block; margin: 4px auto; }
+.trav-item.tr .hexa { width: 44px; margin: 4px 0; }
+.oracle-res { display: grid; gap: 4px; justify-items: center; }
+.oracle-num { font: 400 30px var(--f-num); color: #b8902e; }
+.oracle-num.petit { font-size: 22px; margin-top: 6px; }
+.oracle-res h3 { font: 700 24px "Philosopher", Georgia, serif; margin: 0; }
+.oracle-msg { font: 400 24px/1.3 "Over the Rainbow", cursive; color: #33363b; margin: 0; }
+.oracle .hint .hexa { width: 70px; }
+@media (prefers-reduced-motion: reduce) { .pieces.lance svg { animation: none; } }
 .jump { justify-self: start; border: 0; border-radius: 99px; padding: 7px 14px; font-weight: 700; font-size: 14px; background: rgba(255,255,255,.55); color: var(--ink); box-shadow: inset 0 0 0 1.5px #2f7a45; }
 .sheet-body { max-width: 640px; margin: 0 auto; padding: 16px 16px 0; display: grid; gap: 18px; }
 .sheet-body > .title-block h2 { font-size: 24px; }
@@ -2756,6 +2771,42 @@ Propose 3 pistes de réponse courtes (une ligne chacune), concrètes et personne
     eclairStep = +b.dataset.estep; renderEclair();
   });
 
+  /* ================= l'oracle : 3 pièces lancées 6 fois (Yi King) ================= */
+  const HEXA = {"1": ["Le Créateur", "L'élan est là : ose commencer, avec constance."], "2": ["Le Réceptif", "Accueille et laisse venir : la douceur porte loin."], "3": ["La Difficulté initiale", "Tout début est un peu confus : avance pas à pas, bien entourée."], "4": ["La Folie juvénile", "Reste curieuse comme une élève : pose tes questions."], "5": ["L'Attente", "Prends des forces, le bon moment viendra."], "6": ["Le Conflit", "Évite la lutte, cherche un terrain d'entente."], "7": ["L'Armée", "Rassemble tes forces avec discipline et cœur."], "8": ["La Solidarité", "Rapproche-toi de ceux qui partagent ton chemin."], "9": ["Le Petit Apprivoisement", "De petites touches patientes préparent la suite."], "10": ["La Marche", "Avance avec délicatesse et respect."], "11": ["La Paix", "Le ciel et la terre s'accordent : profite de ce moment fertile."], "12": ["La Stagnation", "Le moment est au repli : garde ta lumière intérieure."], "13": ["La Communauté", "Ensemble, on va plus loin."], "14": ["Le Grand Avoir", "Tu as beaucoup reçu : partage-le avec générosité."], "15": ["L'Humilité", "La simplicité ouvre toutes les portes."], "16": ["L'Enthousiasme", "La joie entraîne : laisse-la te mettre en mouvement."], "17": ["La Suite", "Suis le courant juste, adapte-toi avec souplesse."], "18": ["La Réparation", "Répare doucement ce qui s'est abîmé, sans te juger."], "19": ["L'Approche", "Une belle période approche : prépare-toi à l'accueillir."], "20": ["La Contemplation", "Prends de la hauteur, observe avant d'agir."], "21": ["Mordre au travers", "Tranche avec clarté ce qui bloque."], "22": ["La Grâce", "La beauté nourrit, mais l'essentiel est au-dedans."], "23": ["L'Éclatement", "Laisse partir ce qui doit partir, protège l'essentiel."], "24": ["Le Retour", "La lumière revient : un nouveau cycle commence."], "25": ["L'Innocence", "Agis avec un cœur simple et sincère."], "26": ["Le Grand Apprivoisement", "Accumule ta force tranquillement, elle servira."], "27": ["La Nourriture", "Nourris-toi de bons mots, de bonnes pensées, de bons repas."], "28": ["La Prépondérance du grand", "Le poids est grand : allège et cherche un appui."], "29": ["L'Eau", "Comme l'eau, continue ton chemin malgré les obstacles."], "30": ["Le Feu", "Rayonne, en restant reliée à ce qui t'éclaire."], "31": ["L'Influence", "Laisse-toi toucher : l'ouverture crée le lien."], "32": ["La Durée", "La constance fait grandir ce qui compte."], "33": ["La Retraite", "Un pas en arrière peut être une sagesse."], "34": ["La Puissance du grand", "Ta force est grande : utilise-la avec justesse."], "35": ["Le Progrès", "Comme le soleil qui se lève, tu avances."], "36": ["La Lumière voilée", "Garde ta lumière à l'abri, elle reviendra briller."], "37": ["La Famille", "Prends soin de ton foyer, il te porte."], "38": ["L'Opposition", "Les différences peuvent se compléter."], "39": ["L'Obstacle", "Contourne, demande de l'aide, regarde en toi."], "40": ["La Libération", "Le nœud se défait : avance plus légère."], "41": ["La Diminution", "Simplifier libère de la place pour l'essentiel."], "42": ["L'Augmentation", "Le moment est porteur : ose donner et entreprendre."], "43": ["La Percée", "Dis clairement ce qui doit être dit, avec bienveillance."], "44": ["La Rencontre", "Une rencontre inattendue : reste toi-même."], "45": ["Le Rassemblement", "Rassemble ce qui compte autour d'un même cœur."], "46": ["La Poussée vers le haut", "Grandis pas à pas, comme un arbre."], "47": ["L'Accablement", "Même fatiguée, garde confiance : la source est en toi."], "48": ["Le Puits", "Retourne à ta source, elle ne tarit pas."], "49": ["La Révolution", "Le changement est mûr : accueille-le."], "50": ["Le Chaudron", "Ce que tu vis te transforme et te nourrit."], "51": ["Le Tonnerre", "Une secousse réveille : reste centrée."], "52": ["La Montagne", "Arrête-toi, respire, trouve le calme intérieur."], "53": ["Le Développement progressif", "Lentement mais sûrement, comme les oies qui migrent."], "54": ["L'Épousée", "Trouve ta juste place, avec patience."], "55": ["L'Abondance", "Plénitude : savoure ce moment lumineux."], "56": ["Le Voyageur", "Voyage léger, reste ouverte et attentive."], "57": ["Le Vent", "Une influence douce et continue pénètre partout."], "58": ["Le Lac", "La joie partagée se multiplie."], "59": ["La Dissolution", "Laisse se dissoudre les tensions."], "60": ["La Limitation", "Des limites justes donnent de la liberté."], "61": ["La Vérité intérieure", "Écoute ta voix intérieure, elle sait."], "62": ["La Prépondérance du petit", "Prends soin des petites choses."], "63": ["Après l'accomplissement", "Une étape est franchie : reste attentive."], "64": ["Avant l'accomplissement", "Le but est proche : continue avec soin."]};
+  // trigrammes (traits du bas vers le haut, 1 = yang) dans l'ordre Qian, Zhen, Kan, Gen, Kun, Xun, Li, Dui
+  const TRIG = ["111", "100", "010", "001", "000", "011", "101", "110"];
+  const KW = [[1, 25, 6, 33, 12, 44, 13, 10], [34, 51, 40, 62, 16, 32, 55, 54], [5, 3, 29, 39, 8, 48, 63, 60], [26, 27, 4, 52, 23, 18, 22, 41],
+    [11, 24, 7, 15, 2, 46, 36, 19], [9, 42, 59, 53, 20, 57, 37, 61], [14, 21, 64, 56, 35, 50, 30, 38], [43, 17, 47, 31, 45, 28, 49, 58]];
+  const hexDe = (traits) => { const b = traits.map((v) => (v % 2 ? "1" : "0")).join(""); return KW[TRIG.indexOf(b.slice(3))][TRIG.indexOf(b.slice(0, 3))]; };
+  const hexMue = (traits) => hexDe(traits.map((v) => (v === 6 ? 7 : v === 9 ? 8 : v)));
+  const PIECE = (pile) => `<svg viewBox="0 0 60 60" aria-hidden="true"><circle cx="30" cy="30" r="27" fill="${pile ? "#e2b24f" : "#b8863a"}" stroke="#8a6420" stroke-width="2.5"/><circle cx="30" cy="30" r="21" fill="none" stroke="${pile ? "#f8dc8a" : "#d6a659"}" stroke-width="1.5"/><rect x="23" y="23" width="14" height="14" rx="1.5" fill="#fbf1de" stroke="#8a6420" stroke-width="2"/>${pile ? `<g fill="#8a6420"><circle cx="30" cy="13" r="2.2"/><circle cx="30" cy="47" r="2.2"/><circle cx="13" cy="30" r="2.2"/><circle cx="47" cy="30" r="2.2"/></g>` : ""}</svg>`;
+  function traitsSvg(traits) {
+    // le premier lancer est le trait du bas
+    return `<svg class="hexa" viewBox="0 0 120 ${traits.length * 20 + 4}" aria-hidden="true">${traits.map((v, i) => { const y = (traits.length - 1 - i) * 20 + 4, c = "#33363b";
+      const bar = v % 2 ? `<rect x="10" y="${y}" width="100" height="11" rx="2" fill="${c}"/>` : `<rect x="10" y="${y}" width="44" height="11" rx="2" fill="${c}"/><rect x="66" y="${y}" width="44" height="11" rx="2" fill="${c}"/>`;
+      return bar + (v === 6 || v === 9 ? `<circle cx="116" cy="${y + 5.5}" r="3.5" fill="#c9a252"/>` : ""); }).join("")}</svg>`;
+  }
+  function oracleTexte(o) {
+    const [n1, m1] = HEXA[o.n], mue = o.n2 && o.n2 !== o.n ? HEXA[o.n2] : null;
+    return `${o.n}. ${n1} : ${m1}` + (mue ? ` Puis ${o.n2}. ${mue[0]} : ${mue[1]}` : "");
+  }
+  function oracleCarte(t, M) {
+    const o = (t.oracleEnCours && t.oracleEnCours.k === M.k) ? t.oracleEnCours : { k: M.k, traits: [] };
+    const n = o.traits.length, last = n ? o.traits[n - 1] : null;
+    let html = `<div class="panel trav-card oracle"><span class="trav-kicker">L'oracle du monde ${M.de}</span>
+      <p class="hint">Pense à ta quête, puis lance les trois pièces six fois. Chaque lancer trace un trait, du bas vers le haut.</p>
+      <div class="pieces${o.anim ? " lance" : ""}">${(o.pieces || [1, 1, 1]).map((p) => PIECE(p)).join("")}</div>`;
+    if (n < 6) html += `<div class="row" style="justify-content:center"><button class="btn" type="button" id="oracle-go">Lancer les pièces · ${n + 1}/6</button></div>`;
+    if (n) html += traitsSvg(o.traits);
+    if (n === 6) {
+      const h = hexDe(o.traits), h2 = hexMue(o.traits), [nom, msg] = HEXA[h];
+      html += `<div class="oracle-res"><span class="oracle-num">${h}</span><h3>${nom}</h3><p class="oracle-msg">${msg}</p>
+        ${h2 !== h ? `<p class="hint">Les traits mobiles (point doré) se transforment : ${traitsSvg(o.traits.map((v) => (v === 6 ? 7 : v === 9 ? 8 : v)))}</p><span class="oracle-num petit">${h2}</span><h3>${HEXA[h2][0]}</h3><p class="oracle-msg">${HEXA[h2][1]}</p>` : ""}
+        <div class="row" style="justify-content:center"><button class="btn" type="button" id="oracle-keep">Garder l'oracle</button></div></div>`;
+    }
+    return html + `</div>`;
+  }
+
   /* ================= la Traversée : affichage ================= */
   let travCadeau = null, travMsg = "";   // monde dont le trésor vient d'être reçu (petite célébration)
   const travMonde = (t) => (t.monde > 3 ? "la Lumière" : "le monde " + TRAV[t.monde].de);
@@ -2811,7 +2862,8 @@ Propose 3 pistes de réponse courtes (une ligne chacune), concrètes et personne
         const r = (t.rep[q[0]] || {}).t || "";
         return `<div class="trav-item"><b>${q[2]}</b>${edit ? `<textarea class="field" data-trav-edit="${q[0]}" placeholder="Pas encore de réponse">${esc(r)}</textarea>` : `<p>${r ? esc(r) : "<i>passée</i>"}</p>`}</div>`;
       }).join("");
-      const tr = t.tresors[M.k] ? `<div class="trav-item tr">${tresorSvg(M.k)}<div><b>${M.qt}</b><p>${esc(t.tresors[M.k].t)}</p></div></div>` : "";
+      const tr = ((t.oracles || {})[M.k] ? `<div class="trav-item tr">${traitsSvg(t.oracles[M.k].traits)}<div><b>L'oracle</b><p>${esc(oracleTexte(t.oracles[M.k]))}</p></div></div>` : "")
+        + (t.tresors[M.k] ? `<div class="trav-item tr">${tresorSvg(M.k)}<div><b>${M.qt}</b><p>${esc(t.tresors[M.k].t)}</p></div></div>` : "");
       return items || tr ? `<details class="trav-world" ${i === Math.min(t.monde, 3) && edit ? "open" : ""}><summary>${tresorSvg(M.k)} Monde ${M.de} · ${M.titre}</summary>${items}${tr}</details>` : "";
     }).join("") + (t.decision ? `<div class="trav-item tr">${tresorSvg("lumiere")}<div><b>Que décides-tu maintenant ?</b><p>${esc(t.decision.t)}</p></div></div>` : "");
   }
@@ -2860,6 +2912,8 @@ Propose 3 pistes de réponse courtes (une ligne chacune), concrètes et personne
           ${travMsg ? `<p class="hint">${travMsg}</p>` : ""}
           <p class="hint">Une question par jour suffit. Ta réponse allume la sphère ${n.mot} sur l'arbre.</p></div>`;
         travMsg = "";
+      } else if (!(t.oracles || {})[M.k]) {
+        cur += oracleCarte(t, M);
       } else {
         cur += `<div class="panel trav-card"><span class="trav-kicker">Le monde ${M.de} est traversé</span>${tresorSvg(M.k, "big")}
           <h3>${M.qt}</h3><label class="sr" for="trav-tresor">Ma réponse</label>
@@ -2927,6 +2981,21 @@ Propose 3 pistes de réflexion courtes (une ligne chacune), au tutoiement, en fr
       } catch (err) { msg.textContent = "Pas de réponse cette fois."; }
       ai.disabled = false; return;
     }
+    if (el.closest("#oracle-go")) {
+      const M = TRAV[t.monde];
+      if (!t.oracleEnCours || t.oracleEnCours.k !== M.k) t.oracleEnCours = { k: M.k, traits: [] };
+      const o = t.oracleEnCours; if (o.traits.length >= 6) return;
+      // pile = 3, face = 2 : 6 et 9 sont des traits mobiles
+      const pieces = [0, 0, 0].map(() => (Math.random() < 0.5 ? 1 : 0));
+      o.pieces = pieces; o.traits.push(pieces.reduce((a, p) => a + (p ? 3 : 2), 0)); o.anim = 1;
+      save(); renderTravSheet(); o.anim = 0;
+      return;
+    }
+    if (el.closest("#oracle-keep")) {
+      const o = t.oracleEnCours, M = TRAV[t.monde]; if (!o || o.traits.length < 6) return;
+      t.oracles = t.oracles || {}; t.oracles[M.k] = { traits: o.traits, n: hexDe(o.traits), n2: hexMue(o.traits), date: dayKey() };
+      delete t.oracleEnCours; save(); renderTravSheet(); return;
+    }
     if (el.closest("#trav-tresor-go")) {
       const v = $("trav-tresor").value.trim(); if (!v) { $("trav-msg").textContent = "Écris ce que tu emportes avec toi."; return; }
       t.tresors[TRAV[t.monde].k] = { t: v, date: dayKey() }; travCadeau = t.monde; t.monde++;
@@ -2960,6 +3029,7 @@ Propose 3 pistes de réflexion courtes (une ligne chacune), au tutoiement, en fr
     [S.traversee, ...(S.traversees || [])].filter(Boolean).forEach((t) => {
       TRAV.forEach((M) => {
         M.qs.forEach((q) => { const r = t.rep[q[0]]; if (r && r.t.trim()) L.push({ date: jour(r.date), el: M.k, label: "Traversée · " + q[2], texte: r.t }); });
+        const or = (t.oracles || {})[M.k]; if (or) L.push({ date: jour(or.date), el: M.k, label: "Oracle · Monde " + M.de, texte: oracleTexte(or) });
         const tr = t.tresors[M.k]; if (tr) L.push({ date: jour(tr.date), el: M.k, label: "Trésor · " + M.qt, texte: tr.t });
       });
       if (t.decision) L.push({ date: jour(t.decision.date), el: "lumiere", label: "Traversée · Que décides-tu maintenant ?", texte: t.decision.t });
