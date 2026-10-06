@@ -471,6 +471,9 @@ body { overflow: hidden; padding: 0 16px; margin: 0; }
 .env-carte { position: relative; display: grid; gap: 4px; background: #fff; border-radius: 4px; padding: 10px 12px; transform: rotate(-2deg) translateY(-18px); box-shadow: 0 2px 6px rgba(0,0,0,.12); }
 .env-txt { font: 400 22px/1.25 "Over the Rainbow", cursive; color: #1f3a66; overflow-wrap: anywhere; }
 .env-carte small { font-size: 12px; color: var(--ink-soft); }
+.save-banner { position: fixed; z-index: 60; left: 12px; right: 12px; bottom: calc(12px + env(safe-area-inset-bottom, 0px)); display: grid; gap: 8px; padding: 14px 16px; border-radius: 20px;
+  background: rgba(255,250,243,.92); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); box-shadow: 0 8px 24px rgba(30,40,60,.25); animation: monte .3s ease both; }
+.save-banner p { margin: 0; font-size: 15px; }
 .jump { justify-self: start; border: 0; border-radius: 99px; padding: 7px 14px; font-weight: 700; font-size: 14px; background: rgba(255,255,255,.55); color: var(--ink); box-shadow: inset 0 0 0 1.5px #2f7a45; }
 .sheet-body { max-width: 640px; margin: 0 auto; padding: 16px 16px 0; display: grid; gap: 18px; }
 .sheet-body > .title-block h2 { font-size: 24px; }
@@ -741,6 +744,8 @@ body.sheet-open .home { visibility: hidden; }
           <button class="linkbtn" id="data-restore-cancel" type="button">Annuler</button></div>
         </div>
         <p class="hint" id="data-msg" aria-live="polite"></p>
+        <p class="hint" id="data-last"></p>
+        <details class="hist-pli"><summary>Copies automatiques (7 derniers jours)</summary><div class="history" id="copies"></div></details>
       </div>
       <div class="save-state" id="save-state"><i></i><span>Enregistré sur cet appareil</span></div>
     </div>
@@ -1114,6 +1119,11 @@ body.sheet-open .home { visibility: hidden; }
       <div class="row grim-nav"><button class="linkbtn" type="button" id="grim-rand">Ouvrir à une page au hasard</button><button class="linkbtn" type="button" id="grim-close">Refermer le livre</button></div>
     </div>
   </section>
+
+<div class="save-banner" id="save-banner" hidden role="dialog" aria-label="Sauvegarde du jour">
+  <p><b>Sauvegarde du jour</b><br>Un toucher, puis « Enregistrer dans Fichiers » → iCloud Drive.</p>
+  <div class="row"><button class="btn small" type="button" id="save-now">Sauvegarder</button><button class="linkbtn" type="button" id="save-later">Demain</button></div>
+</div>
 
 <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Photo" hidden>
   <img id="lb-img" alt="">
@@ -3116,16 +3126,51 @@ Propose 3 pistes de réflexion courtes (une ligne chacune), au tutoiement, en fr
     try { await navigator.clipboard.writeText(txt); dataMsg("Copié. Colle-le dans Notes ou dans l'autre version de l'app."); }
     catch (e) { $("data-restore").hidden = false; $("data-paste").value = txt; $("data-paste").select(); dataMsg("Copie automatique impossible : le texte est sélectionné ci-dessus, copie-le à la main."); }
   };
-  $("data-file").onclick = async () => {
+  // sauvegarde en fichier (feuille de partage iOS → Enregistrer dans Fichiers → iCloud Drive) ; renvoie true si faite
+  async function sauvegarder() {
     const name = "zora-" + dayKey() + ".json";
     const blob = new Blob([await dump()], { type: "application/json" });
     try {
       const file = new File([blob], name, { type: "application/json" });
-      if (navigator.canShare && navigator.canShare({ files: [file] })) { await navigator.share({ files: [file], title: name }); dataMsg("Sauvegarde prête."); return; }
-    } catch (e) { if (e && e.name === "AbortError") return; }
-    const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click(); a.remove();
-    dataMsg("Sauvegarde téléchargée.");
-  };
+      if (navigator.canShare && navigator.canShare({ files: [file] })) { await navigator.share({ files: [file], title: name }); }
+      else { const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click(); a.remove(); }
+    } catch (e) { return false; }
+    S.sauvegarde = dayKey(); save(); renderCopies(); return true;
+  }
+  $("data-file").onclick = async () => { if (await sauvegarder()) dataMsg("Sauvegarde faite ✨"); };
+  $("save-now").onclick = async () => { if (await sauvegarder()) $("save-banner").hidden = true; };
+  $("save-later").onclick = () => { S.sauvegardeReport = dayKey(); save(); $("save-banner").hidden = true; };
+  const aDesDonnees = () => S.notes.length || Object.keys(S.gratitudes).length || Object.keys(S.intentions).length || Object.keys(S.faits).length || S.traversee;
+  // une fois par jour, dans l'app installée, proposer la sauvegarde
+  setTimeout(() => { if (standalone && aDesDonnees() && S.sauvegarde !== dayKey() && S.sauvegardeReport !== dayKey()) $("save-banner").hidden = false; }, 2500);
+
+  /* copies automatiques : une copie par jour gardée dans le téléphone (7 jours), restaurable en un toucher */
+  const copiesDb = () => new Promise((res, rej) => { try { const r = indexedDB.open("zora-copies", 1); r.onupgradeneeded = () => r.result.createObjectStore("c"); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); } catch (e) { rej(e); } });
+  async function copiesListe() {
+    try { const db = await copiesDb(); return await new Promise((res) => { const out = []; const rq = db.transaction("c").objectStore("c").openCursor(); rq.onsuccess = () => { const c = rq.result; if (c) { out.push([c.key, c.value]); c.continue(); } else res(out); }; rq.onerror = () => res(out); }); } catch (e) { return []; }
+  }
+  async function copieDuJour() {
+    if (!aDesDonnees()) return;
+    try {
+      const db = await copiesDb(), st = db.transaction("c", "readwrite").objectStore("c");
+      st.put(JSON.stringify(S), dayKey());
+      const keys = (await copiesListe()).map((x) => x[0]).sort();
+      if (keys.length > 7) { const st2 = db.transaction("c", "readwrite").objectStore("c"); keys.slice(0, keys.length - 7).forEach((k) => st2.delete(k)); }
+    } catch (e) {}
+    renderCopies();
+  }
+  async function renderCopies() {
+    $("data-last").textContent = S.sauvegarde ? "Dernière sauvegarde dans un fichier : " + new Date(S.sauvegarde + "T12:00:00").toLocaleDateString("fr-CH", { weekday: "long", day: "numeric", month: "long" }) + "." : "Pas encore de sauvegarde dans un fichier.";
+    const L = (await copiesListe()).sort((a, b) => b[0].localeCompare(a[0]));
+    $("copies").innerHTML = L.length ? L.map(([k]) => `<div style="--c:var(--ochre)"><i></i><span>${new Date(k + "T12:00:00").toLocaleDateString("fr-CH", { weekday: "short", day: "numeric", month: "short" })} <button class="linkbtn" type="button" data-copie="${k}">Revenir à cette copie</button></span></div>`).join("")
+      : `<p class="hint">Une copie se fait toute seule chaque jour.</p>`;
+  }
+  $("copies").addEventListener("click", async (e) => {
+    const b = e.target.closest("[data-copie]"); if (!b) return;
+    if (!confirm("Revenir à la copie du " + b.dataset.copie + " ? Ce que tu as écrit depuis sera remplacé.")) return;
+    const v = (await copiesListe()).find((x) => x[0] === b.dataset.copie); if (!v) return;
+    try { restaurer(JSON.parse(v[1])); dataMsg("Copie restaurée."); } catch (err) { dataMsg("Cette copie n'a pas pu être lue."); }
+  });
   $("data-restore-open").onclick = () => { $("data-restore").hidden = false; dataMsg(""); };
   $("data-restore-cancel").onclick = () => { $("data-restore").hidden = true; $("data-paste").value = ""; dataMsg(""); };
   $("data-upload").onchange = async () => { const f = $("data-upload").files[0]; if (f) $("data-paste").value = await f.text(); };
@@ -3133,20 +3178,23 @@ Propose 3 pistes de réflexion courtes (une ligne chacune), au tutoiement, en fr
     let o;
     try { o = JSON.parse($("data-paste").value); } catch (e) { dataMsg("Ce texte n'est pas une copie valide de Zora."); return; }
     if (!o || typeof o !== "object" || !Array.isArray(o.gestes)) { dataMsg("Ce texte n'est pas une copie valide de Zora."); return; }
+    restaurer(o);
+    $("data-restore").hidden = true; $("data-paste").value = "";
+    dataMsg("Données restaurées.");
+  };
+  function restaurer(o) {
     delete o.app; delete o.exporte;
     const ph = o.photos || {}; delete o.photos;
     Object.entries(ph).forEach(([k, v]) => putPhoto(k, v));
     S = migrate(o); save(); renderAll();
-    $("data-restore").hidden = true; $("data-paste").value = "";
-    dataMsg("Données restaurées.");
-  };
+  }
 
   function renderAll() {
     renderMoods(); renderGrat(); renderNextStep(); renderGarden(); renderGestes(); renderDreams();
     renderTypePick(); renderEntries(); renderVoices(); renderPeople(); renderRefuges(); renderBilan(); armRappel();
     renderIntention(); renderTree(); renderCare(); renderQualites(); renderDecision(); renderCond(); renderIntu(); renderInsp(); renderGratPhotos();
   }
-  renderAll(); showThought(); renderSteps();
+  renderAll(); showThought(); renderSteps(); copieDuJour();
   const hash = location.hash.slice(1);
   if (byK[hash] || ["trav", "grimoire", "mieux"].includes(hash)) openSheet(hash);
 })();
