@@ -2338,8 +2338,8 @@ Si la pensée évoque une envie de se faire du mal ou de mourir, réponds avec d
     });
     $("tree").innerHTML = g;
     const it = S.intentions[t];
-    // l'intention du jour s'écrit à la main sous la date, seulement quand elle est posée
-    $("greeting").textContent = it || ""; $("greeting").hidden = !it;
+    // l'accueil reste épuré : l'intention ne s'affiche que dans la page Intention
+    $("greeting").hidden = true;
     fitTree();
   }
   /* ================= scène : horizon, soleil levant, mer, feuillages ================= */
