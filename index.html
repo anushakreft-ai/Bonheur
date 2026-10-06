@@ -23,7 +23,7 @@
 <body>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Changa+One&family=Over+the+Rainbow&family=Clarity+City:wght@400..700&family=Philosopher:ital,wght@0,400;0,700;1,400&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Changa+One&family=Over+the+Rainbow&family=WindSong:wght@500&family=Clarity+City:wght@400..700&family=Philosopher:ital,wght@0,400;0,700;1,400&display=swap">
 <style>
 /* Layout : une colonne façon carnet de papiers découpés (Matisse), cinq onglets en bas.
    Toujours en clair. Palette du plateau « jungle douce » : blanc chaud, rose poudré, sarcelle, moutarde, corail, points noirs */
@@ -615,6 +615,8 @@ body.sheet-open .home { visibility: hidden; }
 .sheet .cond button { background: rgba(251,247,239,.25) !important; border-bottom: 1px solid rgba(201,162,82,.35) !important; border-radius: 0 !important; }
 .sheet [style*="--c:var(--orange)"] > h3 { color: #b4553e !important; }
 .sheet .jar-memo .enveloppe { text-shadow: none; }
+.lien-plume { justify-self: start; border: 0; background: none; padding: 6px 0 2px; color: #fbf7ef; font: 500 34px/1.2 "WindSong", "Snell Roundhand", cursive; text-shadow: none; border-bottom: 1px solid rgba(251,247,239,.55); }
+.lien-plume span { font-family: var(--f-body); font-size: 20px; margin-left: 6px; }
 </style>
 
 <div class="scene" id="scene" aria-hidden="true"></div>
@@ -1608,7 +1610,7 @@ body.sheet-open .home { visibility: hidden; }
     if (!ns) {
       $("nextstep-host").innerHTML = S.projets.length ? "" :
         `<div class="nextstep"><div class="eyebrow">Un pas vers ton rêve</div><p>Quel rêve aimerais-tu voir pousser cette année ?</p>
-         <button class="btn small" type="button" data-go="reves" style="justify-self:start">Planter un rêve</button></div>`;
+         <button class="lien-plume" type="button" data-go="reves">Planter un rêve <span aria-hidden="true">→</span></button></div>`;
       return;
     }
     $("nextstep-host").innerHTML = `<div class="nextstep"><div class="eyebrow">Un pas vers ton rêve</div>
