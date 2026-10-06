@@ -23,7 +23,7 @@
 <body>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Changa+One&family=Over+the+Rainbow&family=WindSong:wght@500&family=Clarity+City:wght@400..700&family=Philosopher:ital,wght@0,400;0,700;1,400&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Changa+One&family=Eagle+Lake&family=WindSong:wght@400;500&family=Clarity+City:wght@400..700&family=Philosopher:ital,wght@0,400;0,700;1,400&display=swap">
 <style>
 /* Layout : une colonne façon carnet de papiers découpés (Matisse), cinq onglets en bas.
    Toujours en clair. Palette du plateau « jungle douce » : blanc chaud, rose poudré, sarcelle, moutarde, corail, points noirs */
@@ -44,9 +44,9 @@
   --line: rgba(43,52,64,.12);
   --on-color: #fbf7ef;
   --f-brand: "Philosopher", "Optima", Georgia, serif;
-  --f-display: "Philosopher", "Optima", Georgia, serif;
+  --f-display: "Eagle Lake", "Philosopher", Georgia, serif;
   --f-num: "Changa One", "Arial Black", system-ui, sans-serif;
-  --f-body: "Clarity City", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-body: "Philosopher", "Optima", Georgia, serif;
   --f-poem: "Philosopher", "Optima", Georgia, serif;
   --nav-h: 68px;
   color-scheme: light;
@@ -418,17 +418,17 @@ body { overflow: hidden; padding: 0 16px; margin: 0; }
 .grim-text { font: 400 19px/1.55 "Philosopher", Georgia, serif; white-space: pre-wrap; overflow-wrap: anywhere; margin: 0; }
 .grim-text::first-letter { float: left; font: 700 52px/0.9 "Philosopher", Georgia, serif; color: #9c2f1f; margin: 4px 8px 0 0; text-shadow: 1px 1px 0 #e3c27a; }
 .grim-type { max-width: 100%; text-align: center; text-transform: none; letter-spacing: .02em; font-size: 13px; }
-.grim-main { font: 400 30px/1.3 "Over the Rainbow", cursive; color: #1f3a66; text-align: center; }
+.grim-main { font: 500 32px/1.35 "WindSong", cursive; color: #1f3a66; text-align: center; }
 .grim-main::first-letter { float: none; font: inherit; color: inherit; margin: 0; text-shadow: none; }
 .grim-el { justify-self: end; margin-top: auto; font: 700 11px var(--f-body); letter-spacing: .14em; text-transform: uppercase; color: var(--c); }
 .grim-type { font: 700 16px "Philosopher", Georgia, serif !important; letter-spacing: .03em !important; padding: 3px 14px !important; }
-.grim-text, .grim-main { font: 400 28px/1.35 "Over the Rainbow", cursive !important; color: #33363b !important; text-align: center; }
+.grim-text, .grim-main { font: 500 30px/1.4 "WindSong", cursive !important; color: #33363b !important; text-align: center; }
 .grim-text::first-letter { float: none !important; font: inherit !important; color: inherit !important; margin: 0 !important; text-shadow: none !important; }
 .ge-date { font: 400 12px var(--f-body); letter-spacing: .14em; text-transform: uppercase; color: #8a6430; text-align: center; margin-top: 4px; display: flex; align-items: center; gap: 10px; }
 .ge-date::before, .ge-date::after { content: ""; flex: 1; height: 1px; background: #c9a25a; opacity: .7; }
 .ge { display: grid; gap: 0; }
 .ge-lab { font: italic 400 15px "Philosopher", Georgia, serif; color: #7a5a34; }
-.ge-txt { font: 400 24px/1.3 "Over the Rainbow", cursive; color: #33363b; overflow-wrap: anywhere; margin: 0; }
+.ge-txt { font: 500 28px/1.4 "WindSong", cursive; color: #33363b; overflow-wrap: anywhere; margin: 0; }
 #livre-print { display: none; }
 @media print {
   @page { margin: 18mm 16mm; }
@@ -441,7 +441,7 @@ body { overflow: hidden; padding: 0 16px; margin: 0; }
   #livre-print .ge-date { margin: 7mm 0 3mm; font-size: 9pt; }
   #livre-print .ge { break-inside: avoid; margin-bottom: 3mm; }
   #livre-print .ge-lab { font-size: 11pt; }
-  #livre-print .ge-txt { font-size: 18pt; }
+  #livre-print .ge-txt { font-size: 21pt; }
 }
 .grim-empty { text-align: center; font: 400 18px/1.5 "Philosopher", Georgia, serif; color: #7a5a34; margin-top: 30%; }
 .grim-cover { position: absolute; inset: 0; border: 0; border-radius: 4px 12px 12px 4px; transform-origin: left center; transition: transform 1.1s cubic-bezier(.6,.05,.3,1), opacity .4s 0.8s; backface-visibility: hidden; z-index: 2; overflow: hidden;
@@ -460,7 +460,7 @@ body { overflow: hidden; padding: 0 16px; margin: 0; }
 .grim-nav .btn { font-size: 20px; padding: 4px 18px; background: rgba(255,250,243,.7); }
 .grim-count { font: 400 15px var(--f-num); color: var(--ink); min-width: 70px; text-align: center; }
 @media (prefers-reduced-motion: reduce) { .grim-cover { transition: none; } .grim-page.tourne, .grim-page.tourne-g { animation: none; } }
-.manuscrit { font: 400 36px/1.2 "Over the Rainbow", "Snell Roundhand", cursive; color: #1f3a66; margin: 0; overflow-wrap: anywhere; }
+.manuscrit { font: 500 40px/1.25 "WindSong", "Snell Roundhand", cursive; color: #1f3a66; margin: 0; overflow-wrap: anywhere; }
 .manuscrit.petit { font-size: 19px; color: #3b4a66; }
 .intent-ecrite { display: grid; justify-items: center; gap: 10px; padding: 14px 4px 0; }
 .papier-ombre { position: relative; width: min(94%, 340px); transform: rotate(-1.5deg); filter: drop-shadow(0 5px 8px rgba(60,40,20,.25)) drop-shadow(0 1px 1px rgba(60,40,20,.25)); }
@@ -472,7 +472,7 @@ body { overflow: hidden; padding: 0 16px; margin: 0; }
 .papier .manuscrit { color: #2a2f45; line-height: 1.15; font-size: 31px; text-wrap: balance; }
 .manuscrit.ecrit { animation: ecrire 1.6s ease-out both; }
 @keyframes ecrire { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
-#greeting.greeting { font: 400 22px/1.15 "Over the Rainbow", "Snell Roundhand", cursive; color: #1f3a66; margin: 4px 0 0; max-width: 62vw; text-shadow: 0 1px 0 rgba(255,255,255,.6); }
+#greeting.greeting { font: 400 22px/1.15 "WindSong", "Snell Roundhand", cursive; color: #1f3a66; margin: 4px 0 0; max-width: 62vw; text-shadow: 0 1px 0 rgba(255,255,255,.6); }
 @media (prefers-reduced-motion: reduce) { .manuscrit.ecrit { animation: none; } }
 .hist-pli summary { cursor: pointer; font-size: 14px; color: var(--ink-soft); list-style: none; }
 .hist-pli.jours { justify-self: start; background: rgba(255,250,243,.8); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); border-radius: 18px; padding: 8px 14px; }
@@ -491,7 +491,7 @@ body { overflow: hidden; padding: 0 16px; margin: 0; }
   box-shadow: 0 6px 14px rgba(20,60,80,.18); animation: pousse .5s cubic-bezier(.3,1.5,.5,1) both; }
 .enveloppe::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 30px; background: #2bb3c0; clip-path: polygon(0 0, 100% 0, 50% 100%); border-radius: 6px 6px 0 0; }
 .env-carte { position: relative; display: grid; gap: 4px; background: #fbf7ef; border-radius: 4px; padding: 10px 12px; transform: rotate(-2deg) translateY(-18px); box-shadow: 0 2px 6px rgba(0,0,0,.12); }
-.env-txt { font: 400 22px/1.25 "Over the Rainbow", cursive; color: #1f3a66; overflow-wrap: anywhere; }
+.env-txt { font: 500 27px/1.3 "WindSong", cursive; color: #1f3a66; overflow-wrap: anywhere; }
 .env-carte small { font-size: 12px; color: var(--ink-soft); }
 .save-banner { position: fixed; z-index: 60; left: 12px; right: 12px; bottom: calc(12px + env(safe-area-inset-bottom, 0px)); display: grid; gap: 8px; padding: 14px 16px; border-radius: 20px;
   background: rgba(255,250,243,.92); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); box-shadow: 0 8px 24px rgba(30,40,60,.25); animation: monte .3s ease both; }
@@ -509,7 +509,7 @@ body.sheet-open .save-banner { display: none; }
 .oracle-num { font: 400 30px var(--f-num); color: #b8902e; }
 .oracle-num.petit { font-size: 22px; margin-top: 6px; }
 .oracle-res h3 { font: 700 24px "Philosopher", Georgia, serif; margin: 0; }
-.oracle-msg { font: 400 24px/1.3 "Over the Rainbow", cursive; color: #33363b; margin: 0; }
+.oracle-msg { font: 500 28px/1.4 "WindSong", cursive; color: #33363b; margin: 0; }
 .oracle .hint .hexa { width: 70px; }
 @media (prefers-reduced-motion: reduce) { .pieces.lance svg { animation: none; } }
 .jump { justify-self: start; border: 0; border-radius: 99px; padding: 7px 14px; font-weight: 700; font-size: 14px; background: rgba(255,255,255,.55); color: var(--ink); box-shadow: inset 0 0 0 1.5px #2f7a45; }
@@ -617,6 +617,12 @@ body.sheet-open .home { visibility: hidden; }
 .sheet .jar-memo .enveloppe { text-shadow: none; }
 .lien-plume { justify-self: start; border: 0; background: none; padding: 6px 0 2px; color: #fbf7ef; font: 500 34px/1.2 "WindSong", "Snell Roundhand", cursive; text-shadow: none; border-bottom: 1px solid rgba(251,247,239,.55); }
 .lien-plume span { font-family: var(--f-body); font-size: 20px; margin-left: 6px; }
+/* titres en Eagle Lake (une seule graisse), texte en Philosopher, notes manuscrites en WindSong */
+h1:not(.brand), h2, h3, .grim-title, .ge-lab, .trav-kicker, .oracle-res h3 { font-weight: 400 !important; }
+.brand { font-family: var(--f-brand) !important; font-weight: 700 !important; }
+#tree .t-mot { font-family: "Philosopher", Georgia, serif !important; font-weight: 700 !important; }
+.dream-head .pct, .jar-count, .breath-label { font-family: "Philosopher", Georgia, serif !important; }
+.sheet-title h2 { letter-spacing: .02em; }
 </style>
 
 <div class="scene" id="scene" aria-hidden="true"></div>
