@@ -42,7 +42,7 @@
   --blush: #f8e4dc;
   --mint: #e3f0ec;
   --line: rgba(43,52,64,.12);
-  --on-color: #ffffff;
+  --on-color: #fbf7ef;
   --f-brand: "Philosopher", "Optima", Georgia, serif;
   --f-display: "Philosopher", "Optima", Georgia, serif;
   --f-num: "Changa One", "Arial Black", system-ui, sans-serif;
@@ -101,7 +101,7 @@ section.view { display: grid; gap: 22px; padding-block: 14px 8px; }
 .title-block { display: grid; gap: 6px; }
 
 /* ---- boutons, champs ---- */
-.btn { border: 0; border-radius: 99px; padding: 11px 18px; font-weight: 700; background: var(--cobalt); color: #ffffff; }
+.btn { border: 0; border-radius: 99px; padding: 11px 18px; font-weight: 700; background: var(--cobalt); color: #fbf7ef; }
 .btn.alt { background: transparent; color: var(--ink); box-shadow: inset 0 0 0 2px var(--ink); }
 .btn.orange { background: var(--orange); }
 .btn.small { padding: 7px 13px; font-size: 14px; }
@@ -160,12 +160,12 @@ textarea.field { min-height: 110px; resize: vertical; font-family: var(--f-poem)
 .grat-line input { font-family: var(--f-poem); font-size: 17px; }
 
 /* ---- pas vers le rêve ---- */
-.nextstep { background: var(--cobalt); color: #ffffff; border-radius: 26px 26px 6px 26px; padding: 18px 20px; display: grid; gap: 10px; }
-.nextstep .eyebrow { color: #ffffff; opacity: .8; }
+.nextstep { background: var(--cobalt); color: #fbf7ef; border-radius: 26px 26px 6px 26px; padding: 18px 20px; display: grid; gap: 10px; }
+.nextstep .eyebrow { color: #fbf7ef; opacity: .8; }
 .nextstep p { margin: 0; font-family: var(--f-poem); font-size: 21px; line-height: 1.2; }
 .nextstep small { opacity: .85; }
 .nextstep .btn { background: var(--ochre); color: #2b3440; }
-.nextstep .btn.alt { background: transparent; color: #ffffff; box-shadow: inset 0 0 0 2px #ffffff; }
+.nextstep .btn.alt { background: transparent; color: #fbf7ef; box-shadow: inset 0 0 0 2px #fbf7ef; }
 
 /* ---- jardin + gestes ---- */
 .garden-art { background: var(--blush); border-radius: 160px 160px 24px 24px; overflow: hidden; aspect-ratio: 16/10; max-width: 100%; }
@@ -320,7 +320,7 @@ body { overflow: hidden; padding: 0 16px; margin: 0; }
 #tree .node { cursor: pointer; outline: none; }
 #tree .node circle.main { transition: transform .2s; transform-box: fill-box; transform-origin: center; }
 #tree .node:hover circle.main, #tree .node:active circle.main { transform: scale(1.06); }
-#tree .node:focus-visible circle.main { stroke: #fff; stroke-width: 8; }
+#tree .node:focus-visible circle.main { stroke: #fbf7ef; stroke-width: 8; }
 #tree .node:active circle.main { fill: rgba(255,255,255,.18); }
 #tree .t-mot { font: 700 46px var(--f-display); }
 #tree .t-halo { paint-order: stroke; stroke: rgba(20,20,30,.5); stroke-width: 7px; stroke-linejoin: round; }
@@ -398,7 +398,7 @@ body { overflow: hidden; padding: 0 16px; margin: 0; }
 .eclair-sum { display: grid; gap: 8px; }
 .eclair-sum div { background: rgba(255,255,255,.5); border-radius: 14px; padding: 8px 12px; border-left: 5px solid var(--c); overflow-wrap: anywhere; }
 .eclair-sum b { font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-soft); display: block; }
-.btn-eclair { justify-self: start; border: 0; border-radius: 99px; padding: 8px 14px; font-weight: 700; font-size: 14px; background: linear-gradient(100deg, #10294f, #1f5a8a 45%, #c39233); color: #fff; }
+.btn-eclair { justify-self: start; border: 0; border-radius: 99px; padding: 8px 14px; font-weight: 700; font-size: 14px; background: linear-gradient(100deg, #10294f, #1f5a8a 45%, #c39233); color: #fbf7ef; }
 @media (max-width: 380px) { .eclair-top { grid-template-columns: 1fr; } #eclair-mini { position: static; width: 70px; justify-self: center; } }
 .btn-grim { justify-self: start; display: inline-flex; align-items: center; gap: 8px; border: 0; border-radius: 99px; padding: 8px 15px 8px 10px; font-weight: 700; font-size: 14px; background: linear-gradient(100deg, #1d4462, #2f6688); color: #f6e2a8; box-shadow: 0 3px 10px rgba(20,50,75,.3); }
 .btn-grim svg { width: 22px; height: 22px; }
@@ -413,7 +413,7 @@ body { overflow: hidden; padding: 0 16px; margin: 0; }
 @keyframes tourne { from { transform: rotateY(-70deg); transform-origin: left; opacity: .2; } to { transform: none; transform-origin: left; } }
 @keyframes tourneg { from { transform: rotateY(70deg); transform-origin: right; opacity: .2; } to { transform: none; transform-origin: right; } }
 .grim-date { font: 400 13px var(--f-body); letter-spacing: .12em; text-transform: uppercase; color: #8a6430; text-align: center; }
-.grim-type { justify-self: center; font: 700 12px var(--f-body); letter-spacing: .1em; text-transform: uppercase; color: #fff; background: var(--c); padding: 3px 12px; border-radius: 99px; }
+.grim-type { justify-self: center; font: 700 12px var(--f-body); letter-spacing: .1em; text-transform: uppercase; color: #fbf7ef; background: var(--c); padding: 3px 12px; border-radius: 99px; }
 .grim-sep { height: 14px; background: radial-gradient(circle at 50% 50%, #b48a4c 2.5px, transparent 3px) center / 14px 14px no-repeat, linear-gradient(#c9a25a, #c9a25a) center / 70% 1px no-repeat; }
 .grim-text { font: 400 19px/1.55 "Philosopher", Georgia, serif; white-space: pre-wrap; overflow-wrap: anywhere; margin: 0; }
 .grim-text::first-letter { float: left; font: 700 52px/0.9 "Philosopher", Georgia, serif; color: #9c2f1f; margin: 4px 8px 0 0; text-shadow: 1px 1px 0 #e3c27a; }
@@ -433,7 +433,7 @@ body { overflow: hidden; padding: 0 16px; margin: 0; }
 @media print {
   @page { margin: 18mm 16mm; }
   body > *:not(#livre-print) { display: none !important; }
-  body { background: #fff !important; }
+  body { background: #fbf7ef !important; }
   #livre-print { display: block !important; color: #33363b; }
   #livre-print .lp-titre { text-align: center; margin-bottom: 10mm; }
   #livre-print h1 { font: 700 30pt "Philosopher", Georgia, serif; color: #1f4867; margin: 0 0 2mm; }
@@ -490,7 +490,7 @@ body { overflow: hidden; padding: 0 16px; margin: 0; }
   background: radial-gradient(circle at 20% 30%, #3fb6c8 0 3px, transparent 3.5px) 0 0 / 18px 18px, radial-gradient(ellipse at 70% 70%, #a9cf3f 0 3px, transparent 3.5px) 0 0 / 18px 18px, radial-gradient(circle at 60% 20%, #7c6bb8 0 1.6px, transparent 2px) 0 0 / 14px 14px, #fbfdfc;
   box-shadow: 0 6px 14px rgba(20,60,80,.18); animation: pousse .5s cubic-bezier(.3,1.5,.5,1) both; }
 .enveloppe::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 30px; background: #2bb3c0; clip-path: polygon(0 0, 100% 0, 50% 100%); border-radius: 6px 6px 0 0; }
-.env-carte { position: relative; display: grid; gap: 4px; background: #fff; border-radius: 4px; padding: 10px 12px; transform: rotate(-2deg) translateY(-18px); box-shadow: 0 2px 6px rgba(0,0,0,.12); }
+.env-carte { position: relative; display: grid; gap: 4px; background: #fbf7ef; border-radius: 4px; padding: 10px 12px; transform: rotate(-2deg) translateY(-18px); box-shadow: 0 2px 6px rgba(0,0,0,.12); }
 .env-txt { font: 400 22px/1.25 "Over the Rainbow", cursive; color: #1f3a66; overflow-wrap: anywhere; }
 .env-carte small { font-size: 12px; color: var(--ink-soft); }
 .save-banner { position: fixed; z-index: 60; left: 12px; right: 12px; bottom: calc(12px + env(safe-area-inset-bottom, 0px)); display: grid; gap: 8px; padding: 14px 16px; border-radius: 20px;
@@ -522,14 +522,14 @@ details.tight summary { font-weight: 700; color: var(--cobalt); }
 .board .pola:hover, .board .pola:focus-visible { transform: rotate(0) scale(1.06); z-index: 2; }
 .board .pola img { width: 100%; aspect-ratio: 1; object-fit: cover; display: block; background: var(--blush); }
 .board .pola span { position: absolute; left: 4px; right: 4px; bottom: 2px; font: 600 10px var(--f-body); color: #4a3b2a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: center; background: none; padding: 0; }
-.board .pola i { position: absolute; top: -6px; right: -6px; width: 22px; height: 22px; border-radius: 50%; background: #e08a76; color: #fff; font-style: normal; font-size: 12px; display: grid; place-items: center; box-shadow: 0 2px 4px rgba(0,0,0,.2); }
+.board .pola i { position: absolute; top: -6px; right: -6px; width: 22px; height: 22px; border-radius: 50%; background: #e08a76; color: #fbf7ef; font-style: normal; font-size: 12px; display: grid; place-items: center; box-shadow: 0 2px 4px rgba(0,0,0,.2); }
 .draw { display: grid; gap: 10px; justify-items: center; background: rgba(255,250,243,.55); border-radius: 18px; padding: 12px; }
 .draw img { max-width: 100%; max-height: 46vh; border-radius: 6px; border: 6px solid #fffdf8; box-shadow: 0 8px 18px rgba(40,30,20,.25); transform: rotate(-1.5deg); }
 .draw p { margin: 0; font-family: var(--f-poem); font-size: 17px; text-align: center; }
 .vision-old { display: grid; }
 .vision button { border: 0; padding: 0; aspect-ratio: 1; border-radius: var(--r, 18px); overflow: hidden; background: var(--blush); position: relative; }
 .vision img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.vision span { position: absolute; left: 0; right: 0; bottom: 0; padding: 22px 12px 12px; background: linear-gradient(transparent, rgba(0,0,0,.55)); font-size: 11px; font-weight: 700; color: #fff; text-align: center; line-height: 1.15; }
+.vision span { position: absolute; left: 0; right: 0; bottom: 0; padding: 22px 12px 12px; background: linear-gradient(transparent, rgba(0,0,0,.55)); font-size: 11px; font-weight: 700; color: #fbf7ef; text-align: center; line-height: 1.15; }
 .sortbar { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
 .sortbar .chip { padding: 5px 11px; font-size: 13px; }
 .dream-list { display: grid; gap: 10px; }
@@ -598,6 +598,23 @@ body.sheet-open .home { visibility: hidden; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
+
+/* Pages : le texte se pose directement sur l'image (pas d'encarts), aucun blanc ni noir purs */
+.sheet .panel, .sheet .entry, .sheet .trav-card, .sheet .eclair-step, .sheet-body > .title-block, .sheet-body > .row, .sheet-body > .sortbar,
+.sheet-body > .hint, .sheet-body > p, .hist-pli.jours, .trav-world, .trav-rappel, .dm-recul, .trav-tresors > div, .trav-item.tr {
+  background: none !important; -webkit-backdrop-filter: none !important; backdrop-filter: none !important; border: 0 !important; box-shadow: none !important; }
+.sheet .panel { padding: 6px 2px !important; }
+.sheet .drow, .sheet .dream-detail { background: rgba(251,247,239,.28) !important; -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
+.sheet-body { text-shadow: 0 0 10px rgba(251,247,239,.9), 0 0 3px rgba(251,247,239,.95); color: #2b3440; }
+.sheet .hint, .sheet .lead, .sheet .help { color: #3f4652 !important; }
+.sheet .field { background: rgba(251,247,239,.55) !important; border-color: rgba(43,52,64,.18) !important; text-shadow: none; }
+.sheet .btn, .sheet .chip, .sheet .geste, .sheet .grim-page, .sheet .grim-cover, .sheet .papier, .sheet .enveloppe { text-shadow: none; }
+.sheet .panel + .panel, .sheet .panel + .trav-card, .sheet .trav-card + .panel { border-top: 1px solid rgba(201,162,82,.45) !important; padding-top: 16px !important; border-radius: 0 !important; }
+.sheet .glass, .sheet .jar-count, .sheet .jar-memo { background: none !important; -webkit-backdrop-filter: none !important; backdrop-filter: none !important; border: 0 !important; box-shadow: none !important; }
+.sheet .glass { padding: 6px 2px !important; }
+.sheet .cond button { background: rgba(251,247,239,.25) !important; border-bottom: 1px solid rgba(201,162,82,.35) !important; border-radius: 0 !important; }
+.sheet [style*="--c:var(--orange)"] > h3 { color: #b4553e !important; }
+.sheet .jar-memo .enveloppe { text-shadow: none; }
 </style>
 
 <div class="scene" id="scene" aria-hidden="true"></div>
@@ -618,7 +635,7 @@ body.sheet-open .home { visibility: hidden; }
 </div>
 
   <section class="sheet" id="s-keter" role="dialog" aria-modal="true" aria-labelledby="h-keter" hidden>
-    <div class="sheet-head" style="--c:#ffffff;--t:var(--ink)">
+    <div class="sheet-head" style="--c:#fbf7ef;--t:var(--ink)">
       <button class="back" type="button" data-close aria-label="Revenir à l'arbre">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Arbre</button>
       <div class="sheet-title"><span class="heb">Keter · Couronne</span><h2 id="h-keter">Intention</h2><p>Ce qui guide ma journée.</p></div>
@@ -688,7 +705,7 @@ body.sheet-open .home { visibility: hidden; }
   </section>
 
   <section class="sheet" id="s-binah" role="dialog" aria-modal="true" aria-labelledby="h-binah" hidden>
-    <div class="sheet-head" style="--c:#2f7f7c;--t:#ffffff">
+    <div class="sheet-head" style="--c:#2f7f7c;--t:#fbf7ef">
       <button class="back" type="button" data-close aria-label="Revenir à l'arbre">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Arbre</button>
       <div class="sheet-title"><span class="heb">Binah · Compréhension</span><h2 id="h-binah">Comprendre</h2><p>Regarder ce qui se passe, avec douceur.</p></div>
@@ -893,7 +910,7 @@ body.sheet-open .home { visibility: hidden; }
   </section>
 
   <section class="sheet" id="s-netzach" role="dialog" aria-modal="true" aria-labelledby="h-netzach" hidden>
-    <div class="sheet-head" style="--c:#3f8a55;--t:#ffffff">
+    <div class="sheet-head" style="--c:#3f8a55;--t:#fbf7ef">
       <button class="back" type="button" data-close aria-label="Revenir à l'arbre">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Arbre</button>
       <div class="sheet-title"><span class="heb">Netsah · Victoire</span><h2 id="h-netzach">Rêves</h2><p>M'élever : mes rêves et la musique qui me porte.</p></div>
@@ -1036,7 +1053,7 @@ body.sheet-open .home { visibility: hidden; }
   </section>
 
   <section class="sheet" id="s-malkhut" role="dialog" aria-modal="true" aria-labelledby="h-malkhut" hidden>
-    <div class="sheet-head" style="--c:#b97a57;--t:#ffffff">
+    <div class="sheet-head" style="--c:#b97a57;--t:#fbf7ef">
       <button class="back" type="button" data-close aria-label="Revenir à l'arbre">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Arbre</button>
       <div class="sheet-title"><span class="heb">Malkhout · Royaume</span><h2 id="h-malkhut">Gestes</h2><p>Le corps, le concret, les petits gestes.</p></div>
@@ -1090,7 +1107,7 @@ body.sheet-open .home { visibility: hidden; }
   </section>
 
   <section class="sheet" id="s-eclair" role="dialog" aria-modal="true" aria-labelledby="h-eclair" hidden>
-    <div class="sheet-head" id="eclair-head" style="--c:#2f7a45;--t:#ffffff">
+    <div class="sheet-head" id="eclair-head" style="--c:#2f7a45;--t:#fbf7ef">
       <button class="back" type="button" data-open="netzach" aria-label="Revenir à mes rêves">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Rêves</button>
       <div class="sheet-title"><span class="heb" id="eclair-heb">Le chemin de l'Éclair</span><h2 id="h-eclair">Le chemin de l'Éclair</h2><p id="eclair-dream"></p></div>
@@ -1104,7 +1121,7 @@ body.sheet-open .home { visibility: hidden; }
   </section>
 
   <section class="sheet" id="s-trav" role="dialog" aria-modal="true" aria-labelledby="h-trav" hidden>
-    <div class="sheet-head" style="--c:#10294f;--t:#ffffff">
+    <div class="sheet-head" style="--c:#10294f;--t:#fbf7ef">
       <button class="back" type="button" data-close aria-label="Revenir à l'arbre">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Arbre</button>
       <div class="sheet-title"><span class="heb">Terre · Eau · Feu · Air · Lumière</span><h2 id="h-trav">La Traversée</h2><p id="trav-sub"></p></div>
@@ -1170,7 +1187,7 @@ body.sheet-open .home { visibility: hidden; }
   <img id="lb-img" alt="">
   <div class="row lb-actions">
     <button class="btn small" type="button" id="lb-close">Fermer</button>
-    <button class="btn alt small" type="button" id="lb-del" style="color:#fff;box-shadow:inset 0 0 0 2px #fff">Retirer cette photo</button>
+    <button class="btn alt small" type="button" id="lb-del" style="color:#fbf7ef;box-shadow:inset 0 0 0 2px #fbf7ef">Retirer cette photo</button>
   </div>
 </div>
 <div id="toast-host"></div>
@@ -1499,7 +1516,7 @@ body.sheet-open .home { visibility: hidden; }
       <path d="M600 0H470C540 70 560 160 600 190Z" fill="#8fc4bb"/>
       <g clip-path="url(#arche)">
         <rect x="150" y="60" width="300" height="320" fill="url(#ciel)"/>
-        <circle cx="352" cy="250" r="22" fill="#ffffff"/>
+        <circle cx="352" cy="250" r="22" fill="#fbf7ef"/>
         <rect x="150" y="262" width="300" height="120" fill="#5fa3a0"/>
         <path d="M330 280H374M318 296H386M336 312H368" stroke="#f0d9a8" stroke-width="4" stroke-linecap="round"/>
       </g>
@@ -1985,7 +2002,7 @@ Réponds uniquement en JSON : {"etapes": ["..."], "obstacle": "...", "plan": "..
   }
   function drawBreath() {
     const b = BREATHS[breathType], segs = shapeSegments(b.phases.length);
-    $("breath-types").innerHTML = ["infinie", "coherence", "478", "carre", "soupir", "energie"].map((k) => [k, BREATHS[k]]).map(([k, v]) => `<button type="button" class="chip" style="--c:#7a5ea8;--t:#fff" data-bt="${k}" aria-pressed="${k === breathType}">${v.nom}</button>`).join("");
+    $("breath-types").innerHTML = ["infinie", "coherence", "478", "carre", "soupir", "energie"].map((k) => [k, BREATHS[k]]).map(([k, v]) => `<button type="button" class="chip" style="--c:#7a5ea8;--t:#fbf7ef" data-bt="${k}" aria-pressed="${k === breathType}">${v.nom}</button>`).join("");
     $("breath-desc").textContent = b.desc;
     const tot = b.phases.reduce((a, p) => a + p[1], 0) * b.cycles;
     $("breath-go").textContent = `Commencer · ${tot >= 60 ? Math.round(tot / 60) + " min" : Math.round(tot) + " s"}`;
@@ -1995,7 +2012,7 @@ Réponds uniquement en JSON : {"etapes": ["..."], "obstacle": "...", "plan": "..
       : `<text x="150" y="${b.phases.length === 3 ? 108 : 84}" text-anchor="middle" class="inf-t" id="breath-center">Départ</text>`;
     $("breath-svg").innerHTML = segs.map((d, i) => `<path d="${d}" fill="none" stroke="${PH[b.phases[i][0]][1]}" stroke-opacity=".35" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"/>`).join("")
       + segs.map((d, i) => `<path id="bseg-${i}" d="${d}" fill="none" stroke="${PH[b.phases[i][0]][1]}" stroke-width="20" stroke-linecap="round" stroke-dasharray="0 9999"/>`).join("")
-      + labels + `<circle id="inf-dot" r="11" fill="#fff" stroke="#2b3440" stroke-width="3"/>`;
+      + labels + `<circle id="inf-dot" r="11" fill="#fbf7ef" stroke="#2b3440" stroke-width="3"/>`;
     placeDot(0);
   }
   function placeDot(t) {
@@ -2328,20 +2345,20 @@ Si la pensée évoque une envie de se faire du mal ou de mourir, réponds avec d
       <pattern id="m1" width="14" height="14" patternUnits="userSpaceOnUse"><rect width="14" height="14" fill="#fbfdfc"/><ellipse cx="4" cy="4" rx="3.4" ry="1.6" transform="rotate(35 4 4)" fill="#3fb6c8"/><ellipse cx="11" cy="10" rx="3" ry="1.4" transform="rotate(-30 11 10)" fill="#a9cf3f"/><circle cx="11" cy="3" r="1.2" fill="#7c6bb8"/></pattern>
       <pattern id="m2" width="14" height="14" patternUnits="userSpaceOnUse"><rect width="14" height="14" fill="#f4fbfb"/><ellipse cx="7" cy="7" rx="3.6" ry="1.6" transform="rotate(-40 7 7)" fill="#7c6bb8"/><ellipse cx="2" cy="12" rx="2.6" ry="1.2" transform="rotate(20 2 12)" fill="#3fb6c8"/></pattern>
       <pattern id="m3" width="14" height="14" patternUnits="userSpaceOnUse"><rect width="14" height="14" fill="#fbfdf6"/><ellipse cx="5" cy="9" rx="3.4" ry="1.5" transform="rotate(50 5 9)" fill="#a9cf3f"/><ellipse cx="11" cy="4" rx="2.8" ry="1.3" transform="rotate(-20 11 4)" fill="#2bb3c0"/></pattern>
-      <linearGradient id="glassg" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity=".6"/><stop offset=".22" stop-color="#fff" stop-opacity=".1"/><stop offset=".8" stop-color="#fff" stop-opacity=".06"/><stop offset="1" stop-color="#fff" stop-opacity=".45"/></linearGradient>
+      <linearGradient id="glassg" x1="0" x2="1"><stop offset="0" stop-color="#fbf7ef" stop-opacity=".6"/><stop offset=".22" stop-color="#fbf7ef" stop-opacity=".1"/><stop offset=".8" stop-color="#fbf7ef" stop-opacity=".06"/><stop offset="1" stop-color="#fbf7ef" stop-opacity=".45"/></linearGradient>
       <linearGradient id="rub" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5fd0dc"/><stop offset="1" stop-color="#1f9fb0"/></linearGradient></defs>
       <path d="${body}" fill="rgba(255,255,255,.22)"/>
       <g clip-path="url(#jarclip)"><rect x="20" y="172" width="160" height="50" fill="#168a96"/>${fris}${slips}</g>
       <path d="${body}" fill="url(#glassg)" stroke="rgba(255,255,255,.95)" stroke-width="3"/>
-      <path d="M42 96C38 120 38 160 46 186" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".75"/>
-      <path d="M156 100C160 120 160 150 156 170" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".5"/>
+      <path d="M42 96C38 120 38 160 46 186" fill="none" stroke="#fbf7ef" stroke-width="5" stroke-linecap="round" opacity=".75"/>
+      <path d="M156 100C160 120 160 150 156 170" fill="none" stroke="#fbf7ef" stroke-width="3" stroke-linecap="round" opacity=".5"/>
       <rect x="62" y="38" width="76" height="20" rx="4" fill="rgba(255,255,255,.35)" stroke="rgba(255,255,255,.95)" stroke-width="2.5"/>
       <rect x="61" y="45" width="78" height="9" fill="url(#rub)"/>
       <ellipse cx="100" cy="49.5" rx="16" ry="7" fill="#d9dde0" stroke="#9aa3a8" stroke-width="1.5"/>
       <text x="100" y="52.5" text-anchor="middle" font-size="8.5" fill="#5b6670" font-family="'Over the Rainbow', cursive">merci</text>
       <ellipse cx="100" cy="38" rx="44" ry="7" fill="rgba(255,255,255,.55)" stroke="rgba(255,255,255,.95)" stroke-width="2.5"/>
       <path d="M62 37C64 24 136 24 138 37" fill="rgba(255,255,255,.45)" stroke="rgba(255,255,255,.95)" stroke-width="2.5"/>
-      <path d="M76 30C88 26 104 26 116 28" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" opacity=".8"/>
+      <path d="M76 30C88 26 104 26 116 28" fill="none" stroke="#fbf7ef" stroke-width="2.5" stroke-linecap="round" opacity=".8"/>
       ${n ? "" : `<text x="100" y="140" text-anchor="middle" font-size="12" fill="#6b6f78" font-family="sans-serif">Encore vide</text>`}`;
     $("jar-count").textContent = n ? `${n} bonheur${n > 1 ? "s" : ""} dans le bocal` : "Mon bocal à bonheurs";
     $("jar-next").hidden = !n;
@@ -2360,16 +2377,16 @@ Si la pensée évoque une envie de se faire du mal ou de mourir, réponds avec d
   // couleurs traditionnelles des séphiroth (échelle de la Reine)
   const SEPH = [
     { k: "keter", heb: "Keter", mot: "Intention", x: 150, y: 44, fill: "#fbf7ee", txt: "#2b3440" },
-    { k: "chokhmah", heb: "Hokhmah", mot: "Intuitions", x: 248, y: 108, fill: "#8e8a85", txt: "#ffffff" },
-    { k: "binah", heb: "Binah", mot: "Comprendre", x: 52, y: 108, fill: "#1f2f52", txt: "#ffffff" },
+    { k: "chokhmah", heb: "Hokhmah", mot: "Intuitions", x: 248, y: 108, fill: "#8e8a85", txt: "#fbf7ef" },
+    { k: "binah", heb: "Binah", mot: "Comprendre", x: 52, y: 108, fill: "#1f2f52", txt: "#fbf7ef" },
     { k: "daat", heb: "Daat", mot: "Traversée", x: 150, y: 170, fill: "rgba(255,248,235,.75)", txt: "#2b3440", dash: true },
-    { k: "chesed", heb: "Hessed", mot: "Gratitude", x: 248, y: 236, fill: "#3f86c0", txt: "#ffffff" },
-    { k: "gevurah", heb: "Guevourah", mot: "Limites", x: 52, y: 236, fill: "#c4412a", txt: "#ffffff" },
+    { k: "chesed", heb: "Hessed", mot: "Gratitude", x: 248, y: 236, fill: "#3f86c0", txt: "#fbf7ef" },
+    { k: "gevurah", heb: "Guevourah", mot: "Limites", x: 52, y: 236, fill: "#c4412a", txt: "#fbf7ef" },
     { k: "tiferet", heb: "Tiferet", mot: "Cœur", x: 150, y: 300, fill: "#e6bf35", txt: "#2b3440" },
-    { k: "netzach", heb: "Netsah", mot: "Rêves", x: 248, y: 390, fill: "#2f7a45", txt: "#ffffff" },
+    { k: "netzach", heb: "Netsah", mot: "Rêves", x: 248, y: 390, fill: "#2f7a45", txt: "#fbf7ef" },
     { k: "hod", heb: "Hod", mot: "Mots", x: 52, y: 390, fill: "#d08a2c", txt: "#2b3440" },
-    { k: "yesod", heb: "Yesod", mot: "Ancrage", x: 150, y: 452, fill: "#7a5ea8", txt: "#ffffff" },
-    { k: "malkhut", heb: "Malkhout", mot: "Gestes", x: 150, y: 524, fill: "#a8452a", txt: "#ffffff", quarters: ["#c9a43a", "#5f7a3a", "#1f2f52", "#a8452a"] }
+    { k: "yesod", heb: "Yesod", mot: "Ancrage", x: 150, y: 452, fill: "#7a5ea8", txt: "#fbf7ef" },
+    { k: "malkhut", heb: "Malkhout", mot: "Gestes", x: 150, y: 524, fill: "#a8452a", txt: "#fbf7ef", quarters: ["#c9a43a", "#5f7a3a", "#1f2f52", "#a8452a"] }
   ];
   const PATHS = "keter-chokhmah keter-binah keter-tiferet chokhmah-binah chokhmah-tiferet chokhmah-chesed binah-tiferet binah-gevurah chesed-gevurah chesed-tiferet chesed-netzach gevurah-tiferet gevurah-hod tiferet-netzach tiferet-yesod tiferet-hod netzach-hod netzach-yesod netzach-malkhut hod-yesod hod-malkhut yesod-malkhut".split(" ").map((x) => x.split("-"));
   const byK = Object.fromEntries(SEPH.map((n) => [n.k, n]));
@@ -2460,7 +2477,7 @@ Si la pensée évoque une envie de se faire du mal ou de mourir, réponds avec d
       let sub = "";
       if (n.k === "malkhut") sub = `${(S.faits[t] || []).filter((id) => S.gestes.some((z) => z.id === id)).length}/${S.gestes.length}`;
       if (n.k === "tiferet" && S.humeur[t]) sub = MOODS[S.humeur[t] - 1].label;
-      const light = n.txt !== "#ffffff", ic = ICONS[n.k];
+      const light = n.txt !== "#fbf7ef", ic = ICONS[n.k];
       const fs = n.mot.length > 9 ? 38 : 46;
       g += `<g class="node" data-open="${n.k === "daat" ? "trav" : n.k}" tabindex="0" role="button" aria-label="${n.heb}, ${n.mot}${done ? ", fait aujourd'hui" : ""}">
         ${n.dash ? `<circle cx="${x}" cy="${y}" r="${r}" fill="rgba(255,246,230,.82)" stroke="#d9a33a" stroke-width="9" stroke-dasharray="20 14"/>` : ""}
@@ -2707,7 +2724,7 @@ Si la pensée évoque une envie de se faire du mal ou de mourir, réponds avec d
     if (lit.length > 1) g += `<polyline points="${lit.map((q) => q.join(",")).join(" ")}" fill="none" stroke="#f2c230" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/>`;
     P.forEach((q, i) => {
       const n0 = SEPH.find((s) => s.k === ECLAIR[i].k), ok = ((p.eclair || {})[ECLAIR[i].k] || "").trim(), cur = i === eclairStep;
-      g += `<circle cx="${q[0]}" cy="${q[1]}" r="${cur ? 19 : 15}" fill="${n0.fill}" stroke="${cur ? "#fff" : "#dcb24e"}" stroke-width="${cur ? 5 : 3}" data-estep="${i}" style="cursor:pointer"/>`;
+      g += `<circle cx="${q[0]}" cy="${q[1]}" r="${cur ? 19 : 15}" fill="${n0.fill}" stroke="${cur ? "#fbf7ef" : "#dcb24e"}" stroke-width="${cur ? 5 : 3}" data-estep="${i}" style="cursor:pointer"/>`;
       if (ok) g += `<path d="M${q[0] - 6} ${q[1]}l4 4 8-9" fill="none" stroke="${n0.txt}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>`;
     });
     $("eclair-mini").innerHTML = g;
@@ -2718,7 +2735,7 @@ Si la pensée évoque une envie de se faire du mal ou de mourir, réponds avec d
     renderEclairMini(p);
     const box = $("eclair-step");
     if (eclairStep >= ECLAIR.length) {
-      $("eclair-head").style.cssText = "--c:#10294f;--t:#ffffff";
+      $("eclair-head").style.cssText = "--c:#10294f;--t:#fbf7ef";
       $("eclair-heb").textContent = "L'Éclair est descendu jusqu'au concret";
       box.innerHTML = `<h3>Ton chemin, de la Couronne au Royaume</h3>
         <div class="eclair-sum">${ECLAIR.map((e) => { const n0 = SEPH.find((s) => s.k === e.k); const a = (p.eclair[e.k] || "").trim(); return a ? `<div style="--c:${n0.fill}"><b>${n0.heb} · ${n0.mot}</b>${esc(a)}</div>` : ""; }).join("")}</div>
