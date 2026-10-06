@@ -624,7 +624,29 @@ h1:not(.brand), h2, h3, .grim-title, .ge-lab, .trav-kicker, .oracle-res h3 { fon
 .dream-head .pct, .jar-count, .breath-label { font-family: "Philosopher", Georgia, serif !important; }
 .sheet-title h2 { letter-spacing: .02em; }
 /* sous-titres en Meddon */
-.sheet-title p, .sheet .lead, .sheet .title-block > p:not(.hint) { font-family: "Meddon", "Philosopher", cursive !important; font-size: 15px !important; line-height: 1.7 !important; font-style: normal; }
+.sheet-title p { font-family: "Meddon", "Philosopher", cursive !important; font-size: 15px !important; line-height: 1.7 !important; }
+.sheet .lead { font-style: italic; }
+/* système d'actions : invitations écrites à la main, actions pratiques en boutons sobres, choix soulignés */
+.lien-plume.encre { color: #1f3a66; border-bottom-color: rgba(31,58,102,.35); text-shadow: 0 0 8px rgba(251,247,239,.9); font-size: 30px; }
+.lien-plume[hidden] { display: none; }
+.sheet .btn-grim { background: none !important; box-shadow: none !important; color: #1f3a66 !important; border-radius: 0 !important; padding: 4px 0 !important;
+  font: 500 28px/1.2 "WindSong", cursive !important; border-bottom: 1px solid rgba(31,58,102,.35) !important; gap: 10px; }
+.sheet .btn-grim svg { width: 26px; height: 26px; }
+.lien-simple { justify-self: start; border: 0; background: none; padding: 4px 0; color: #1f3a66; font: 700 15px var(--f-body); border-bottom: 1px solid rgba(31,58,102,.35); }
+.sheet .btn { border-radius: 14px; padding: 9px 16px; font-family: var(--f-body); letter-spacing: .01em; }
+.sheet .btn.small { padding: 6px 12px; border-radius: 12px; }
+.sheet .chip { box-shadow: none !important; background: none !important; padding: 4px 4px !important; color: #3a404b !important; font-weight: 600;
+  text-decoration: underline 1px rgba(43,52,64,.18); text-underline-offset: 6px; }
+.sheet .chip[aria-pressed="true"] { color: #1f2a3a !important; font-weight: 700; text-decoration: underline 3px var(--c, #1f4867); text-decoration-skip-ink: none; }
+.sheet .seg { gap: 4px 14px; }
+#jar-next.lien-plume { background: none !important; font-size: 26px; }
+.lien-plume.encre { white-space: nowrap; max-width: 100%; }
+#trav-start.lien-plume { font-size: 27px; }
+.sheet .ideas button { background: none !important; box-shadow: none !important; padding: 4px 2px !important; color: #3a404b; text-decoration: underline 1px rgba(43,52,64,.25); text-underline-offset: 6px; font-weight: 600; }
+.sheet .ideas { gap: 16px; }
+.jarbox { grid-template-columns: 140px minmax(0, 1fr) !important; }
+.jarbox .jar-svg { width: 140px !important; }
+#jar-next.lien-plume { white-space: normal; font-size: 25px; text-align: left; }
 </style>
 
 <div class="scene" id="scene" aria-hidden="true"></div>
@@ -829,7 +851,7 @@ h1:not(.brand), h2, h3, .grim-title, .ge-lab, .trav-kicker, .oracle-res h3 { fon
         <div class="jar-side">
           <div class="jar-count" id="jar-count"></div>
           <p class="jar-memo" id="jar-memo"></p>
-          <button class="btn small" type="button" id="jar-next" hidden>Piocher un souvenir</button>
+          <button class="lien-plume encre" type="button" id="jar-next" hidden>Piocher un souvenir <span aria-hidden="true">→</span></button>
         </div>
       </div>
       <div class="glass">
@@ -1074,7 +1096,7 @@ h1:not(.brand), h2, h3, .grim-title, .ge-lab, .trav-kicker, .oracle-res h3 { fon
         <div class="garden-art" id="garden"></div>
         <div class="row between">
           <div class="count" id="count"></div>
-          <button class="btn orange small" id="random" type="button">Un geste au hasard</button>
+          <button class="lien-plume encre" id="random" type="button">Un geste au hasard <span aria-hidden="true">→</span></button>
         </div>
       </div>
       <div class="title-block">
@@ -1137,7 +1159,7 @@ h1:not(.brand), h2, h3, .grim-title, .ge-lab, .trav-kicker, .oracle-res h3 { fon
       <div class="sheet-title"><span class="heb">Terre · Eau · Feu · Air · Lumière</span><h2 id="h-trav">La Traversée</h2><p id="trav-sub"></p></div>
     </div>
     <div class="sheet-body"><div id="trav-body" style="display:grid;gap:16px"></div>
-      <button class="btn-grim trav-bilan" type="button" data-open="daat">Mon bilan et mes données ›</button></div>
+      <button class="lien-simple" type="button" data-open="daat">Mon bilan et mes données ›</button></div>
   </section>
 
   <section class="sheet" id="s-grimoire" role="dialog" aria-modal="true" aria-labelledby="h-grim" hidden>
@@ -1182,7 +1204,7 @@ h1:not(.brand), h2, h3, .grim-title, .ge-lab, .trav-kicker, .oracle-res h3 { fon
         <button class="btn alt small" type="button" id="grim-next" aria-label="Page suivante">›</button>
       </div>
       <div class="row grim-nav"><button class="linkbtn" type="button" id="grim-rand">Ouvrir à une page au hasard</button><button class="linkbtn" type="button" id="grim-close">Refermer le livre</button></div>
-      <div class="row grim-nav"><button class="btn-grim" type="button" id="grim-print">Imprimer ou faire un PDF</button></div>
+      <div class="row grim-nav"><button class="lien-simple" type="button" id="grim-print">Imprimer ou faire un PDF ›</button></div>
     </div>
   </section>
 
@@ -2912,7 +2934,7 @@ Propose 3 pistes de réponse courtes (une ligne chacune), concrètes et personne
           <label class="sr" for="trav-titre">Ma quête</label>
           <input class="field" id="trav-titre" maxlength="90" placeholder="Ce que je cherche…">
           ${reves.length ? `<p class="hint">Ou pars d'un de tes rêves :</p><div class="seg">${reves.map((p) => `<button type="button" class="chip" data-trav-reve="${p.id}">${esc(p.titre)}</button>`).join("")}</div>` : ""}
-          <div class="row"><button class="btn" type="button" id="trav-start">Commencer ma traversée</button><span class="hint" id="trav-msg"></span></div>
+          <div class="row"><button class="lien-plume encre" type="button" id="trav-start">Commencer ma traversée <span aria-hidden="true">→</span></button><span class="hint" id="trav-msg"></span></div>
         </div>${archives}`;
       return;
     }
