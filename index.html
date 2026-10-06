@@ -23,7 +23,7 @@
 <body>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Changa+One&family=Clarity+City:wght@400..700&family=Philosopher:ital,wght@0,400;0,700;1,400&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Changa+One&family=Dancing+Script:wght@500;700&family=Clarity+City:wght@400..700&family=Philosopher:ital,wght@0,400;0,700;1,400&display=swap">
 <style>
 /* Layout : une colonne façon carnet de papiers découpés (Matisse), cinq onglets en bas.
    Toujours en clair. Palette du plateau « jungle douce » : blanc chaud, rose poudré, sarcelle, moutarde, corail, points noirs */
@@ -316,7 +316,7 @@ body { overflow: hidden; padding: 0 16px; margin: 0; }
 .home-head { position: relative; z-index: 2; }
 .home-head .eyebrow { white-space: nowrap; }
 .home-head > div { background: rgba(244,224,205,.6); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); border-radius: 20px; padding: 6px 12px 8px; margin-left: -6px; }
-.home .greeting { max-width: 34vw !important; font-size: 15px !important; }
+.home .greeting { max-width: 62vw !important; font-size: 22px !important; }
 #tree .node { cursor: pointer; outline: none; }
 #tree .node circle.main { transition: transform .2s; transform-box: fill-box; transform-origin: center; }
 #tree .node:hover circle.main, #tree .node:active circle.main { transform: scale(1.06); }
@@ -429,6 +429,14 @@ body { overflow: hidden; padding: 0 16px; margin: 0; }
 .grim-nav .btn { font-size: 20px; padding: 4px 18px; background: rgba(255,250,243,.7); }
 .grim-count { font: 400 15px var(--f-num); color: var(--ink); min-width: 70px; text-align: center; }
 @media (prefers-reduced-motion: reduce) { .grim-cover { transition: none; } .grim-page.tourne, .grim-page.tourne-g { animation: none; } }
+.manuscrit { font: 700 34px/1.2 "Dancing Script", "Snell Roundhand", cursive; color: #1f3a66; margin: 0; overflow-wrap: anywhere; }
+.manuscrit.petit { font-size: 19px; color: #3b4a66; }
+.intent-ecrite { display: grid; justify-items: center; text-align: center; gap: 6px; padding: 18px 12px 10px; border-radius: 18px;
+  background: linear-gradient(transparent 0 calc(100% - 1px), rgba(31,58,102,.12) 0) 0 14px / 100% 40px, rgba(255,251,240,.7); }
+.manuscrit.ecrit { animation: ecrire 1.6s ease-out both; }
+@keyframes ecrire { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+#greeting.greeting { font: 700 22px/1.15 "Dancing Script", "Snell Roundhand", cursive; color: #1f3a66; margin: 4px 0 0; max-width: 62vw; text-shadow: 0 1px 0 rgba(255,255,255,.6); }
+@media (prefers-reduced-motion: reduce) { .manuscrit.ecrit { animation: none; } }
 .jump { justify-self: start; border: 0; border-radius: 99px; padding: 7px 14px; font-weight: 700; font-size: 14px; background: rgba(255,255,255,.55); color: var(--ink); box-shadow: inset 0 0 0 1.5px #2f7a45; }
 .sheet-body { max-width: 640px; margin: 0 auto; padding: 16px 16px 0; display: grid; gap: 18px; }
 .sheet-body > .title-block h2 { font-size: 24px; }
@@ -548,10 +556,16 @@ body.sheet-open .home { visibility: hidden; }
           <h2>Mon intention du jour</h2>
           <p class="lead">Une phrase courte pour donner la direction. Pas un objectif : une manière d'être.</p>
         </div>
+        <div class="intent-ecrite" id="intention-show" hidden>
+          <p class="manuscrit" id="intention-script"></p>
+          <button class="linkbtn" type="button" id="intention-change">Changer d'intention</button>
+        </div>
+        <div id="intention-form">
         <label class="sr" for="intention-in">Mon intention</label>
         <input class="field" id="intention-in" maxlength="90" placeholder="Aujourd'hui, je choisis de…">
         <div class="seg" id="intention-ideas"></div>
         <div class="row"><button class="btn" id="intention-save" type="button">Poser mon intention</button><span class="hint" id="intention-msg" aria-live="polite"></span></div>
+        </div>
         <div class="history" id="intention-history"></div>
       </div>
       <div class="trav-slot"></div>
@@ -2316,7 +2330,8 @@ Si la pensée évoque une envie de se faire du mal ou de mourir, réponds avec d
     });
     $("tree").innerHTML = g;
     const it = S.intentions[t];
-    $("greeting").textContent = it ? "« " + it + " »" : greetingText;
+    // l'intention du jour s'écrit à la main sous la date, seulement quand elle est posée
+    $("greeting").textContent = it || ""; $("greeting").hidden = !it;
     fitTree();
   }
   /* ================= scène : horizon, soleil levant, mer, feuillages ================= */
@@ -2881,16 +2896,19 @@ Propose 3 pistes de réflexion courtes (une ligne chacune), au tutoiement, en fr
   $("intention-ideas").innerHTML = IDEAS.map((x, i) => `<button type="button" class="chip" style="${paint(COLORS[i % COLORS.length])};padding:6px 12px;font-size:14px" data-idea="${esc(x)}">${esc(x)}</button>`).join("");
   $("intention-ideas").addEventListener("click", (e) => { const b = e.target.closest("[data-idea]"); if (b) { $("intention-in").value = b.dataset.idea; $("intention-in").focus(); } });
   function renderIntention() {
-    $("intention-in").value = S.intentions[dayKey()] || "";
+    const it = S.intentions[dayKey()] || "";
+    $("intention-in").value = it;
+    $("intention-script").textContent = it; $("intention-show").hidden = !it; $("intention-form").hidden = !!it;
     const past = Object.entries(S.intentions).sort((a, b) => b[0].localeCompare(a[0])).filter(([k]) => k !== dayKey()).slice(0, 5);
     $("intention-history").innerHTML = past.map(([k, v]) =>
-      `<div style="--c:var(--ochre)"><i></i><span>${new Date(k + "T12:00:00").toLocaleDateString("fr-CH", { weekday: "short", day: "numeric", month: "short" })} · ${esc(v)}</span></div>`).join("");
+      `<div style="--c:var(--ochre)"><i></i><span>${new Date(k + "T12:00:00").toLocaleDateString("fr-CH", { weekday: "short", day: "numeric", month: "short" })} · <span class="manuscrit petit">${esc(v)}</span></span></div>`).join("");
   }
   $("intention-save").onclick = () => {
     const v = $("intention-in").value.trim();
     if (!v) { $("intention-msg").textContent = "Écris quelques mots, ou choisis une idée."; return; }
-    S.intentions[dayKey()] = v; save(); renderIntention(); $("intention-msg").textContent = "Posée. Elle t'accompagne sur l'arbre.";
+    S.intentions[dayKey()] = v; save(); renderIntention(); $("intention-script").classList.remove("ecrit"); void $("intention-script").offsetWidth; $("intention-script").classList.add("ecrit");
   };
+  $("intention-change").onclick = () => { $("intention-show").hidden = true; $("intention-form").hidden = false; $("intention-msg").textContent = ""; $("intention-in").focus(); };
 
   /* ================= sauvegarde / restauration ================= */
   const standalone = !(window.claude && window.claude.use);
