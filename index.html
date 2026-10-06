@@ -147,7 +147,7 @@ textarea.field { min-height: 110px; resize: vertical; font-family: var(--f-poem)
 .today-list span { font-size: 13px; background: rgba(255,255,255,.55); border-radius: 99px; padding: 4px 10px; }
 .today-list button { border: 0; background: none; color: var(--ink-soft); font-size: 13px; padding: 0 0 0 4px; }
 .jarbox { display: grid; grid-template-columns: 150px 1fr; gap: 12px; align-items: center; }
-.jar-svg { width: 150px; height: auto; display: block; filter: drop-shadow(0 6px 10px rgba(60,40,20,.18)); }
+.jar-svg { width: 170px; height: auto; display: block; filter: drop-shadow(0 6px 10px rgba(60,40,20,.18)); }
 .jar-svg .slip { cursor: pointer; }
 .jar-side { display: grid; gap: 8px; min-width: 0; }
 .jar-count { font-family: var(--f-display); font-weight: 700; font-size: 17px; color: var(--ink); background: rgba(255,250,243,.55); border-radius: 12px; padding: 4px 10px; justify-self: start; }
@@ -461,6 +461,13 @@ body { overflow: hidden; padding: 0 16px; margin: 0; }
 .dm-phrase { font: 400 19px/1.45 var(--f-poem); background: rgba(255,250,240,.7); border-left: 5px solid #2f7f9c; border-radius: 14px; padding: 12px 14px; }
 .dm-recul { font-size: 14px; color: var(--ink-soft); background: rgba(255,255,255,.45); border-radius: 14px; padding: 8px 12px; margin: 0; }
 .dm-recul ul { margin: 4px 0 0; padding-left: 18px; }
+.enveloppe { position: relative; display: block; margin-top: 8px; padding: 34px 10px 10px; border-radius: 6px;
+  background: radial-gradient(circle at 20% 30%, #3fb6c8 0 3px, transparent 3.5px) 0 0 / 18px 18px, radial-gradient(ellipse at 70% 70%, #a9cf3f 0 3px, transparent 3.5px) 0 0 / 18px 18px, radial-gradient(circle at 60% 20%, #7c6bb8 0 1.6px, transparent 2px) 0 0 / 14px 14px, #fbfdfc;
+  box-shadow: 0 6px 14px rgba(20,60,80,.18); animation: pousse .5s cubic-bezier(.3,1.5,.5,1) both; }
+.enveloppe::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 30px; background: #2bb3c0; clip-path: polygon(0 0, 100% 0, 50% 100%); border-radius: 6px 6px 0 0; }
+.env-carte { position: relative; display: grid; gap: 4px; background: #fff; border-radius: 4px; padding: 10px 12px; transform: rotate(-2deg) translateY(-18px); box-shadow: 0 2px 6px rgba(0,0,0,.12); }
+.env-txt { font: 400 22px/1.25 "Over the Rainbow", cursive; color: #1f3a66; overflow-wrap: anywhere; }
+.env-carte small { font-size: 12px; color: var(--ink-soft); }
 .jump { justify-self: start; border: 0; border-radius: 99px; padding: 7px 14px; font-weight: 700; font-size: 14px; background: rgba(255,255,255,.55); color: var(--ink); box-shadow: inset 0 0 0 1.5px #2f7a45; }
 .sheet-body { max-width: 640px; margin: 0 auto; padding: 16px 16px 0; display: grid; gap: 18px; }
 .sheet-body > .title-block h2 { font-size: 24px; }
@@ -2248,25 +2255,40 @@ Si la pensée évoque une envie de se faire du mal ou de mourir, réponds avec d
   }
   function renderJar() {
     const all = allGrat(), n = all.length;
-    // petits papiers pliés qui remplissent le bocal, du fond vers le haut
-    let slips = "";
+    // papiers pliés à motifs, posés sur la frisure turquoise, du fond vers le haut
+    let slips = "", fris = "";
     const shown = all.slice(-45);
     shown.forEach((g, i) => {
       const row = Math.floor(i / 5), col = i % 5;
-      const x = 56 + col * 22 + (row % 2) * 10 + ((i * 37) % 7) - 3, y = 200 - row * 15 - ((i * 13) % 5);
-      const r = ((i * 47) % 50) - 25, c = GCOL[i % GCOL.length];
-      slips += `<g class="slip" data-slip="${all.length - shown.length + i}" transform="translate(${x} ${y}) rotate(${r})"><rect x="-11" y="-7" width="22" height="14" rx="3" fill="${c}" stroke="rgba(255,255,255,.7)" stroke-width="1"/></g>`;
+      const x = 56 + col * 22 + (row % 2) * 10 + ((i * 37) % 7) - 3, y = 168 - row * 14 - ((i * 13) % 5);
+      const r = ((i * 47) % 40) - 20, m = ["m1", "m2", "m3"][i % 3];
+      slips += `<g class="slip" data-slip="${all.length - shown.length + i}" transform="translate(${x} ${y}) rotate(${r})"><path d="M0-12L13 0 0 12-13 0Z" fill="url(#${m})" stroke="rgba(40,80,100,.25)" stroke-width=".8"/><path d="M-13 0H13" stroke="rgba(40,80,100,.28)" stroke-width=".8"/><path d="M0-12L13 0H-13Z" fill="rgba(255,255,255,.25)"/></g>`;
     });
+    for (let k = 0; k < 70; k++) {
+      const x = 30 + ((k * 53) % 142), y = 176 + ((k * 29) % 42), w = 6 + (k % 4) * 2, c = ["#2bb3c0", "#17808c", "#3cc6cf", "#12707b"][k % 4];
+      fris += `<path d="M${x} ${y}q${w / 4} -4 ${w / 2} 0t${w / 2} 0" fill="none" stroke="${c}" stroke-width="2.2" stroke-linecap="round"/>`;
+    }
+    const body = "M60 56C34 66 28 100 30 140C32 188 52 216 100 218C148 216 168 188 170 140C172 100 166 66 140 56Z";
     $("jar-svg").innerHTML = `
-      <defs><clipPath id="jarclip"><path d="M48 62C38 66 34 78 34 92V196C34 210 44 218 58 218H142C156 218 166 210 166 196V92C166 78 162 66 152 62Z"/></clipPath>
-      <linearGradient id="glassg" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset=".25" stop-color="#fff" stop-opacity=".12"/><stop offset=".8" stop-color="#fff" stop-opacity=".08"/><stop offset="1" stop-color="#fff" stop-opacity=".4"/></linearGradient></defs>
-      <path d="M48 62C38 66 34 78 34 92V196C34 210 44 218 58 218H142C156 218 166 210 166 196V92C166 78 162 66 152 62Z" fill="rgba(255,255,255,.18)"/>
-      <g clip-path="url(#jarclip)">${slips}</g>
-      <path d="M48 62C38 66 34 78 34 92V196C34 210 44 218 58 218H142C156 218 166 210 166 196V92C166 78 162 66 152 62Z" fill="url(#glassg)" stroke="rgba(255,255,255,.9)" stroke-width="3"/>
-      <path d="M46 98V184" stroke="#fff" stroke-width="4" stroke-linecap="round" opacity=".7"/>
-      <rect x="52" y="46" width="96" height="18" rx="5" fill="#d9a33a" stroke="#a87a22" stroke-width="2"/>
-      <path d="M62 30H138L148 46H52Z" fill="#e8c25a" stroke="#a87a22" stroke-width="2"/>
-      ${n ? "" : `<text x="100" y="150" text-anchor="middle" font-size="12" fill="#6b6f78" font-family="sans-serif">Encore vide</text>`}`;
+      <defs><clipPath id="jarclip"><path d="${body}"/></clipPath>
+      <pattern id="m1" width="14" height="14" patternUnits="userSpaceOnUse"><rect width="14" height="14" fill="#fbfdfc"/><ellipse cx="4" cy="4" rx="3.4" ry="1.6" transform="rotate(35 4 4)" fill="#3fb6c8"/><ellipse cx="11" cy="10" rx="3" ry="1.4" transform="rotate(-30 11 10)" fill="#a9cf3f"/><circle cx="11" cy="3" r="1.2" fill="#7c6bb8"/></pattern>
+      <pattern id="m2" width="14" height="14" patternUnits="userSpaceOnUse"><rect width="14" height="14" fill="#f4fbfb"/><ellipse cx="7" cy="7" rx="3.6" ry="1.6" transform="rotate(-40 7 7)" fill="#7c6bb8"/><ellipse cx="2" cy="12" rx="2.6" ry="1.2" transform="rotate(20 2 12)" fill="#3fb6c8"/></pattern>
+      <pattern id="m3" width="14" height="14" patternUnits="userSpaceOnUse"><rect width="14" height="14" fill="#fbfdf6"/><ellipse cx="5" cy="9" rx="3.4" ry="1.5" transform="rotate(50 5 9)" fill="#a9cf3f"/><ellipse cx="11" cy="4" rx="2.8" ry="1.3" transform="rotate(-20 11 4)" fill="#2bb3c0"/></pattern>
+      <linearGradient id="glassg" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity=".6"/><stop offset=".22" stop-color="#fff" stop-opacity=".1"/><stop offset=".8" stop-color="#fff" stop-opacity=".06"/><stop offset="1" stop-color="#fff" stop-opacity=".45"/></linearGradient>
+      <linearGradient id="rub" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5fd0dc"/><stop offset="1" stop-color="#1f9fb0"/></linearGradient></defs>
+      <path d="${body}" fill="rgba(255,255,255,.22)"/>
+      <g clip-path="url(#jarclip)"><rect x="20" y="172" width="160" height="50" fill="#168a96"/>${fris}${slips}</g>
+      <path d="${body}" fill="url(#glassg)" stroke="rgba(255,255,255,.95)" stroke-width="3"/>
+      <path d="M42 96C38 120 38 160 46 186" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".75"/>
+      <path d="M156 100C160 120 160 150 156 170" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".5"/>
+      <rect x="62" y="38" width="76" height="20" rx="4" fill="rgba(255,255,255,.35)" stroke="rgba(255,255,255,.95)" stroke-width="2.5"/>
+      <rect x="61" y="45" width="78" height="9" fill="url(#rub)"/>
+      <ellipse cx="100" cy="49.5" rx="16" ry="7" fill="#d9dde0" stroke="#9aa3a8" stroke-width="1.5"/>
+      <text x="100" y="52.5" text-anchor="middle" font-size="8.5" fill="#5b6670" font-family="'Over the Rainbow', cursive">merci</text>
+      <ellipse cx="100" cy="38" rx="44" ry="7" fill="rgba(255,255,255,.55)" stroke="rgba(255,255,255,.95)" stroke-width="2.5"/>
+      <path d="M62 37C64 24 136 24 138 37" fill="rgba(255,255,255,.45)" stroke="rgba(255,255,255,.95)" stroke-width="2.5"/>
+      <path d="M76 30C88 26 104 26 116 28" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" opacity=".8"/>
+      ${n ? "" : `<text x="100" y="140" text-anchor="middle" font-size="12" fill="#6b6f78" font-family="sans-serif">Encore vide</text>`}`;
     $("jar-count").textContent = n ? `${n} bonheur${n > 1 ? "s" : ""} dans le bocal` : "Mon bocal à bonheurs";
     $("jar-next").hidden = !n;
     if (!n) { $("jar-memo").innerHTML = "Ajoute un moment agréable : il tombe dans le bocal."; return; }
@@ -2275,7 +2297,7 @@ Si la pensée évoque une envie de se faire du mal ou de mourir, réponds avec d
   }
   function showPick() {
     const d = new Date(jarPick.k + "T12:00:00").toLocaleDateString("fr-CH", { day: "numeric", month: "long" });
-    $("jar-memo").innerHTML = `« ${esc(jarPick.t)} »<small>${d}</small>`;
+    $("jar-memo").innerHTML = `<span class="enveloppe"><span class="env-carte"><span class="env-txt">${esc(jarPick.t)}</span><small>${d}</small></span></span>`;
   }
   $("jar-next").onclick = () => { const all = allGrat(); jarPick = all[Math.floor(Math.random() * all.length)]; showPick(); };
   $("jar-svg").addEventListener("click", (e) => { const g = e.target.closest("[data-slip]"); if (!g) return; jarPick = allGrat()[+g.dataset.slip]; if (jarPick) showPick(); });
