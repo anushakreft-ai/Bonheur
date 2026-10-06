@@ -424,6 +424,25 @@ body { overflow: hidden; padding: 0 16px; margin: 0; }
 .grim-type { font: 700 16px "Philosopher", Georgia, serif !important; letter-spacing: .03em !important; padding: 3px 14px !important; }
 .grim-text, .grim-main { font: 400 28px/1.35 "Over the Rainbow", cursive !important; color: #33363b !important; text-align: center; }
 .grim-text::first-letter { float: none !important; font: inherit !important; color: inherit !important; margin: 0 !important; text-shadow: none !important; }
+.ge-date { font: 400 12px var(--f-body); letter-spacing: .14em; text-transform: uppercase; color: #8a6430; text-align: center; margin-top: 4px; display: flex; align-items: center; gap: 10px; }
+.ge-date::before, .ge-date::after { content: ""; flex: 1; height: 1px; background: #c9a25a; opacity: .7; }
+.ge { display: grid; gap: 0; }
+.ge-lab { font: italic 400 15px "Philosopher", Georgia, serif; color: #7a5a34; }
+.ge-txt { font: 400 24px/1.3 "Over the Rainbow", cursive; color: #33363b; overflow-wrap: anywhere; }
+#livre-print { display: none; }
+@media print {
+  @page { margin: 18mm 16mm; }
+  body > *:not(#livre-print) { display: none !important; }
+  body { background: #fff !important; }
+  #livre-print { display: block !important; color: #33363b; }
+  #livre-print .lp-titre { text-align: center; margin-bottom: 10mm; }
+  #livre-print h1 { font: 700 30pt "Philosopher", Georgia, serif; color: #1f4867; margin: 0 0 2mm; }
+  #livre-print .lp-titre p { font: italic 11pt "Philosopher", Georgia, serif; color: #7a5a34; margin: 0; }
+  #livre-print .ge-date { margin: 7mm 0 3mm; font-size: 9pt; }
+  #livre-print .ge { break-inside: avoid; margin-bottom: 3mm; }
+  #livre-print .ge-lab { font-size: 11pt; }
+  #livre-print .ge-txt { font-size: 18pt; }
+}
 .grim-empty { text-align: center; font: 400 18px/1.5 "Philosopher", Georgia, serif; color: #7a5a34; margin-top: 30%; }
 .grim-cover { position: absolute; inset: 0; border: 0; border-radius: 4px 12px 12px 4px; transform-origin: left center; transition: transform 1.1s cubic-bezier(.6,.05,.3,1), opacity .4s 0.8s; backface-visibility: hidden; z-index: 2; overflow: hidden;
   background: radial-gradient(60% 45% at 52% 48%, rgba(150,200,225,.55), transparent 70%), radial-gradient(30% 25% at 30% 30%, rgba(30,70,100,.35), transparent), radial-gradient(35% 30% at 70% 72%, rgba(20,60,90,.35), transparent),
@@ -1121,6 +1140,7 @@ body.sheet-open .home { visibility: hidden; }
         <button class="btn alt small" type="button" id="grim-next" aria-label="Page suivante">›</button>
       </div>
       <div class="row grim-nav"><button class="linkbtn" type="button" id="grim-rand">Ouvrir à une page au hasard</button><button class="linkbtn" type="button" id="grim-close">Refermer le livre</button></div>
+      <div class="row grim-nav"><button class="btn-grim" type="button" id="grim-print">Imprimer ou faire un PDF</button></div>
     </div>
   </section>
 
@@ -1128,6 +1148,8 @@ body.sheet-open .home { visibility: hidden; }
   <p><b>Sauvegarde du jour</b><br>Un toucher, puis « Enregistrer dans Fichiers » → iCloud Drive.</p>
   <div class="row"><button class="btn small" type="button" id="save-now">Sauvegarder</button><button class="linkbtn" type="button" id="save-later">Demain</button></div>
 </div>
+
+<div id="livre-print" aria-hidden="true"></div>
 
 <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Photo" hidden>
   <img id="lb-img" alt="">
@@ -2518,7 +2540,7 @@ Si la pensée évoque une envie de se faire du mal ou de mourir, réponds avec d
     document.querySelectorAll(".sheet").forEach((x) => { x.hidden = x !== el; });
     el.hidden = false; el.scrollTop = 0; current = k;
     renderHist(k); if (k === "binah") renderDemele();
-    if (k === "trav") renderTravSheet(); else if (k === "grimoire") { $("grim-book").classList.remove("ouvert"); grimIdx = 0; renderGrimoire(); } else renderTravSlot(k);
+    if (k === "trav") renderTravSheet(); else if (k === "grimoire") { $("grim-book").classList.remove("ouvert"); grimIdx = 0; grimPages = []; renderGrimoire(); if (document.fonts) document.fonts.ready.then(() => { if (current === "grimoire") { grimPages = []; renderGrimoire(); } }); } else renderTravSlot(k);
     document.body.classList.add("sheet-open");
     try { history.replaceState(null, "", "#" + k); } catch (e) {}
   }
@@ -2945,32 +2967,58 @@ Propose 3 pistes de réflexion courtes (une ligne chacune), au tutoiement, en fr
     return L.sort((a, b) => String(b.date).localeCompare(String(a.date)));
   }
   const grimNotes = () => livre().filter((n) => grimFiltre === "tout" || n.el === grimFiltre);
+  // les écrits s'enchaînent sur la page, chacun finit par « … » ; les pages se forment selon la place
+  const suspension = (t) => String(t || "").trim().replace(/[\s.!…,;:]+$/, "") + "…";
+  const jourLong = (d) => new Date(d).toLocaleDateString("fr-CH", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+  function ecritsHtml(items) {
+    let last = "", h = "";
+    items.forEach((n) => {
+      const j = dayKey(new Date(n.date));
+      if (j !== last) { h += `<div class="ge-date">${jourLong(n.date)}</div>`; last = j; }
+      h += `<div class="ge"><span class="ge-lab">${esc(n.label)}</span><span class="ge-txt">${esc(suspension(n.texte))}</span></div>`;
+    });
+    return h;
+  }
+  let grimPages = [];
+  function paginer(list) {
+    const probe = document.createElement("div"); probe.className = "grim-page"; probe.style.cssText = "visibility:hidden;overflow:hidden;z-index:-1";
+    $("grim-book").appendChild(probe);
+    const H = probe.clientHeight, pages = []; let cur = [];
+    list.forEach((n) => { probe.innerHTML = ecritsHtml([...cur, n]); if (probe.scrollHeight > H + 1 && cur.length) { pages.push(cur); cur = [n]; } else cur.push(n); });
+    if (cur.length) pages.push(cur);
+    probe.remove(); return pages;
+  }
   function renderGrimoire(dir) {
     $("grim-filter").innerHTML = [["tout", "Toutes les pages", "#1f4867"], ...Object.entries(ELN).map(([k, l]) => [k, l, ELC[k]])]
       .map(([k, l, c]) => `<button type="button" class="chip" style="${paint(c)};padding:5px 11px;font-size:13px" data-gf="${k}" aria-pressed="${k === grimFiltre}">${l}</button>`).join("");
     const list = grimNotes(), pg = $("grim-page");
-    grimIdx = Math.max(0, Math.min(grimIdx, list.length - 1));
+    if (!dir || !grimPages.length) grimPages = paginer(list);
+    grimIdx = Math.max(0, Math.min(grimIdx, grimPages.length - 1));
     if (!list.length) {
       pg.innerHTML = `<p class="grim-empty">Ton livre attend ses premiers mots.<br><br>Tout ce que tu écris dans les sphères et dans ta Traversée devient une page.</p>`;
       $("grim-count").textContent = ""; $("grim-prev").disabled = $("grim-next").disabled = true; return;
     }
-    const n = list[grimIdx], t = { label: n.label, c: ELC[n.el] };
-    const d = new Date(n.date);
-    pg.innerHTML = `<div class="grim-date">${d.toLocaleDateString("fr-CH", { weekday: "long", day: "numeric", month: "long", year: "numeric" })}</div>
-      <span class="grim-type" style="--c:${t.c}">${t.label}</span><div class="grim-sep"></div>
-      <p class="grim-text${n.main ? " grim-main" : ""}">${esc(n.texte || "")}</p><div class="grim-el" style="--c:${t.c}">${ELN[n.el]}</div>`;
+    pg.innerHTML = ecritsHtml(grimPages[grimIdx]);
     pg.scrollTop = 0;
     if (dir) { pg.classList.remove("tourne", "tourne-g"); void pg.offsetWidth; pg.classList.add(dir > 0 ? "tourne" : "tourne-g"); }
-    $("grim-count").textContent = `${grimIdx + 1} / ${list.length}`;
-    $("grim-prev").disabled = grimIdx === 0; $("grim-next").disabled = grimIdx >= list.length - 1;
+    $("grim-count").textContent = `${grimIdx + 1} / ${grimPages.length}`;
+    $("grim-prev").disabled = grimIdx === 0; $("grim-next").disabled = grimIdx >= grimPages.length - 1;
   }
-  const grimGo = (d) => { const L = grimNotes().length; const i = grimIdx + d; if (i < 0 || i >= L) return; grimIdx = i; renderGrimoire(d); };
+  const grimGo = (d) => { const i = grimIdx + d; if (i < 0 || i >= grimPages.length) return; grimIdx = i; renderGrimoire(d); };
+  // imprimer ou enregistrer en PDF : tout le livre (filtre en cours), du plus ancien au plus récent
+  $("grim-print").onclick = () => {
+    const list = grimNotes().slice().reverse();
+    if (!list.length) return;
+    const titre = grimFiltre === "tout" ? "" : " · " + ELN[grimFiltre];
+    $("livre-print").innerHTML = `<div class="lp-titre"><h1>Le livre de Zora</h1><p>${titre ? ELN[grimFiltre] + " · " : ""}du ${jourLong(list[0].date)} au ${jourLong(list[list.length - 1].date)}</p></div>${ecritsHtml(list)}`;
+    setTimeout(() => window.print(), 300);
+  };
   $("grim-cover").onclick = () => { $("grim-book").classList.add("ouvert"); };
   $("grim-close").onclick = () => { $("grim-book").classList.remove("ouvert"); };
   $("grim-prev").onclick = () => grimGo(-1);
   $("grim-next").onclick = () => grimGo(1);
-  $("grim-rand").onclick = () => { const L = grimNotes().length; if (!L) return; $("grim-book").classList.add("ouvert"); grimIdx = Math.floor(Math.random() * L); renderGrimoire(1); };
-  $("grim-filter").addEventListener("click", (e) => { const b = e.target.closest("[data-gf]"); if (b) { grimFiltre = b.dataset.gf; grimIdx = 0; renderGrimoire(1); } });
+  $("grim-rand").onclick = () => { if (!grimPages.length) return; $("grim-book").classList.add("ouvert"); grimIdx = Math.floor(Math.random() * grimPages.length); renderGrimoire(1); };
+  $("grim-filter").addEventListener("click", (e) => { const b = e.target.closest("[data-gf]"); if (b) { grimFiltre = b.dataset.gf; grimIdx = 0; grimPages = []; renderGrimoire(1); } });
   { let x0 = null; const st = $("grim-stage");
     st.addEventListener("touchstart", (e) => { x0 = e.touches[0].clientX; }, { passive: true });
     st.addEventListener("touchend", (e) => { if (x0 === null) return; const dx = e.changedTouches[0].clientX - x0; x0 = null; if (Math.abs(dx) > 50 && $("grim-book").classList.contains("ouvert")) grimGo(dx < 0 ? 1 : -1); }); }
