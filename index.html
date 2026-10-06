@@ -331,6 +331,9 @@ body { overflow: hidden; padding: 0 16px; margin: 0; }
 @keyframes luit { 50% { opacity: .72; } }
 @keyframes trace { to { stroke-dashoffset: 0; } }
 @media (prefers-reduced-motion: reduce) { #tree .chemin, #tree .chemin.neuf, #tree .halo-tout { animation: none; stroke-dashoffset: 0; } }
+#tree .lueur { animation: luit 3.6s ease-in-out infinite; }
+#tree .scintille { animation: scint 2.8s ease-in-out infinite; transform-box: fill-box; }
+@keyframes scint { 0%, 100% { opacity: 1; } 50% { opacity: .55; } }
 #tree .spark { animation: luit 2.4s ease-in-out infinite; }
 .trav-card { border-left: 6px solid #c9a252; }
 .trav-kicker { font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #8a6a24; }
@@ -2263,7 +2266,7 @@ Si la pensée évoque une envie de se faire du mal ou de mourir, réponds avec d
   function renderTree() {
     const t = dayKey();
     let g = `<defs><linearGradient id="fade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f2d9c2"/><stop offset="1" stop-color="#f2d9c2" stop-opacity="0"/></linearGradient>
-      <radialGradient id="halo"><stop offset="0" stop-color="#fff4c2" stop-opacity=".8"/><stop offset=".6" stop-color="#ffd76a" stop-opacity=".35"/><stop offset="1" stop-color="#ffd76a" stop-opacity="0"/></radialGradient></defs>
+      <filter id="flou" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="9"/></filter><filter id="flou2" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="5"/></filter><radialGradient id="halo"><stop offset="0" stop-color="#fff4c2" stop-opacity=".8"/><stop offset=".6" stop-color="#ffd76a" stop-opacity=".35"/><stop offset="1" stop-color="#ffd76a" stop-opacity="0"/></radialGradient></defs>
       <mask id="mbot" maskUnits="userSpaceOnUse" x="0" y="0" width="1414" height="2000"><rect width="1414" height="2000" fill="url(#gbot)"/></mask><linearGradient id="gbot" x1="0" y1="0" x2="0" y2="2000" gradientUnits="userSpaceOnUse"><stop offset=".86" stop-color="#fff"/><stop offset=".97" stop-color="#fff" stop-opacity="0"/></linearGradient>
       <image href="${BG}" x="0" y="0" width="1414" height="2000" preserveAspectRatio="none" mask="url(#mbot)"/>`;
     // chemins du jour : le sentier s'allume quand ses deux sphères sont faites aujourd'hui
@@ -2307,7 +2310,8 @@ Si la pensée évoque une envie de se faire du mal ou de mourir, réponds avec d
         ${sub ? `<text x="${x}" y="${y + (ic ? 66 : 46)}" text-anchor="middle" class="t-sub${light ? "" : " t-halo"}" fill="${n.txt}">${esc(sub)}</text>` : ""}
         <text x="${x}" y="${y + r + 44}" text-anchor="middle" class="t-heb">${n.heb}</text>
         ${travSpark(n.k) ? `<g class="spark" transform="translate(${x - r * .74} ${y - r * .74})" pointer-events="none"><circle r="30" fill="#10294f" stroke="#f5d77a" stroke-width="4"/><path d="M0-19l5 14 14 5-14 5-5 14-5-14-14-5 14-5z" fill="#f5d77a"/></g>` : ""}
-        ${done ? `<g transform="translate(${x + r * .74} ${y - r * .74})"><circle r="30" fill="#2b3440" stroke="#fbf1e2" stroke-width="5"/><path d="M-13 0l9 9 17-18" fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></g>` : ""}
+        ${done ? `<g class="lueur" pointer-events="none"><circle cx="${x}" cy="${y}" r="${r + 14}" fill="none" stroke="#ffd85c" stroke-width="40" stroke-opacity="1" filter="url(#flou)"/><circle cx="${x}" cy="${y}" r="${r + 8}" fill="none" stroke="#fff1a8" stroke-width="14" filter="url(#flou2)"/><circle cx="${x}" cy="${y}" r="${r + 4}" fill="none" stroke="#fffbea" stroke-width="6"/></g>
+          <g class="scintille" transform="translate(${x + r * .78} ${y - r * .78}) scale(1.7)" pointer-events="none"><path d="M0-30C3-8 8-3 30 0 8 3 3 8 0 30-3 8-8 3-30 0-8-3-3-8 0-30z" fill="#fff4c2" filter="url(#flou2)"/><path d="M0-24C2.5-6 6-2.5 24 0 6 2.5 2.5 6 0 24-2.5 6-6 2.5-24 0-6-2.5-2.5-6 0-24z" fill="#fffbe9" stroke="#e3b23c" stroke-width="2.5"/></g>` : ""}
       </g>`;
     });
     $("tree").innerHTML = g;
