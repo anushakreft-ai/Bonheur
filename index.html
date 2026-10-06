@@ -446,6 +446,9 @@ body { overflow: hidden; padding: 0 16px; margin: 0; }
 @keyframes ecrire { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
 #greeting.greeting { font: 400 22px/1.15 "Over the Rainbow", "Snell Roundhand", cursive; color: #1f3a66; margin: 4px 0 0; max-width: 62vw; text-shadow: 0 1px 0 rgba(255,255,255,.6); }
 @media (prefers-reduced-motion: reduce) { .manuscrit.ecrit { animation: none; } }
+.hist-pli summary { cursor: pointer; font-size: 14px; color: var(--ink-soft); list-style: none; }
+.hist-pli summary::before { content: "▸ "; } .hist-pli[open] summary::before { content: "▾ "; }
+.hist-pli .history { margin-top: 8px; }
 .jump { justify-self: start; border: 0; border-radius: 99px; padding: 7px 14px; font-weight: 700; font-size: 14px; background: rgba(255,255,255,.55); color: var(--ink); box-shadow: inset 0 0 0 1.5px #2f7a45; }
 .sheet-body { max-width: 640px; margin: 0 auto; padding: 16px 16px 0; display: grid; gap: 18px; }
 .sheet-body > .title-block h2 { font-size: 24px; }
@@ -494,7 +497,9 @@ details.tight summary { font-weight: 700; color: var(--cobalt); }
 .decision { background: var(--ochre); color: var(--ink); border-radius: 26px 26px 26px 6px; padding: 16px 18px; display: grid; gap: 10px; }
 .decision p { margin: 0; font-family: var(--f-poem); font-size: 17px; line-height: 1.35; }
 .decision .btn { background: var(--ink); justify-self: start; }
-.decision.on .btn { background: var(--card); color: var(--ink); }
+.decision.on { background: none; padding: 0; justify-items: start; }
+.decision.on p { display: none; }
+.decision.on .btn { background: rgba(255,248,230,.75); color: #8a6a24; font-size: 14px; padding: 7px 14px; box-shadow: inset 0 0 0 1.5px #d9b45a; }
 .cond { display: grid; gap: 6px; }
 .cond button { border: 0; background: var(--paper); border-radius: 16px; padding: 10px 12px; display: grid; grid-template-columns: 34px 1fr; gap: 10px; align-items: center; text-align: left; }
 .cond button b { font-family: var(--f-num); font-weight: 400; font-size: 18px; width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; background: var(--c); color: var(--t); }
@@ -572,12 +577,12 @@ body.sheet-open .home { visibility: hidden; }
         <div id="intention-form">
         <label class="sr" for="intention-in">Mon intention</label>
         <input class="field" id="intention-in" maxlength="90" placeholder="Aujourd'hui, je choisis de…">
-        <div class="seg" id="intention-ideas"></div>
+        <button class="linkbtn" type="button" id="intention-ideas-toggle" style="justify-self:start">Besoin d'une idée ?</button>
+        <div class="seg" id="intention-ideas" hidden></div>
         <div class="row"><button class="btn" id="intention-save" type="button">Poser mon intention</button><span class="hint" id="intention-msg" aria-live="polite"></span></div>
         </div>
-        <div class="history" id="intention-history"></div>
+        <details class="hist-pli"><summary>Mes intentions passées</summary><div class="history" id="intention-history"></div></details>
       </div>
-      <div class="trav-slot"></div>
     </div>
   </section>
 
@@ -1015,7 +1020,8 @@ body.sheet-open .home { visibility: hidden; }
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Arbre</button>
       <div class="sheet-title"><span class="heb">Terre · Eau · Feu · Air · Lumière</span><h2 id="h-trav">La Traversée</h2><p id="trav-sub"></p></div>
     </div>
-    <div class="sheet-body" id="trav-body"></div>
+    <div class="sheet-body"><div id="trav-body" style="display:grid;gap:16px"></div>
+      <button class="btn-grim trav-bilan" type="button" data-open="daat">Mon bilan et mes données ›</button></div>
   </section>
 
   <section class="sheet" id="s-grimoire" role="dialog" aria-modal="true" aria-labelledby="h-grim" hidden>
@@ -1219,13 +1225,14 @@ body.sheet-open .home { visibility: hidden; }
   function travToday(k) {
     const t = S.traversee; if (!t) return false; const d = dayKey();
     if (Object.values(t.rep).some((r) => r.date === d && r.sph === k)) return true;
-    return k === "keter" && (Object.values(t.tresors).some((r) => r.date === d) || (t.decision && t.decision.date === d));
+    // Daat, la porte de la Traversée, s'allume dès que la traversée avance aujourd'hui
+    return k === "daat" && (Object.values(t.rep).some((r) => r.date === d) || Object.values(t.tresors).some((r) => r.date === d) || (t.decision && t.decision.date === d));
   }
   // étincelle sur l'arbre : là où la traversée attend une réponse
   function travSpark(k) {
     const t = S.traversee; if (!t || t.fin) return false;
-    if (t.monde > 3) return k === "keter";
-    if (!travPending(t.monde).length) return k === "keter";
+    if (t.monde > 3) return k === "daat";
+    if (!travPending(t.monde).length) return k === "daat";
     return travPending(t.monde, k).length > 0;
   }
   const LS = "petits-gestes-v1";
@@ -2245,7 +2252,7 @@ Si la pensée évoque une envie de se faire du mal ou de mourir, réponds avec d
     { k: "keter", heb: "Keter", mot: "Intention", x: 150, y: 44, fill: "#fbf7ee", txt: "#2b3440" },
     { k: "chokhmah", heb: "Hokhmah", mot: "Intuitions", x: 248, y: 108, fill: "#8e8a85", txt: "#ffffff" },
     { k: "binah", heb: "Binah", mot: "Comprendre", x: 52, y: 108, fill: "#1f2f52", txt: "#ffffff" },
-    { k: "daat", heb: "Daat", mot: "Bilan", x: 150, y: 170, fill: "rgba(255,248,235,.75)", txt: "#2b3440", dash: true },
+    { k: "daat", heb: "Daat", mot: "Traversée", x: 150, y: 170, fill: "rgba(255,248,235,.75)", txt: "#2b3440", dash: true },
     { k: "chesed", heb: "Hessed", mot: "Gratitude", x: 248, y: 236, fill: "#3f86c0", txt: "#ffffff" },
     { k: "gevurah", heb: "Guevourah", mot: "Limites", x: 52, y: 236, fill: "#c4412a", txt: "#ffffff" },
     { k: "tiferet", heb: "Tiferet", mot: "Cœur", x: 150, y: 300, fill: "#e6bf35", txt: "#2b3440" },
@@ -2345,11 +2352,11 @@ Si la pensée évoque une envie de se faire du mal ou de mourir, réponds avec d
       if (n.k === "tiferet" && S.humeur[t]) sub = MOODS[S.humeur[t] - 1].label;
       const light = n.txt !== "#ffffff", ic = ICONS[n.k];
       const fs = n.mot.length > 9 ? 38 : 46;
-      g += `<g class="node" data-open="${n.k}" tabindex="0" role="button" aria-label="${n.heb}, ${n.mot}${done ? ", fait aujourd'hui" : ""}">
+      g += `<g class="node" data-open="${n.k === "daat" ? "trav" : n.k}" tabindex="0" role="button" aria-label="${n.heb}, ${n.mot}${done ? ", fait aujourd'hui" : ""}">
         ${n.dash ? `<circle cx="${x}" cy="${y}" r="${r}" fill="rgba(255,246,230,.82)" stroke="#d9a33a" stroke-width="9" stroke-dasharray="20 14"/>` : ""}
         <circle class="main" cx="${x}" cy="${y}" r="${r}" fill="rgba(255,255,255,0)"/>
         ${ic ? (() => { const z = n.k === "netzach" ? 100 : n.k === "yesod" || n.k === "gevurah" ? 84 : n.k === "daat" ? 46 : 68; const iy = n.k === "daat" ? y - 54 : y - (sub ? 86 : 78) - (z - 68) / 2; return `<svg x="${x - z / 2}" y="${iy}" width="${z}" height="${z}" viewBox="0 0 100 100" style="color:${n.k === "keter" ? "#c9952c" : n.txt}" aria-hidden="true">${ic.replaceAll("eaglem", "eaglem-tree")}</svg>`; })() : ""}
-        <text x="${x}" y="${y + (n.k === "daat" ? 26 : ic ? 30 : sub ? 4 : 15)}" text-anchor="middle" class="t-mot${light ? "" : " t-halo"}" fill="${n.txt}" style="font-size:${n.k === "daat" ? 30 : fs}px">${n.mot}</text>
+        <text x="${x}" y="${y + (n.k === "daat" ? 26 : ic ? 30 : sub ? 4 : 15)}" text-anchor="middle" class="t-mot${light ? "" : " t-halo"}" fill="${n.txt}" style="font-size:${n.k === "daat" ? 28 : fs}px">${n.mot}</text>
         ${sub ? `<text x="${x}" y="${y + (ic ? 66 : 46)}" text-anchor="middle" class="t-sub${light ? "" : " t-halo"}" fill="${n.txt}">${esc(sub)}</text>` : ""}
         <text x="${x}" y="${y + r + 44}" text-anchor="middle" class="t-heb">${n.heb}</text>
         ${travSpark(n.k) ? `<g class="spark" transform="translate(${x - r * .74} ${y - r * .74})" pointer-events="none"><circle r="30" fill="#10294f" stroke="#f5d77a" stroke-width="4"/><path d="M0-19l5 14 14 5-14 5-5 14-5-14-14-5 14-5z" fill="#f5d77a"/></g>` : ""}
@@ -2532,7 +2539,7 @@ Si la pensée évoque une envie de se faire du mal ou de mourir, réponds avec d
   function renderDecision() {
     const on = !!S.decision[dayKey()];
     $("decision-go").closest(".decision").classList.toggle("on", on);
-    $("decision-go").textContent = on ? "C'est décidé pour aujourd'hui ✓" : "Aujourd'hui, je choisis d'être heureuse";
+    $("decision-go").textContent = on ? "✓ Aujourd'hui, j'ai choisi d'être heureuse" : "Aujourd'hui, je choisis d'être heureuse";
   }
   $("decision-go").onclick = () => { const t = dayKey(); if (S.decision[t]) delete S.decision[t]; else S.decision[t] = 1; save(); renderDecision(); };
   const COND = [
@@ -2937,6 +2944,7 @@ Propose 3 pistes de réflexion courtes (une ligne chacune), au tutoiement, en fr
     if (!v) { $("intention-msg").textContent = "Écris quelques mots, ou choisis une idée."; return; }
     S.intentions[dayKey()] = v; save(); renderIntention(); $("intention-script").classList.remove("ecrit"); void $("intention-script").offsetWidth; $("intention-script").classList.add("ecrit");
   };
+  $("intention-ideas-toggle").onclick = () => { const h = $("intention-ideas"); h.hidden = !h.hidden; $("intention-ideas-toggle").textContent = h.hidden ? "Besoin d'une idée ?" : "Masquer les idées"; };
   $("intention-change").onclick = () => { $("intention-show").hidden = true; $("intention-form").hidden = false; $("intention-msg").textContent = ""; $("intention-in").focus(); };
 
   /* ================= sauvegarde / restauration ================= */
