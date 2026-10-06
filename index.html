@@ -2983,8 +2983,8 @@ Propose 3 pistes de réflexion courtes (une ligne chacune), au tutoiement, en fr
   const jourLong = (d) => new Date(d).toLocaleDateString("fr-CH", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
   // les écrits d'un même jour et d'une même sorte s'enchaînent dans un seul paragraphe, l'étiquette n'apparaît qu'une fois
   // « Un café chaud, la lumière sur le lac, une sieste… » : virgule entre les phrases, points de suspension à la fin
-  const net = (t) => String(t || "").trim().replace(/[\s.!…,;:]+$/, "");
-  const enchainer = (arr) => arr.map(net).filter(Boolean).map((x, i) => i && /^[A-ZÀ-Ý][a-zà-ÿ]/.test(x) ? x.charAt(0).toLowerCase() + x.slice(1) : x).join(", ") + "…";
+  const net = (t) => String(t || "").trim().replace(/[\s.…,;:]+$/, "");
+  const enchainer = (arr) => arr.map(net).filter(Boolean).map((x) => x.charAt(0).toUpperCase() + x.slice(1) + (/[?!]$/.test(x) ? "" : ".")).join(" ");
   function ecritsHtml(items) {
     let lastJ = "", h = "", run = null;
     const flush = () => { if (run) h += `<div class="ge"><span class="ge-lab">${esc(run.label)}</span><p class="ge-txt">${esc(enchainer(run.t))}</p></div>`; run = null; };
