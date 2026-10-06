@@ -3154,7 +3154,13 @@ Propose 3 pistes de réflexion courtes (une ligne chacune), au tutoiement, en fr
 
 <script>
   if ("serviceWorker" in navigator) {
-    window.addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));
+    // mises à jour : vérifier à chaque retour dans l'app, et recharger dès qu'une nouvelle version est prête
+    const avait = !!navigator.serviceWorker.controller;
+    let recharge = false;
+    navigator.serviceWorker.addEventListener("controllerchange", () => { if (avait && !recharge) { recharge = true; location.reload(); } });
+    window.addEventListener("load", () => navigator.serviceWorker.register("sw.js", { updateViaCache: "none" }).then((reg) => {
+      document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") reg.update().catch(() => {}); });
+    }).catch(() => {}));
   }
   if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {});
 </script>

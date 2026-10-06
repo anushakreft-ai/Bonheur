@@ -14,7 +14,7 @@ self.addEventListener("fetch", (e) => {
   const url = new URL(req.url);
   // Page : réseau d'abord (pour recevoir les mises à jour), cache si hors ligne
   if (req.mode === "navigate") {
-    e.respondWith(fetch(req).then((r) => { const copie = r.clone(); caches.open(CACHE).then((c) => c.put("index.html", copie)); return r; })
+    e.respondWith(fetch(req, { cache: "no-store" }).then((r) => { const copie = r.clone(); caches.open(CACHE).then((c) => c.put("index.html", copie)); return r; })
       .catch(() => caches.match("index.html")));
     return;
   }
