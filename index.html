@@ -751,6 +751,14 @@ body.sheet-open .home-liens, body.sheet-open .home-hebdo { display: none; }
 .mstep .suggest-geste b { font-size: 19px; }
 #moment-fin .manuscrit { font-size: 30px; color: #b8862a; text-align: center; margin: 14px 0; }
 #moment-hebdo .hebdo { font: 400 24px/1.3 "WindSong", cursive; color: #1f3a66; margin: 0 0 8px; }
+
+/* mon pourquoi */
+.pourquoi .pq-txt { font-size: 32px; line-height: 1.25; color: #b8862a; text-shadow: 0 0 14px rgba(240,200,110,.45); margin: 4px 0 6px; }
+.pq-aide { margin: 6px 0; padding-left: 18px; font-size: 15px; line-height: 1.5; }
+.pq-rappel { font: 400 22px/1.3 "WindSong", cursive; color: #1f3a66; margin: 0 0 6px; text-align: center; }
+.pq-rappel:empty, .pq-rappel[hidden] { display: none; }
+body[data-moment="nuit"] .pq-rappel { color: #f6e2a8; }
+.pq-reve { font-style: italic; }
 </style>
 
 <div class="scene" id="scene" aria-hidden="true"></div>
@@ -782,6 +790,21 @@ body.sheet-open .home-liens, body.sheet-open .home-hebdo { display: none; }
       <div class="decision" hidden>
         <p>Le bonheur commence par une décision : <b>ici et maintenant</b>, par des choses qui font du bien tout de suite.</p>
         <button class="btn" id="decision-go" type="button">Aujourd'hui, je choisis d'être heureuse</button>
+      </div>
+      <div class="panel pourquoi" id="pourquoi">
+        <div class="title-block">
+          <h2>Mon pourquoi</h2>
+          <p class="lead">Une phrase qui tient des semaines. Pour qui, pour quoi je prends soin de moi.</p>
+        </div>
+        <div id="pq-show" hidden></div>
+        <div id="pq-form">
+          <label class="sr" for="pq-in">Mon pourquoi</label>
+          <input class="field" id="pq-in" maxlength="160" placeholder="Je prends soin de moi parce que…">
+          <details class="hist-pli"><summary>Je ne sais pas encore</summary>
+            <ul class="pq-aide"><li>Pour qui ai-je envie d'être en forme ?</li><li>Qu'est-ce que je veux pouvoir donner, ou vivre, grâce à cela ?</li><li>À quoi ressemble ma vie dans un an si je prends soin de moi ?</li></ul>
+            <p class="hint">Un pourquoi qui vient de toi (« parce que ça compte pour moi ») porte bien plus loin qu'un pourquoi imposé (« parce qu'il faut »).</p></details>
+          <div class="row"><button class="btn" id="pq-save" type="button">Garder mon pourquoi</button></div>
+        </div>
       </div>
       <div class="panel rituel" id="rituel">
         <div class="title-block">
@@ -1083,6 +1106,7 @@ body.sheet-open .home-liens, body.sheet-open .home-hebdo { display: none; }
       <div class="trav-slot"></div>
       <div class="panel qjour" data-qj="netzach"></div>
       <button class="jump" type="button" id="go-music" hidden>♪ La musique qui m'élève</button>
+      <p class="pq-rappel" data-pq></p>
       <div id="nextstep-host"></div>
       <div class="vision board" id="vision" hidden></div>
       <div class="row" id="dream-draw-row" hidden><button class="btn alt small" type="button" data-draw="dream">✨ Une image au hasard</button></div>
@@ -1267,6 +1291,7 @@ body.sheet-open .home-liens, body.sheet-open .home-hebdo { display: none; }
       <div class="sheet-title"><span class="heb">Deux minutes</span><h2 id="h-moment">Mon moment Zora</h2><p id="moment-sub">Le même petit rituel, chaque jour.</p></div>
     </div>
     <div class="sheet-body">
+      <p class="pq-rappel" data-pq></p>
       <div id="moment-hebdo"></div>
       <div class="panel mstep" id="m-meteo"></div>
       <div class="panel mstep" id="m-geste"></div>
@@ -1455,7 +1480,7 @@ body.sheet-open .home-liens, body.sheet-open .home-hebdo { display: none; }
   ];
   const fresh = () => ({
     v: 6, gestes: DEFAULT_GESTES.slice(), faits: {}, notes: [], voix: [], checkins: [],
-    rappel: { on: false, min: 45 }, humeur: {}, gratitudes: {}, projets: [], refuges: [], pas: {}, souffle: "infinie", intentions: {}, ancre: {}, triReves: "commencer", eclairActif: null, qualites: [], questions: {}, qDecal: {}, rituels: {}, sommeil: {}, momentVu: "", momentQuand: "", traversee: null, traversees: [], decision: {}, condition: {}, inspirations: [], gratPhotos: []
+    rappel: { on: false, min: 45 }, humeur: {}, gratitudes: {}, projets: [], refuges: [], pas: {}, souffle: "infinie", intentions: {}, ancre: {}, triReves: "commencer", eclairActif: null, qualites: [], questions: {}, qDecal: {}, rituels: {}, sommeil: {}, momentVu: "", momentQuand: "", pourquoi: null, traversee: null, traversees: [], decision: {}, condition: {}, inspirations: [], gratPhotos: []
   });
   const migrate = (o) => {
     const s = Object.assign(fresh(), o || {});
@@ -1984,7 +2009,8 @@ body.sheet-open .home-liens, body.sheet-open .home-hebdo { display: none; }
       const sg = suggestions[p.id];
       return `<article data-p="${p.id}">${row}
         <div class="dream-detail">
-          ${p.pourquoi ? `<p class="lead" style="margin:0">${esc(p.pourquoi)}</p>` : ""}
+          <label class="sr" for="dp-${p.id}">Pourquoi ce rêve compte pour moi</label>
+          <input class="field pq-reve" id="dp-${p.id}" maxlength="160" data-dp="${p.id}" value="${esc(p.pourquoi || "")}" placeholder="Pourquoi ce rêve compte pour moi…">
           <div class="photo-strip">
             ${ph.map((id) => `<button type="button" data-view-photo="${id}" aria-label="Voir la photo"><img data-photo="${id}" alt=""></button>`).join("")}
             <button type="button" class="add" data-add-photo="${p.id}">+ Photo<br>ou capture</button>
@@ -3353,6 +3379,8 @@ Propose 3 pistes de réflexion courtes (une ligne chacune), au tutoiement, en fr
     S.notes.forEach((n) => L.push({ date: n.date, el: n.type === "envie" ? "feu" : "eau", label: n.src === "demele" ? "Démêler" : n.src === "douceur" ? "Douceur pour moi" : n.type === "reve" ? "Rêve de nuit" : n.type === "envie" ? "Envie" : "Pensée", texte: n.texte }));
     Object.entries(S.gratitudes || {}).forEach(([k, arr]) => (arr || []).filter((x) => x && x.trim()).forEach((x) => L.push({ date: jour(k), el: "eau", label: "Gratitude", texte: x })));
     Object.entries(S.intentions || {}).forEach(([k, v]) => v && L.push({ date: k + "T07:00:00", el: "lumiere", label: "Intention", texte: v, main: 1 }));
+    if (S.pourquoi && S.pourquoi.t) L.push({ date: S.pourquoi.date, el: "lumiere", label: "Mon pourquoi", texte: S.pourquoi.t });
+    (S.pourquoi && S.pourquoi.anciens || []).forEach((a) => L.push({ date: a.date, el: "lumiere", label: "Mon pourquoi", texte: a.t }));
     Object.entries(S.rituels || {}).forEach(([k, r]) => { if (r.adieu) L.push({ date: k + "T06:58:00", el: "lumiere", label: "J'ai dit adieu à", texte: r.adieu }); if (r.accueil) L.push({ date: k + "T06:59:00", el: "lumiere", label: "J'ai accueilli", texte: r.accueil }); });
     Object.entries(S.questions || {}).forEach(([k, o]) => Object.entries(o || {}).forEach(([sp, r]) => r && r.r && L.push({ date: r.date || jour(k), el: ELEMENT[sp] || "eau", label: r.q, texte: r.r })));
     (S.checkins || []).forEach((c) => { const v = VOICES[c.voix]; if (v) L.push({ date: c.date, el: "feu", label: "Ma voix", texte: v.label + (c.qui ? " (" + c.qui + ")" : "") }); });
@@ -3766,10 +3794,33 @@ Propose 3 pistes de réflexion courtes (une ligne chacune), au tutoiement, en fr
     const dim = new Date().getDay() === 0, mh = messageHebdo();
     $("home-hebdo").hidden = !(dim && mh); $("home-hebdo").textContent = mh;
   }
+
+  /* ================= mon pourquoi (Keter) : une phrase qui tient des semaines ================= */
+  function renderPourquoi() {
+    const q = S.pourquoi && S.pourquoi.t ? S.pourquoi : null;
+    $("pq-form").hidden = !!q; $("pq-show").hidden = !q;
+    const vieux = q && (Date.now() - new Date(q.date)) > 30 * 86400000;
+    if (q) $("pq-show").innerHTML = `<p class="manuscrit pq-txt">${esc(q.t)}</p>
+      ${vieux ? `<p class="hint">Un mois a passé. Ton pourquoi est-il toujours le bon ?</p>` : ""}
+      <div class="row"><button class="linkbtn" type="button" id="pq-edit">${vieux ? "Oui, je le garde" : "Changer mon pourquoi"}</button>${vieux ? `<button class="linkbtn" type="button" id="pq-change">Le réécrire</button>` : ""}</div>`;
+    document.querySelectorAll("[data-pq]").forEach((el) => { el.textContent = q ? q.t : ""; el.hidden = !q; });
+  }
+  $("pq-save").onclick = () => {
+    const t = $("pq-in").value.trim(); if (!t) { $("pq-in").focus(); return; }
+    const old = S.pourquoi && S.pourquoi.t ? S.pourquoi : null;
+    S.pourquoi = { t, date: new Date().toISOString(), anciens: (old ? [{ t: old.t, date: old.date }] : []).concat(old && old.anciens || []).slice(0, 10) };
+    save(); renderPourquoi();
+  };
+  $("pq-show").addEventListener("click", (e) => {
+    if (e.target.closest("#pq-edit")) { if (S.pourquoi && (Date.now() - new Date(S.pourquoi.date)) > 30 * 86400000) { S.pourquoi.date = new Date().toISOString(); save(); renderPourquoi(); } else { $("pq-in").value = S.pourquoi.t; $("pq-form").hidden = false; $("pq-show").hidden = true; $("pq-in").focus(); } }
+    if (e.target.closest("#pq-change")) { $("pq-in").value = S.pourquoi.t; $("pq-form").hidden = false; $("pq-show").hidden = true; $("pq-in").focus(); }
+  });
+  // le pourquoi de chaque rêve se modifie en place
+  $("dreams").addEventListener("change", (e) => { const f = e.target.closest("[data-dp]"); if (!f) return; const p = S.projets.find((x) => x.id === f.dataset.dp); if (p) { p.pourquoi = f.value.trim(); save(); } });
   function renderAll() {
     renderMoods(); renderGrat(); renderNextStep(); renderGarden(); renderGestes(); renderDreams();
     renderTypePick(); renderEntries(); renderVoices(); renderPeople(); renderRefuges(); renderBilan(); armRappel();
-    renderIntention(); renderTree(); renderCare(); renderQualites(); renderDecision(); renderCond(); renderIntu(); renderInsp(); renderGratPhotos(); renderQJ(); renderRituel(); renderHebdo();
+    renderIntention(); renderTree(); renderCare(); renderQualites(); renderDecision(); renderCond(); renderIntu(); renderInsp(); renderGratPhotos(); renderQJ(); renderRituel(); renderHebdo(); renderPourquoi();
   }
   renderAll(); showThought(); renderSteps(); copieDuJour();
   const hash = location.hash.slice(1);
