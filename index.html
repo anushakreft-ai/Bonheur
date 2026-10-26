@@ -1087,7 +1087,7 @@ body[data-moment="nuit"] #s-malkhut #geste-msg { color: #f6e2a8 !important; text
     <div class="sheet-head" style="--c:#f0d08a;--t:var(--ink)">
       <button class="back" type="button" data-close aria-label="Revenir à l'arbre">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Arbre</button>
-      <div class="sheet-title"><span class="heb">Hod · Splendeur</span><h2 id="h-hod">Reconnaissance</h2><p>Reconnaître ce qui est beau, en moi et autour de moi.</p></div>
+      <div class="sheet-title"><span class="heb">Hod · Splendeur</span><h2 id="h-hod">Éclat</h2><p>Reconnaître ce qui brille en moi.</p></div>
     </div>
     <div class="sheet-body">
       <div class="trav-slot"></div>
@@ -2556,7 +2556,7 @@ Si la pensée évoque une envie de se faire du mal ou de mourir, réponds avec d
     { k: "gevurah", heb: "Guevourah", mot: "Force", x: 52, y: 236, fill: "#c4412a", txt: "#fbf7ef" },
     { k: "tiferet", heb: "Tiferet", mot: "Cœur", x: 150, y: 300, fill: "#e6bf35", txt: "#2b3440" },
     { k: "netzach", heb: "Netsah", mot: "Rêves", x: 248, y: 390, fill: "#2f7a45", txt: "#fbf7ef" },
-    { k: "hod", heb: "Hod", mot: "Reconnaissance", x: 52, y: 390, fill: "#d08a2c", txt: "#2b3440" },
+    { k: "hod", heb: "Hod", mot: "Éclat", x: 52, y: 390, fill: "#d08a2c", txt: "#2b3440" },
     { k: "yesod", heb: "Yesod", mot: "Ancrage", x: 150, y: 452, fill: "#7a5ea8", txt: "#fbf7ef" },
     { k: "malkhut", heb: "Malkhout", mot: "Gestes", x: 150, y: 524, fill: "#a8452a", txt: "#fbf7ef", quarters: ["#c9a43a", "#5f7a3a", "#1f2f52", "#a8452a"] }
   ];
@@ -3556,7 +3556,8 @@ Propose 3 pistes de réflexion courtes (une ligne chacune), au tutoiement, en fr
 
   /* ================= questions du jour (inspirées du sens de chaque vase) ================= */
   const QJ = {
-    hod: { titre: "Reconnaître", qs: ["Qu'ai-je bien fait aujourd'hui, même un tout petit peu ?", "Quelle qualité ai-je montrée aujourd'hui ?", "Quel mot doux puis-je me dire ce soir ?", "Qui aimerais-je remercier, et pour quoi ?", "De quoi suis-je fière cette semaine ?", "Qu'est-ce qui était beau aujourd'hui ?", "Quel petit progrès ai-je remarqué ?", "Qu'est-ce que mon corps a fait pour moi aujourd'hui ?", "Qu'est-ce que quelqu'un a fait de bien pour moi récemment ?", "Quel moment d'aujourd'hui aimerais-je garder ?"] },
+    // Hod (Éclat) : ce qui brille en moi ; ce qu'on reçoit des autres reste dans Gratitude
+    hod: { titre: "Briller", qs: ["Qu'ai-je bien fait aujourd'hui, même un tout petit peu ?", "Quelle qualité ai-je montrée aujourd'hui ?", "Quel mot doux puis-je me dire ce soir ?", "De quoi suis-je fière cette semaine ?", "Quel petit progrès ai-je remarqué en moi ?", "Qu'est-ce que je fais bien sans même m'en rendre compte ?", "Quel compliment aurais-je envie de me faire ?", "Quelle force ai-je utilisée aujourd'hui ?", "En quoi ai-je été moi-même aujourd'hui ?", "Qu'est-ce que j'aime chez moi en ce moment ?"] },
     gevurah: { titre: "Choisir", qs: ["Quelle voix ai-je envie d'écouter aujourd'hui, et laquelle laisser passer ?", "À quoi ai-je dit non aujourd'hui pour me respecter ?", "Qu'est-ce que je peux laisser tomber cette semaine ?", "Où ai-je eu du courage aujourd'hui ?", "Qu'est-ce qui me donne de l'énergie, et qu'est-ce qui m'en prend ?", "Qui me fait du bien quand je le vois ?", "Quelle limite douce pourrais-je poser demain ?", "Qu'est-ce qui mérite vraiment mon temps ?", "Dans quelle situation me suis-je sentie forte ?", "De quoi ai-je besoin de me protéger en ce moment ?"] },
     binah: { titre: "Comprendre", qs: ["Qu'ai-je appris aujourd'hui, et de qui ?", "Qu'est-ce que je comprends aujourd'hui que je ne comprenais pas hier ?", "Si une amie vivait ce que je vis, que lui dirais-je ?", "Qu'est-ce qui compte vraiment, là-dedans ?", "Dans un an, que penserai-je de ce moment ?", "Quelle autre façon de voir les choses est possible ?", "Qu'est-ce que cette émotion essaie de me dire ?", "Qu'est-ce qui mûrit en moi en ce moment ?", "Quelle erreur m'a fait grandir ?", "Quelle situation m'a appris quelque chose sur moi ?"] },
     netzach: { titre: "M'élever", qs: ["Quand mon rêve sera réalisé, quelle joie ressentirai-je ?", "Quel petit pas vers mon rêve puis-je faire aujourd'hui ?", "À quoi ressemblera une journée de ma vie quand mon rêve sera là ?", "Qu'est-ce qui m'a rapprochée de mon rêve cette semaine ?", "Qui pourrait m'aider à avancer ?", "Quel obstacle pourrait se présenter, et que ferai-je alors ?", "Qu'ai-je envie de vivre cette année ?", "De quoi suis-je fière dans ce que j'ai déjà fait ?"] }
