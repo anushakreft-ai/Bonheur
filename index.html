@@ -694,6 +694,11 @@ body.sheet-open .home-bilan { display: none; }
 #s-mieux .care .geste:hover { transform: scale(1.06); }
 @keyframes luit { 0%, 100% { opacity: .85; } 50% { opacity: 1; } }
 @keyframes scint { 0%, 100% { opacity: .4; transform: scale(.8); } 50% { opacity: 1; transform: scale(1.15); } }
+
+/* Gestes : un geste fait reste en couleur et s'illumine d'or ; un geste à faire est plus doux */
+#s-malkhut .gestes .geste:not(.done) { opacity: .78; filter: saturate(.7); }
+#s-malkhut .gestes .geste.done { background: var(--c) !important; color: var(--t, var(--on-color)) !important; box-shadow: 0 0 0 3px #e9c46a, 0 0 18px rgba(233,196,106,.7) !important; opacity: 1; filter: none; }
+#s-malkhut .gestes .geste.done::after { content: "✦"; background: #e9c46a !important; color: #3a2a10 !important; font-size: 12px; padding: 0 6px; }
 </style>
 
 <div class="scene" id="scene" aria-hidden="true"></div>
@@ -1574,6 +1579,16 @@ body.sheet-open .home-bilan { display: none; }
     ["romarin",262,326,66,0],["lavande",170,345,72,0],["glycine",478,138,92,1],["lavande",395,342,66,1],
     ["bougain",18,345,140,1],["jasmin",440,320,120,0],["romarin",590,362,80,1],["lavande",85,365,78,0],
     ["laurier",340,330,80,1],["lavande",135,382,74,1],["romarin",522,378,82,0],["lavande",470,390,70,0]];
+  // le jardin prend la lumière du moment : voile rose le soir, nuit bleue étoilée avec lune
+  function jardinMoment() {
+    const m = document.body.dataset.moment;
+    if (m === "crepuscule") return `<rect width="600" height="400" fill="#7a3f72" opacity=".22" style="mix-blend-mode:multiply"/><rect width="600" height="240" fill="#f0a070" opacity=".12"/>`;
+    if (m === "aube") return `<rect width="600" height="400" fill="#c9b8e0" opacity=".16"/>`;
+    if (m !== "nuit") return "";
+    let st = ""; for (let i = 0; i < 26; i++) { const x = (i * 97 + 31) % 600, y = (i * 53 + 17) % 190, r = 0.6 + (i % 3) * 0.45; st += `<circle cx="${x}" cy="${y}" r="${r}" fill="#fff4d6" opacity="${0.55 + (i % 4) * 0.1}"/>`; }
+    return `<rect width="600" height="400" fill="#1c2c66" opacity=".5" style="mix-blend-mode:multiply"/><rect width="600" height="400" fill="#0c1636" opacity=".18"/>${st}
+      <circle cx="470" cy="62" r="30" fill="#fff4d6" opacity=".12"/><circle cx="470" cy="62" r="13" fill="#fbf1d2"/>`;
+  }
   function renderGarden() {
     const done = (S.faits[dayKey()] || []).filter((id) => S.gestes.some((g) => g.id === id));
     const n = done.length, total = S.gestes.length;
@@ -1583,7 +1598,7 @@ body.sheet-open .home-bilan { display: none; }
       return `<g class="plante${pend ? " pend" : ""}" style="animation-delay:${i * 60}ms"><image href="${src}" x="${x - w / 2}" y="${top}" width="${w}" height="${h}"${m ? ` transform="translate(${2 * x} 0) scale(-1 1)"` : ""}/></g>`;
     }).join("");
     $("garden").innerHTML = `<svg viewBox="0 0 600 400" role="img" aria-label="Jardin du jour : ${n} plante${n > 1 ? "s" : ""}">
-      <image href="${JARDIN_IMG}" x="0" y="0" width="600" height="400" preserveAspectRatio="xMidYMid slice"/>${fl}</svg>`;
+      <image href="${JARDIN_IMG}" x="0" y="0" width="600" height="400" preserveAspectRatio="xMidYMid slice"/>${fl}${jardinMoment()}</svg>`;
     $("count").innerHTML = n === 0 ? "Ton jardin attend sa première plante." :
       `<b>${n}</b> geste${n > 1 ? "s" : ""} sur ${total} aujourd'hui${n >= total ? " · tout est fait, bravo" : ""}`;
   }
@@ -2599,7 +2614,7 @@ Si la pensée évoque une envie de se faire du mal ou de mourir, réponds avec d
     crepuscule: "",
     nuit: ETOILES + ", radial-gradient(circle at 78% 18%, rgba(255,244,214,.95) 0 14px, rgba(255,240,200,.25) 16px, rgba(255,240,200,0) 60px), linear-gradient(rgba(6,14,44,.90), rgba(10,22,64,.86) 58%, rgba(8,16,42,.82)), "
   };
-  const TEINTE = { aube: "", jour: "", crepuscule: "linear-gradient(rgba(150,76,110,.20), rgba(150,76,110,.20)), ", nuit: "linear-gradient(rgba(18,30,84,.34), rgba(18,30,84,.34)), " };
+  const TEINTE = { aube: "", jour: "", crepuscule: "linear-gradient(rgba(150,76,110,.20), rgba(150,76,110,.20)), ", nuit: "linear-gradient(rgba(18,30,84,.5), rgba(18,30,84,.5)), " };
   let momentActuel = null;
   function appliquerMoment() {
     const m = momentDuJour(); if (m === momentActuel) return; momentActuel = m;
@@ -2607,7 +2622,7 @@ Si la pensée évoque une envie de se faire du mal ou de mourir, réponds avec d
     const ciel = m === "crepuscule" ? BG_CREP : m === "aube" ? BG_AUBE : BG_SKY;
     $("scene").style.backgroundImage = `${CIEL[m]}url("${ciel}")`;
     document.querySelector(".tree-wrap").style.backgroundImage = `${CIEL[m]}url("${ciel}")`;
-    try { peindrePages(); } catch (e) { /* pages pas encore prêtes : peintes juste après */ }
+    try { peindrePages(); renderGarden(); renderCare(); } catch (e) { /* pages pas encore prêtes : peintes juste après */ }
   }
   appliquerMoment(); fitTree();
   setInterval(appliquerMoment, 60000);
@@ -2622,10 +2637,10 @@ Si la pensée évoque une envie de se faire du mal ou de mourir, réponds avec d
   };
   const ELEMENT = { keter: "lumiere", daat: "lumiere", chokhmah: "feu", gevurah: "feu", netzach: "feu", binah: "eau", chesed: "eau", hod: "eau", tiferet: "air", yesod: "air", malkhut: "terre" };
   function peindrePages() {
-    const t = TEINTE[momentDuJour()] || "";
+    const m = momentDuJour(), t = TEINTE[m] || "", v = m === "nuit" ? "226,230,244" : "251,246,241";
     Object.entries(ELEMENT).forEach(([k, e]) => {
       const el = $("s-" + k); if (!el || !ELEM_IMG[e]) return;
-      el.style.backgroundImage = `linear-gradient(rgba(251,246,241,.55), rgba(251,246,241,.3) 55%, rgba(251,246,241,.08)), ${t}url("${ELEM_IMG[e]}")`;
+      el.style.backgroundImage = `linear-gradient(rgba(${v},.55), rgba(${v},.3) 55%, rgba(${v},.08)), ${t}url("${ELEM_IMG[e]}")`;
       el.style.backgroundSize = "cover"; el.style.backgroundPosition = "center bottom";
     });
   }
@@ -3288,7 +3303,8 @@ Propose 3 pistes de réflexion courtes (une ligne chacune), au tutoiement, en fr
     const done = new Set(S.faits[dayKey()] || []);
     $("care").innerHTML = CARE.map((x, i) => {
       const isDone = x.g && done.has(x.g);
-      return `<button type="button" class="geste ${isDone ? "done" : ""}" data-care="${i}" style="${paint(x.c)};--r:${RADII[i % RADII.length]}">${svg(x.icon)}<span>${x.label}</span></button>`;
+      const nuit = document.body.dataset.moment === "nuit", lab = nuit && x.g === "lumiere" ? "Allumer une lumière douce" : x.label;
+      return `<button type="button" class="geste ${isDone ? "done" : ""}" data-care="${i}" style="${paint(x.c)};--r:${RADII[i % RADII.length]}">${svg(x.icon)}<span>${lab}</span></button>`;
     }).join("");
   }
   // le message apparaît près du feu, bien visible, à chaque toucher
