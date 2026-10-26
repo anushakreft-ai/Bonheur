@@ -752,7 +752,7 @@ img.tresor { object-fit: contain; filter: drop-shadow(0 2px 3px rgba(60,40,20,.2
         </form>
         <p class="hint" id="intu-msg" aria-live="polite"></p>
         <div class="entries" id="intu-list"></div>
-        <button class="linkbtn" type="button" data-open="hod" style="justify-self:start">Tout mon carnet est dans Mots ›</button>
+        <button class="lien-simple" type="button" data-open="grimoire">Relire mes envies dans mon livre ›</button>
       </div>
     </div>
   </section>
@@ -832,7 +832,6 @@ img.tresor { object-fit: contain; filter: drop-shadow(0 2px 3px rgba(60,40,20,.2
         </div>
         <div class="insights" id="insights"></div>
       </div>
-      <div class="jar" id="jar"></div>
 
       <div class="panel">
         <div class="title-block">
@@ -1045,14 +1044,14 @@ img.tresor { object-fit: contain; filter: drop-shadow(0 2px 3px rgba(60,40,20,.2
     <div class="sheet-head" style="--c:#f0d08a;--t:var(--ink)">
       <button class="back" type="button" data-close aria-label="Revenir à l'arbre">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Arbre</button>
-      <div class="sheet-title"><span class="heb">Hod · Splendeur</span><h2 id="h-hod">Mots</h2><p>Écrire ce qui me traverse : rêves de nuit, envies, pensées.</p></div>
+      <div class="sheet-title"><span class="heb">Hod · Splendeur</span><h2 id="h-hod">Mots</h2><p>Écrire ce qui me traverse : rêves de nuit et pensées.</p></div>
     </div>
     <div class="sheet-body">
       <div class="trav-slot"></div>
       <div class="panel">
         <div class="title-block">
           <h2>Carnet</h2>
-          <p class="lead">Rêves de la nuit, envies, pensées. Ce que tu écris reste à toi.</p>
+          <p class="lead">Rêves de la nuit et pensées. Ce que tu écris reste à toi.</p>
         </div>
         <div class="seg" id="type-pick" role="group" aria-label="Type de note"></div>
         <label class="sr" for="note-text">Texte</label>
@@ -1060,11 +1059,13 @@ img.tresor { object-fit: contain; filter: drop-shadow(0 2px 3px rgba(60,40,20,.2
         <div class="row"><button class="btn" id="note-save" type="button">Garder</button><span class="hint" id="note-msg" aria-live="polite"></span></div>
       </div>
       <button class="btn-grim" type="button" data-open="grimoire"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4.5C4 3.7 4.7 3 5.5 3H19v15H5.5C4.7 18 4 18.7 4 19.5z" fill="#24506f" stroke="#e9c77b" stroke-width="1.4"/><path d="M4 19.5C4 20.3 4.7 21 5.5 21H19v-3" fill="none" stroke="#e9c77b" stroke-width="1.4"/><circle cx="12" cy="10" r="3" fill="none" stroke="#e9c77b" stroke-width="1.3"/></svg>Ouvrir mon livre</button>
+      <button class="lien-simple" type="button" data-open="chokhmah">Une envie qui naît ? Note-la dans Intuitions ›</button>
+      <details class="hist-pli"><summary>Modifier ou effacer mes notes</summary>
       <div class="row between">
-        <h3>Mes notes</h3>
         <div class="seg" id="filter" role="group" aria-label="Filtrer"></div>
       </div>
       <div class="entries" id="entries"></div>
+      </details>
     </div>
   </section>
 
@@ -1965,9 +1966,9 @@ Réponds uniquement en JSON : {"etapes": ["..."], "obstacle": "...", "plan": "..
     envie: { label: "Envie", c: "var(--orange)", ph: "J'ai envie de…" },
     pensee: { label: "Pensée", c: "var(--turq)", ph: "Là, je pense à…" }
   };
-  let noteType = hr < 11 ? "reve" : "envie", filter = "tout", confirmDel = null;
+  let noteType = hr < 11 ? "reve" : "pensee", filter = "tout", confirmDel = null;
   function renderTypePick() {
-    $("type-pick").innerHTML = Object.entries(TYPES).map(([k, t]) =>
+    $("type-pick").innerHTML = Object.entries(TYPES).filter(([k]) => k !== "envie").map(([k, t]) =>
       `<button type="button" class="chip" style="${paint(t.c)}" data-k="${k}" aria-pressed="${k === noteType}">${t.label}</button>`).join("");
     $("note-text").placeholder = TYPES[noteType].ph;
     $("filter").innerHTML = [["tout", "Tout", "var(--ink)"], ...Object.entries(TYPES).map(([k, t]) => [k, t.label, t.c])]
@@ -3272,7 +3273,7 @@ Propose 3 pistes de réflexion courtes (une ligne chacune), au tutoiement, en fr
     }
     if (x.k === "respirer") { openSheet("yesod"); setTimeout(() => document.querySelector(".breath").scrollIntoView({ behavior: "smooth", block: "center" }), 150); if (!breathRun) $("breath-go").click(); }
     else if (x.k === "ici") { openSheet("yesod"); setTimeout(() => $("steps").scrollIntoView({ behavior: "smooth", block: "start" }), 200); }
-    else if (x.k === "pensee") openSheet("binah");
+    else if (x.k === "pensee") { $("care-msg").textContent = THOUGHTS[Math.floor(Math.random() * THOUGHTS.length)]; }
     else if (x.k === "souvenir") openSheet("chesed");
     else if (x.k === "baroque") {
       const m = MUSIC_MOODS.find((y) => y.k === "baroque");
