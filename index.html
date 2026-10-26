@@ -809,6 +809,18 @@ body[data-moment="nuit"] #s-malkhut #geste-msg { color: #f6e2a8 !important; text
         <div class="entries" id="intu-list"></div>
         <button class="lien-simple" type="button" data-open="grimoire">Relire mes envies dans mon livre ›</button>
       </div>
+      <div class="glass">
+        <h3>Mon mur d'inspiration</h3>
+        <p class="hint" style="margin:0">Des images qui te parlent : couleurs, paysages, œuvres, envies.</p>
+        <div class="board" id="grat-board"></div>
+        <div class="row">
+          <button class="btn small" type="button" id="grat-photo-add">+ Ajouter des images</button>
+          <button class="btn alt small" type="button" data-draw="grat" id="grat-draw-go" hidden>✨ Une image au hasard</button>
+        </div>
+        <div id="grat-draw"></div>
+        <input type="file" id="grat-photo-input" accept="image/*" multiple hidden>
+      </div>
+
     </div>
   </section>
 
@@ -937,17 +949,6 @@ body[data-moment="nuit"] #s-malkhut #geste-msg { color: #f6e2a8 !important; text
         </form>
         <p class="hint" id="grat-msg" aria-live="polite"></p>
         <div class="today-list" id="grat-today"></div>
-      </div>
-      <div class="glass">
-        <h3>Mes images</h3>
-        <p class="hint" style="margin:0">Un bon moment, un paysage, une personne aimée, une image qui inspire.</p>
-        <div class="board" id="grat-board"></div>
-        <div class="row">
-          <button class="btn small" type="button" id="grat-photo-add">+ Ajouter des images</button>
-          <button class="btn alt small" type="button" data-draw="grat" id="grat-draw-go" hidden>✨ Une image au hasard</button>
-        </div>
-        <div id="grat-draw"></div>
-        <input type="file" id="grat-photo-input" accept="image/*" multiple hidden>
       </div>
       <details class="hist-pli jours" data-hist="chesed"><summary>Les jours passés</summary><div class="history"></div></details>
     </div>
@@ -1951,7 +1952,7 @@ body[data-moment="nuit"] #s-malkhut #geste-msg { color: #f6e2a8 !important; text
   function renderGratPhotos() {
     $("grat-board").innerHTML = gratPool().length ? boardHtml(gratPool().slice(-12).map((x) => Object.assign({}, x, { label: new Date(x.date).toLocaleDateString("fr-CH", { day: "numeric", month: "short" }) }))) : "";
     $("grat-draw-go").hidden = !gratPool().length;
-    hydratePhotos($("s-chesed"));
+    hydratePhotos($("s-chokhmah"));
   }
   $("grat-photo-add").onclick = () => $("grat-photo-input").click();
   $("grat-photo-input").addEventListener("change", async () => {
@@ -1960,7 +1961,7 @@ body[data-moment="nuit"] #s-malkhut #geste-msg { color: #f6e2a8 !important; text
       try { const d = await shrink(f); const pid = uid(); await putPhoto(pid, d); S.gratPhotos.push({ id: uid(), pid, date: new Date().toISOString() }); }
       catch (e) { toastMsg("Cette image n'a pas pu être lue. Essaie avec une autre."); }
     }
-    if (files.length) { const k = dayKey(); if (!(S.gratitudes[k] || []).some((x) => x && x.trim())) S.gratitudes[k] = (S.gratitudes[k] || []).concat("Une image de bonheur"); }
+    // le mur d'images est dans Intuitions : il n'ajoute plus de gratitude
     save(); renderGratPhotos(); renderGrat();
   });
   $("grat-board").addEventListener("click", (e) => { const b = e.target.closest("[data-view-photo]"); if (b) showPhoto(b.dataset.viewPhoto); });
