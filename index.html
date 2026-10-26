@@ -671,6 +671,12 @@ img.tresor { object-fit: contain; filter: drop-shadow(0 2px 3px rgba(60,40,20,.2
 .souffle-pli summary::before { content: "▸ "; color: #7a5ea8; } .souffle-pli[open] summary::before { content: "▾ "; }
 .souffle-pli p { margin: 6px 0 2px; line-height: 1.5; color: #2b3440; }
 .souffle-pli p.sens { font: 500 25px/1.4 "WindSong", cursive; color: #3a2f5a; }
+
+/* simplification (2026-10-26) : un geste principal par sphère, le reste replié */
+.hist-pli.jours, #dm-recul, #dm-trav, #binah-trav, #grat-ideas, #vision, #dream-draw-row { display: none !important; }
+.home-bilan { position: fixed; left: 50%; bottom: max(10px, env(safe-area-inset-bottom)); transform: translateX(-50%); z-index: 3; font-size: 13px; opacity: .75; background: none; border: 0; color: #3f4652; }
+body.sheet-open .home-bilan { display: none; }
+#s-netzach .sheet-body > div:empty { display: none; }
 </style>
 
 <div class="scene" id="scene" aria-hidden="true"></div>
@@ -688,6 +694,7 @@ img.tresor { object-fit: contain; filter: drop-shadow(0 2px 3px rgba(60,40,20,.2
   <main class="tree-wrap">
     <svg id="tree" viewBox="200 0 1014 2000" preserveAspectRatio="xMidYMid meet" role="group" aria-label="Arbre des Séphiroth : touche une sphère"></svg>
   </main>
+  <button class="lien-simple home-bilan" type="button" data-open="daat">Mon bilan et mes données</button>
 </div>
 
   <section class="sheet" id="s-keter" role="dialog" aria-modal="true" aria-labelledby="h-keter" hidden>
@@ -697,14 +704,14 @@ img.tresor { object-fit: contain; filter: drop-shadow(0 2px 3px rgba(60,40,20,.2
       <div class="sheet-title"><span class="heb">Keter · Couronne</span><h2 id="h-keter">Intention</h2><p>Ce qui guide ma journée.</p></div>
     </div>
     <div class="sheet-body">
-      <div class="decision">
+      <div class="decision" hidden>
         <p>Le bonheur commence par une décision : <b>ici et maintenant</b>, par des choses qui font du bien tout de suite.</p>
         <button class="btn" id="decision-go" type="button">Aujourd'hui, je choisis d'être heureuse</button>
       </div>
       <div class="panel">
         <div class="title-block">
           <h2>Mon intention du jour</h2>
-          <p class="lead">Une phrase courte pour donner la direction. Pas un objectif : une manière d'être.</p>
+          <p class="lead">Le bonheur commence par une décision. Une phrase pour donner la direction.</p>
         </div>
         <div class="intent-ecrite" id="intention-show" hidden>
           <div class="papier-ombre"><div class="papier"><p class="manuscrit" id="intention-script"></p></div></div>
@@ -713,7 +720,7 @@ img.tresor { object-fit: contain; filter: drop-shadow(0 2px 3px rgba(60,40,20,.2
         <div id="intention-form">
         <label class="sr" for="intention-in">Mon intention</label>
         <input class="field" id="intention-in" maxlength="90" placeholder="Aujourd'hui, je choisis de…">
-        <button class="linkbtn" type="button" id="intention-ideas-toggle" style="justify-self:start">Besoin d'une idée ?</button>
+        <button class="linkbtn" type="button" id="intention-ideas-toggle" style="justify-self:start" hidden>Besoin d'une idée ?</button>
         <div class="seg" id="intention-ideas" hidden></div>
         <div class="row"><button class="btn" id="intention-save" type="button">Poser mon intention</button><span class="hint" id="intention-msg" aria-live="polite"></span></div>
         </div>
@@ -730,7 +737,7 @@ img.tresor { object-fit: contain; filter: drop-shadow(0 2px 3px rgba(60,40,20,.2
     </div>
     <div class="sheet-body">
       <div class="trav-slot"></div>
-      <div class="panel">
+      <div class="panel" hidden>
         <div class="title-block">
           <h2>Mon mur d'inspiration</h2>
           <p class="lead">Des images en vrac qui te parlent : captures, photos, paysages, couleurs…</p>
@@ -771,7 +778,7 @@ img.tresor { object-fit: contain; filter: drop-shadow(0 2px 3px rgba(60,40,20,.2
       <div class="panel demele">
         <div class="title-block">
           <h2>Démêler ce que je vis</h2>
-          <p class="lead">Quatre petits pas pour comprendre ce qui se passe en toi, et prendre soin de toi.</p>
+          <p class="lead">Quatre petits pas pour y voir clair.</p>
         </div>
         <div class="dm-step"><b>1. Ce qui s'est passé</b>
           <label class="sr" for="dm-fait">Ce qui s'est passé</label>
@@ -796,17 +803,15 @@ img.tresor { object-fit: contain; filter: drop-shadow(0 2px 3px rgba(60,40,20,.2
         <button class="btn-grim" type="button" data-open="grimoire"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4.5C4 3.7 4.7 3 5.5 3H19v15H5.5C4.7 18 4 18.7 4 19.5z" fill="#24506f" stroke="#e9c77b" stroke-width="1.4"/><path d="M4 19.5C4 20.3 4.7 21 5.5 21H19v-3" fill="none" stroke="#e9c77b" stroke-width="1.4"/><circle cx="12" cy="10" r="3" fill="none" stroke="#e9c77b" stroke-width="1.3"/></svg>Relire mon livre</button>
       </div>
 
-      <div class="panel" id="reframe-panel" hidden>
-        <div class="title-block">
-          <h2>Regarder autrement</h2>
-          <p class="lead">Écris une pensée qui t'encombre. Tu reçois une façon plus douce et plus juste de la voir.</p>
-        </div>
+      <details class="panel tight" id="reframe-panel" hidden>
+        <summary>Regarder autrement, avec Claude</summary>
+        <p class="lead">Écris une pensée qui t'encombre. Tu reçois une façon plus douce de la voir.</p>
         <label class="sr" for="reframe-in">Pensée qui encombre</label>
         <textarea class="field" id="reframe-in" placeholder="Ex. Je n'y arriverai jamais."></textarea>
         <div class="row"><button class="btn" id="reframe-go" type="button">Regarder autrement</button><span class="hint" id="reframe-msg" aria-live="polite"></span></div>
         <div class="answer" id="reframe-out" style="--c:var(--turq);--t:#2b3440" hidden><p></p></div>
         <div class="row" id="reframe-keep" hidden><button class="btn alt small" type="button">Garder dans le carnet</button></div>
-      </div>
+      </details>
       <details class="hist-pli jours" data-hist="binah"><summary>Les jours passés</summary><div class="history"></div></details>
     </div>
   </section>
@@ -889,8 +894,8 @@ img.tresor { object-fit: contain; filter: drop-shadow(0 2px 3px rgba(60,40,20,.2
         <div class="today-list" id="grat-today"></div>
       </div>
       <div class="glass">
-        <h3>Mes images de bonheur</h3>
-        <p class="hint" style="margin:0">Une photo d'un bon moment, un paysage, une personne aimée, une image qui fait sourire.</p>
+        <h3>Mes images</h3>
+        <p class="hint" style="margin:0">Un bon moment, un paysage, une personne aimée, une image qui inspire.</p>
         <div class="board" id="grat-board"></div>
         <div class="row">
           <button class="btn small" type="button" id="grat-photo-add">+ Ajouter des images</button>
@@ -921,11 +926,9 @@ img.tresor { object-fit: contain; filter: drop-shadow(0 2px 3px rgba(60,40,20,.2
         <div class="history" id="voice-history"></div>
       </div>
 
-      <div class="panel">
-        <div class="title-block">
-          <h2>Les voix autour de moi</h2>
-          <p class="lead">Personnes, podcasts, comptes… Qui te nourrit ? De qui as-tu envie de prendre un peu de distance ?</p>
-        </div>
+      <details class="panel tight">
+        <summary>Les voix autour de moi</summary>
+        <p class="lead">Qui te nourrit ? De qui prendre un peu de distance ?</p>
         <div class="people">
           <div style="--c:var(--leaf)"><h3>Me nourrissent</h3><ul id="list-nourrit"></ul></div>
           <div style="--c:var(--orange)"><h3>Je prends de la distance</h3><ul id="list-epuise"></ul></div>
@@ -938,7 +941,7 @@ img.tresor { object-fit: contain; filter: drop-shadow(0 2px 3px rgba(60,40,20,.2
             <button class="chip" type="submit" data-effet="epuise" style="--c:var(--orange)">Prendre de la distance</button>
           </div>
         </form>
-      </div>
+      </details>
     </div>
   </section>
 
@@ -968,16 +971,16 @@ img.tresor { object-fit: contain; filter: drop-shadow(0 2px 3px rgba(60,40,20,.2
     <div class="sheet-head" style="--c:#3f8a55;--t:#fbf7ef">
       <button class="back" type="button" data-close aria-label="Revenir à l'arbre">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Arbre</button>
-      <div class="sheet-title"><span class="heb">Netsah · Victoire</span><h2 id="h-netzach">Rêves</h2><p>M'élever : mes rêves et la musique qui me porte.</p></div>
+      <div class="sheet-title"><span class="heb">Netsah · Victoire</span><h2 id="h-netzach">Rêves</h2><p>Ce qui m'élève : mes rêves.</p></div>
     </div>
     <div class="sheet-body">
       <div class="trav-slot"></div>
-      <button class="jump" type="button" id="go-music">♪ La musique qui m'élève</button>
+      <button class="jump" type="button" id="go-music" hidden>♪ La musique qui m'élève</button>
       <div id="nextstep-host"></div>
       <div class="vision board" id="vision" hidden></div>
       <div class="row" id="dream-draw-row" hidden><button class="btn alt small" type="button" data-draw="dream">✨ Une image au hasard</button></div>
       <div id="dream-draw"></div>
-      <div class="panel">
+      <div class="panel" hidden>
         <div class="title-block">
           <h3>Les qualités que je cultive</h3>
           <p class="hint">Touche une qualité quand tu l'as vécue aujourd'hui. Elle grandit avec toi.</p>
@@ -991,14 +994,14 @@ img.tresor { object-fit: contain; filter: drop-shadow(0 2px 3px rgba(60,40,20,.2
         <div class="seg" id="qual-ideas"></div>
         <div class="row"><button class="linkbtn" type="button" id="qual-edit">Retirer des qualités</button></div>
       </div>
-      <div class="sortbar">
+      <div class="sortbar" hidden>
         <span class="hint">Trier</span>
         <div class="seg" id="dream-sort" role="group" aria-label="Trier mes rêves"></div>
       </div>
-      <p class="hint" id="sort-hint"></p>
+      <p class="hint" id="sort-hint" hidden></p>
       <div id="dreams" class="dream-list"></div>
       <details class="panel tight" id="dream-new">
-        <summary>+ Planter un nouveau rêve</summary>
+        <summary>+ Planter un rêve</summary>
         <label class="sr" for="dream-title">Mon rêve</label>
         <input class="field" id="dream-title" maxlength="80" placeholder="Ex. Partir un mois au Japon, apprendre la céramique…">
         <label class="sr" for="dream-why">Pourquoi ça compte</label>
@@ -1006,39 +1009,6 @@ img.tresor { object-fit: contain; filter: drop-shadow(0 2px 3px rgba(60,40,20,.2
         <div class="row"><button class="btn" id="dream-add" type="button">Planter ce rêve</button><span class="hint" id="dream-msg" aria-live="polite"></span></div>
       </details>
       <input type="file" id="photo-input" accept="image/*" multiple hidden>
-      <div id="netz-music"></div>
-
-      <div class="title-block">
-        <h2>La musique qui m'élève</h2>
-        <p class="lead">La musique change l'humeur en trois minutes. Choisis ce dont tu as besoin.</p>
-      </div>
-      <div class="moodmusic" id="moodmusic"></div>
-      <form class="inline-form" id="f-music">
-        <label class="sr" for="music-q">Chercher</label>
-        <input class="field" id="music-q" maxlength="120" placeholder="Ou décris : « du jazz doux pour un dimanche »">
-        <button class="btn" type="submit">Chercher</button>
-      </form>
-      <div class="panel" id="music-panel" hidden>
-        <div class="row between"><h3 id="music-title">Pour toi</h3><span class="hint" id="music-msg" aria-live="polite"></span></div>
-        <div class="results" id="music-results"></div>
-        <div class="row" id="playlist-row" hidden>
-          <button class="btn orange small" id="playlist-go" type="button">Créer une playlist Spotify</button>
-          <span class="hint">Spotify Premium requis</span>
-        </div>
-        <div class="answer" id="playlist-out" style="--c:var(--ochre);--t:#2b3440" hidden><p></p></div>
-      </div>
-      <div class="panel">
-        <div class="title-block">
-          <h2>Mes chansons refuge</h2>
-          <p class="lead">Celles qui te ramènent à toi. Garde-les ici pour les retrouver vite.</p>
-        </div>
-        <div class="results" id="refuges"></div>
-        <form id="f-refuge" style="display:grid;gap:8px">
-          <label class="sr" for="refuge-name">Titre et artiste</label>
-          <input class="field" id="refuge-name" maxlength="100" placeholder="Titre – artiste, ou colle un lien Spotify">
-          <button class="btn alt small" type="submit" style="justify-self:start">Ajouter à mes refuges</button>
-        </form>
-      </div>
       <details class="hist-pli jours" data-hist="netzach"><summary>Les jours passés</summary><div class="history"></div></details>
     </div>
   </section>
@@ -1076,18 +1046,10 @@ img.tresor { object-fit: contain; filter: drop-shadow(0 2px 3px rgba(60,40,20,.2
     <div class="sheet-head" style="--c:#a8cfe0;--t:var(--ink)">
       <button class="back" type="button" data-close aria-label="Revenir à l'arbre">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Arbre</button>
-      <div class="sheet-title"><span class="heb">Yesod · Fondement</span><h2 id="h-yesod">Ancrage</h2><p>Respirer, revenir ici, prendre racine.</p></div>
+      <div class="sheet-title"><span class="heb">Yesod · Fondement</span><h2 id="h-yesod">Ancrage</h2><p>Respirer, écouter, revenir ici.</p></div>
     </div>
     <div class="sheet-body">
       <div class="trav-slot"></div>
-      <div class="panel">
-        <div class="title-block">
-          <h2>Me mettre en condition</h2>
-          <p class="lead">Sept façons simples de revenir à toi et de sentir ce que tu veux vraiment. Touche chacune quand tu l'as vécue.</p>
-        </div>
-        <div class="cond" id="cond"></div>
-        <p class="hint" style="font-size:12px">Inspiré du <i>Livre des sagesses</i> (Le Jeu du Tao).</p>
-      </div>
       <div class="panel breath">
         <h2>Respirer</h2>
         <div class="seg breath-types" id="breath-types" role="group" aria-label="Type de respiration"></div>
@@ -1102,11 +1064,50 @@ img.tresor { object-fit: contain; filter: drop-shadow(0 2px 3px rgba(60,40,20,.2
         <div hidden><div id="blob"></div><svg><path id="rays-path"/></svg></div>
       </div>
 
-      <div class="panel">
-        <h2>5 · 4 · 3 · 2 · 1</h2>
-        <p class="lead">Pour revenir ici, maintenant. Touche chaque ligne quand c'est fait.</p>
+      <details class="panel tight">
+        <summary>5 · 4 · 3 · 2 · 1, revenir ici</summary>
         <div class="steps" id="steps"></div>
+      </details>
+      <details class="panel tight">
+        <summary>Me mettre en condition (7 façons)</summary>
+        <p class="lead">Touche chacune quand tu l'as vécue.</p>
+        <div class="cond" id="cond"></div>
+        <p class="hint" style="font-size:12px">Inspiré du <i>Livre des sagesses</i> (Le Jeu du Tao).</p>
+      </details>
+
+      <details class="panel tight" id="music-pli">
+        <summary>♪ La musique qui m'élève</summary>
+      <div id="netz-music"></div>
+
+      <p class="lead">Choisis ce dont tu as besoin.</p>
+      <div class="moodmusic" id="moodmusic"></div>
+      <form class="inline-form" id="f-music">
+        <label class="sr" for="music-q">Chercher</label>
+        <input class="field" id="music-q" maxlength="120" placeholder="Ou décris : « du jazz doux pour un dimanche »">
+        <button class="btn" type="submit">Chercher</button>
+      </form>
+      <div class="panel" id="music-panel" hidden>
+        <div class="row between"><h3 id="music-title">Pour toi</h3><span class="hint" id="music-msg" aria-live="polite"></span></div>
+        <div class="results" id="music-results"></div>
+        <div class="row" id="playlist-row" hidden>
+          <button class="btn orange small" id="playlist-go" type="button">Créer une playlist Spotify</button>
+          <span class="hint">Spotify Premium requis</span>
+        </div>
+        <div class="answer" id="playlist-out" style="--c:var(--ochre);--t:#2b3440" hidden><p></p></div>
       </div>
+      <div class="panel">
+        <div class="title-block">
+          <h2>Mes chansons refuge</h2>
+          <p class="lead">Celles qui te ramènent à toi. Garde-les ici pour les retrouver vite.</p>
+        </div>
+        <div class="results" id="refuges"></div>
+        <form id="f-refuge" style="display:grid;gap:8px">
+          <label class="sr" for="refuge-name">Titre et artiste</label>
+          <input class="field" id="refuge-name" maxlength="100" placeholder="Titre – artiste, ou colle un lien Spotify">
+          <button class="btn alt small" type="submit" style="justify-self:start">Ajouter à mes refuges</button>
+        </form>
+      </div>
+      </details>
       <details class="hist-pli jours" data-hist="yesod"><summary>Les jours passés</summary><div class="history"></div></details>
     </div>
   </section>
@@ -1185,8 +1186,7 @@ img.tresor { object-fit: contain; filter: drop-shadow(0 2px 3px rgba(60,40,20,.2
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Arbre</button>
       <div class="sheet-title"><span class="heb">Terre · Eau · Feu · Air · Lumière</span><h2 id="h-trav">La Traversée</h2><p id="trav-sub"></p></div>
     </div>
-    <div class="sheet-body"><div id="trav-body" style="display:grid;gap:16px"></div>
-      <button class="lien-simple" type="button" data-open="daat">Mon bilan et mes données ›</button></div>
+    <div class="sheet-body"><div id="trav-body" style="display:grid;gap:16px"></div></div>
   </section>
 
   <section class="sheet" id="s-grimoire" role="dialog" aria-modal="true" aria-labelledby="h-grim" hidden>
@@ -1644,15 +1644,13 @@ img.tresor { object-fit: contain; filter: drop-shadow(0 2px 3px rgba(60,40,20,.2
   function renderNextStep() {
     const ns = nextStep();
     if (!ns) {
-      $("nextstep-host").innerHTML = S.projets.length ? "" :
-        `<div class="nextstep"><div class="eyebrow">Un pas vers ton rêve</div><p>Quel rêve aimerais-tu voir pousser cette année ?</p>
-         <button class="lien-plume" type="button" data-go="reves">Planter un rêve <span aria-hidden="true">→</span></button></div>`;
+      $("nextstep-host").innerHTML = ""; // sans rêve : le formulaire « Planter un rêve » suffit
       return;
     }
     $("nextstep-host").innerHTML = `<div class="nextstep"><div class="eyebrow">Un pas vers ton rêve</div>
       <p>${esc(ns.s.txt)}</p><small>Pour : ${esc(ns.p.titre)}</small>
       <div class="row"><button class="btn small" type="button" data-step-ok="${ns.p.id}|${ns.s.id}">C'est fait</button>
-      <button class="btn alt small" type="button" data-go="reves">Voir mes rêves</button></div></div>`;
+</div></div>`;
   }
   $("nextstep-host").addEventListener("click", (e) => {
     const go_ = e.target.closest("[data-go]"); if (go_) { go(go_.dataset.go); return; }
@@ -1700,7 +1698,7 @@ img.tresor { object-fit: contain; filter: drop-shadow(0 2px 3px rgba(60,40,20,.2
     return S.projets.slice().sort((a, b) => (a.fini - b.fini) || cmp(a, b));
   }
   function renderDreams() {
-    const k = S.triReves || "commencer";
+    const k = S.triReves = "commencer"; // un seul ordre : par où commencer
     $("dream-sort").innerHTML = Object.entries(SORTS).map(([key, v]) =>
       `<button type="button" class="chip" style="--c:var(--leaf)" data-sort="${key}" aria-pressed="${key === k}">${v.label}</button>`).join("");
     $("sort-hint").textContent = S.projets.length > 1 ? SORTS[k].hint : "";
@@ -1709,7 +1707,7 @@ img.tresor { object-fit: contain; filter: drop-shadow(0 2px 3px rgba(60,40,20,.2
     $("vision").hidden = !items.length; $("dream-draw-row").hidden = !items.length;
     $("vision").innerHTML = boardHtml(items.slice(-12));
     if (!S.projets.length) {
-      $("dreams").innerHTML = `<div class="empty">${svg("feuille")}<p>Aucun rêve planté pour l'instant. Commence par un seul, même un peu fou.</p></div>`;
+      $("dreams").innerHTML = "";
       $("dream-new").open = true;
       hydratePhotos($("s-netzach")); return;
     }
@@ -1741,15 +1739,6 @@ img.tresor { object-fit: contain; filter: drop-shadow(0 2px 3px rgba(60,40,20,.2
           <div class="rate"><span class="lbl">Effort pour l'atteindre</span>
             <div class="seg">${Object.entries(EFFORTS).map(([key, v]) => `<button type="button" class="chip" style="--c:var(--cobalt);padding:5px 11px;font-size:13px" data-eff="${key}" aria-pressed="${(p.effort || "moyen") === key}">${v.label}</button>`).join("")}</div></div>
           <button class="btn-eclair" type="button" data-eclair="${p.id}">⚡ Le chemin de l'Éclair · ${eclairCount(p)}/10</button>
-          <div class="rate"><span class="lbl">Ce rêve me fait grandir en…</span>
-            ${S.qualites.length ? `<div class="seg">${S.qualites.map((q, i) => `<button type="button" class="qchip" style="${paint(COLORS[i % COLORS.length])};padding:5px 11px;font-size:13px" data-dq="${q.id}" aria-pressed="${(p.qualites || []).includes(q.id)}">${esc(q.nom)}</button>`).join("")}</div>`
-              : `<p class="hint" style="margin:0">Ajoute d'abord tes qualités, juste au-dessus de la liste.</p>`}</div>
-          <div class="rate"><span class="lbl">Chercher des idées sur internet</span>
-            <div class="row websearch">
-              <a class="chip" style="--c:var(--cobalt)" target="_blank" rel="noopener" href="https://www.google.com/search?q=${encodeURIComponent(p.titre)}">Google</a>
-              <a class="chip" style="--c:var(--orange)" target="_blank" rel="noopener" href="https://www.pinterest.com/search/pins/?q=${encodeURIComponent(p.titre)}">Pinterest</a>
-              <a class="chip" style="--c:var(--ochre)" target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=${encodeURIComponent(p.titre)}">YouTube</a>
-            </div></div>
           <ul class="steps-list">
             ${p.etapes.map((s) => `<li class="${s.ok ? "ok" : ""}">
               <input type="checkbox" id="st-${s.id}" data-st="${s.id}" ${s.ok ? "checked" : ""} aria-label="Étape faite">
@@ -1767,17 +1756,6 @@ img.tresor { object-fit: contain; filter: drop-shadow(0 2px 3px rgba(60,40,20,.2
               ${sg.obstacle ? `<p class="hint"><b>Obstacle possible :</b> ${esc(sg.obstacle)}</p>` : ""}
               ${sg.plan ? `<p class="hint"><b>Plan :</b> ${esc(sg.plan)}</p>` : ""}
               <div class="row"><button class="btn small" type="button" data-ai-keep="${p.id}">Garder ces étapes</button><button class="linkbtn" type="button" data-ai-drop="${p.id}">Non merci</button></div></div>` : ""}
-          <details ${p.open ? "open" : ""} data-det="${p.id}">
-            <summary>Mon plan (méthode WOOP)</summary>
-            <div class="woop">
-              <label for="w-r-${p.id}">Le plus beau résultat <span>Imagine-le vraiment : qu'est-ce que tu ressens ?</span>
-                <textarea class="field" id="w-r-${p.id}" data-w="resultat">${esc(p.resultat || "")}</textarea></label>
-              <label for="w-o-${p.id}">L'obstacle en moi <span>Ce qui, en toi, pourrait t'arrêter (peur, fatigue, doute…)</span>
-                <textarea class="field" id="w-o-${p.id}" data-w="obstacle">${esc(p.obstacle || "")}</textarea></label>
-              <label for="w-p-${p.id}">Mon plan si…, alors… <span>« Si je doute, alors je relis pourquoi ça compte et je fais 5 minutes. »</span>
-                <textarea class="field" id="w-p-${p.id}" data-w="plan">${esc(p.plan || "")}</textarea></label>
-            </div>
-          </details>
           <div class="row between">
             <button class="btn alt small" type="button" data-fini="${p.id}">${p.fini ? "Le remettre en cours" : "Rêve réalisé !"}</button>
             ${confirmDream === p.id
@@ -1842,10 +1820,11 @@ img.tresor { object-fit: contain; filter: drop-shadow(0 2px 3px rgba(60,40,20,.2
       l.textContent = "♥ Gardée dans mes rêves"; l.disabled = true;
     }
   });
-  const gratPool = () => S.gratPhotos.map((x) => ({ pid: x.pid, label: "", date: x.date }));
+  // un seul mur : images de bonheur + anciennes images d'inspiration
+  const gratPool = () => S.gratPhotos.concat(S.inspirations || []).map((x) => ({ pid: x.pid, label: "", date: x.date })).sort((a, b) => String(a.date).localeCompare(String(b.date)));
   function renderGratPhotos() {
-    $("grat-board").innerHTML = S.gratPhotos.length ? boardHtml(gratPool().slice(-12).map((x) => Object.assign({}, x, { label: new Date(x.date).toLocaleDateString("fr-CH", { day: "numeric", month: "short" }) }))) : "";
-    $("grat-draw-go").hidden = !S.gratPhotos.length;
+    $("grat-board").innerHTML = gratPool().length ? boardHtml(gratPool().slice(-12).map((x) => Object.assign({}, x, { label: new Date(x.date).toLocaleDateString("fr-CH", { day: "numeric", month: "short" }) }))) : "";
+    $("grat-draw-go").hidden = !gratPool().length;
     hydratePhotos($("s-chesed"));
   }
   $("grat-photo-add").onclick = () => $("grat-photo-input").click();
@@ -2630,7 +2609,7 @@ Si la pensée évoque une envie de se faire du mal ou de mourir, réponds avec d
     try { history.replaceState(null, "", location.pathname + location.search); } catch (e) {}
     if (node) node.focus({ preventScroll: true });
   }
-  const go = (v) => openSheet({ jour: "malkhut", reves: "netzach", ancrage: "yesod", musique: "netzach", bilan: "daat" }[v] || v);
+  const go = (v) => openSheet({ jour: "malkhut", reves: "netzach", ancrage: "yesod", musique: "yesod", bilan: "daat" }[v] || v);
   document.addEventListener("click", (e) => {
     const o = e.target.closest("[data-open]"); if (o) { openSheet(o.dataset.open); return; }
     if (e.target.closest("[data-close]")) closeSheet();
@@ -3281,9 +3260,9 @@ Propose 3 pistes de réflexion courtes (une ligne chacune), au tutoiement, en fr
     else if (x.k === "souvenir") openSheet("chesed");
     else if (x.k === "baroque") {
       const m = MUSIC_MOODS.find((y) => y.k === "baroque");
-      if (mcp) { openSheet("netzach"); setTimeout(() => $("netz-music").scrollIntoView({ behavior: "smooth" }), 150); searchMusic(m.q, m.label, m.kw); } else openOut(spotifySearchUrl(m.kw));
+      if (mcp) { openSheet("yesod"); $("music-pli").open = true; setTimeout(() => $("netz-music").scrollIntoView({ behavior: "smooth" }), 150); searchMusic(m.q, m.label, m.kw); } else openOut(spotifySearchUrl(m.kw));
     } else if (x.k === "refuge") {
-      if (!S.refuges.length) { openSheet("netzach"); setTimeout(() => $("netz-music").scrollIntoView({ behavior: "smooth" }), 150); return; }
+      if (!S.refuges.length) { openSheet("yesod"); $("music-pli").open = true; setTimeout(() => $("netz-music").scrollIntoView({ behavior: "smooth" }), 150); return; }
       const r = S.refuges[Math.floor(Math.random() * S.refuges.length)];
       openOut(r.url || spotifySearchUrl(r.nom));
       $("care-msg").textContent = "« " + r.nom + " » s'ouvre dans Spotify.";
