@@ -722,6 +722,15 @@ body[data-moment="nuit"] #s-malkhut .gestes .geste.done svg { color: #fffaf0; fi
 body[data-moment="nuit"] #s-malkhut .gestes .geste.done::after { content: "✦"; background: none !important; color: #fff4d6 !important; font-size: 15px; top: 0; right: 16%; padding: 0; animation: scint 2.4s ease-in-out infinite; }
 #s-malkhut #geste-msg { font: 400 28px/1.3 "WindSong", cursive; text-align: center; color: #1f3a66; margin: 10px 4px 0; min-height: 0; }
 body[data-moment="nuit"] #s-malkhut #geste-msg { color: #f6e2a8 !important; text-shadow: 0 0 12px rgba(255,170,80,.55), 0 1px 4px rgba(8,14,30,.9) !important; }
+
+/* question du jour et rituel */
+.qjour .qj-q { font: 400 21px/1.35 "Eagle Lake", "Philosopher", serif; margin: 4px 0 6px; color: #2b3440; }
+.qjour .qj-r { font-size: 30px; line-height: 1.25; color: #1f3a66; margin: 0; }
+.rituel .rit-adieu { margin: 0; font-style: italic; color: #6b6f78; text-decoration: line-through; text-decoration-color: rgba(107,111,120,.5); }
+.rituel .rit-accueil { margin: 4px 0 0; font-size: 34px; color: #b8862a; text-shadow: 0 0 14px rgba(240,200,110,.55); }
+#rituel-show.vu .rit-adieu { animation: envol 2.2s ease both; }
+#rituel-show.vu .rit-accueil { animation: braise 1.6s .9s ease both; }
+@keyframes envol { 0% { opacity: 1; transform: none; filter: none; } 60% { opacity: .2; transform: translateY(-18px) scale(.96); filter: blur(2px); } 100% { opacity: .55; transform: none; filter: none; } }
 </style>
 
 <div class="scene" id="scene" aria-hidden="true"></div>
@@ -753,10 +762,24 @@ body[data-moment="nuit"] #s-malkhut #geste-msg { color: #f6e2a8 !important; text
         <p>Le bonheur commence par une décision : <b>ici et maintenant</b>, par des choses qui font du bien tout de suite.</p>
         <button class="btn" id="decision-go" type="button">Aujourd'hui, je choisis d'être heureuse</button>
       </div>
+      <div class="panel rituel" id="rituel">
+        <div class="title-block">
+          <h2>Dire adieu · Accueillir</h2>
+          <p class="lead">Laisser partir ce qui pèse, accueillir ce qui éclaire.</p>
+        </div>
+        <div id="rituel-form">
+          <label class="sr" for="rit-adieu">Ce à quoi je dis adieu</label>
+          <input class="field" id="rit-adieu" maxlength="100" placeholder="Aujourd'hui, je dis adieu à…">
+          <label class="sr" for="rit-accueil">Ce que j'accueille</label>
+          <input class="field" id="rit-accueil" maxlength="100" placeholder="J'accueille dans mon cœur…">
+          <div class="row"><button class="btn" id="rit-go" type="button">Dire adieu, accueillir</button><span class="hint" id="rit-msg" aria-live="polite"></span></div>
+        </div>
+        <div id="rituel-show" hidden></div>
+      </div>
       <div class="panel">
         <div class="title-block">
           <h2>Mon intention du jour</h2>
-          <p class="lead">Le bonheur commence par une décision. Une phrase pour donner la direction.</p>
+          <p class="lead">Quelle pensée as-tu envie de faire rayonner aujourd'hui ?</p>
         </div>
         <div class="intent-ecrite" id="intention-show" hidden>
           <div class="papier-ombre"><div class="papier"><p class="manuscrit" id="intention-script"></p></div></div>
@@ -832,11 +855,10 @@ body[data-moment="nuit"] #s-malkhut #geste-msg { color: #f6e2a8 !important; text
     </div>
     <div class="sheet-body">
       <div class="trav-slot"></div>
-      <div class="panel demele">
-        <div class="title-block">
-          <h2>Démêler ce que je vis</h2>
-          <p class="lead">Quatre petits pas pour y voir clair.</p>
-        </div>
+      <div class="panel qjour" data-qj="binah"></div>
+      <details class="panel tight demele">
+        <summary>Démêler ce que je vis</summary>
+        <p class="lead">Quatre petits pas pour y voir clair.</p>
         <div class="dm-step"><b>1. Ce qui s'est passé</b>
           <label class="sr" for="dm-fait">Ce qui s'est passé</label>
           <textarea class="field" id="dm-fait" placeholder="Les faits, en une phrase. Ex. ma collègue n'a pas répondu à mon message."></textarea></div>
@@ -848,7 +870,7 @@ body[data-moment="nuit"] #s-malkhut #geste-msg { color: #f6e2a8 !important; text
         <div class="dm-phrase" id="dm-phrase" hidden></div>
         <div class="row"><button class="btn" id="dm-save" type="button">Garder dans mon livre</button><span class="hint" id="dm-msg" aria-live="polite"></span></div>
         <div id="dm-trav"></div>
-      </div>
+      </details>
       <div id="binah-trav"></div>
       <div class="panel" hidden>
         <div class="eyebrow">Une pensée simple</div>
@@ -958,19 +980,20 @@ body[data-moment="nuit"] #s-malkhut #geste-msg { color: #f6e2a8 !important; text
     <div class="sheet-head" style="--c:#e08a76;--t:var(--ink)">
       <button class="back" type="button" data-close aria-label="Revenir à l'arbre">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Arbre</button>
-      <div class="sheet-title"><span class="heb">Guevourah · Force</span><h2 id="h-gevurah">Limites</h2><p>Les voix que j'écoute, et la place que je leur donne.</p></div>
+      <div class="sheet-title"><span class="heb">Guevourah · Force</span><h2 id="h-gevurah">Force</h2><p>Le courage de choisir ce qui me fait du bien.</p></div>
     </div>
     <div class="sheet-body">
       <div class="trav-slot"></div>
-      <div class="panel">
-        <h2>Là, maintenant, j'écoute…</h2>
+      <div class="panel qjour" data-qj="gevurah"></div>
+      <details class="panel tight">
+        <summary>Là, maintenant, j'écoute…</summary>
         <div class="seg" id="voices" role="group" aria-label="Quelle voix"></div>
         <label class="sr" for="voice-who">Qui ou quoi exactement</label>
         <input class="field" id="voice-who" maxlength="80" placeholder="Qui ou quoi ? (facultatif)">
         <div class="answer" id="voice-answer" hidden><p></p></div>
         <div class="row"><button class="btn" id="voice-save" type="button">Noter</button><span class="hint" id="voice-msg" aria-live="polite"></span></div>
         <div class="history" id="voice-history"></div>
-      </div>
+      </details>
 
       <details class="panel tight">
         <summary>Les voix autour de moi</summary>
@@ -1021,6 +1044,7 @@ body[data-moment="nuit"] #s-malkhut #geste-msg { color: #f6e2a8 !important; text
     </div>
     <div class="sheet-body">
       <div class="trav-slot"></div>
+      <div class="panel qjour" data-qj="netzach"></div>
       <button class="jump" type="button" id="go-music" hidden>♪ La musique qui m'élève</button>
       <div id="nextstep-host"></div>
       <div class="vision board" id="vision" hidden></div>
@@ -1063,20 +1087,18 @@ body[data-moment="nuit"] #s-malkhut #geste-msg { color: #f6e2a8 !important; text
     <div class="sheet-head" style="--c:#f0d08a;--t:var(--ink)">
       <button class="back" type="button" data-close aria-label="Revenir à l'arbre">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Arbre</button>
-      <div class="sheet-title"><span class="heb">Hod · Splendeur</span><h2 id="h-hod">Mots</h2><p>Écrire ce qui me traverse : rêves de nuit et pensées.</p></div>
+      <div class="sheet-title"><span class="heb">Hod · Splendeur</span><h2 id="h-hod">Reconnaissance</h2><p>Reconnaître ce qui est beau, en moi et autour de moi.</p></div>
     </div>
     <div class="sheet-body">
       <div class="trav-slot"></div>
-      <div class="panel">
-        <div class="title-block">
-          <h2>Carnet</h2>
-          <p class="lead">Rêves de la nuit et pensées. Ce que tu écris reste à toi.</p>
-        </div>
+      <div class="panel qjour" data-qj="hod"></div>
+      <details class="panel tight">
+        <summary>Écrire librement : rêves de nuit, pensées</summary>
         <div class="seg" id="type-pick" role="group" aria-label="Type de note"></div>
         <label class="sr" for="note-text">Texte</label>
         <textarea class="field" id="note-text"></textarea>
         <div class="row"><button class="btn" id="note-save" type="button">Garder</button><span class="hint" id="note-msg" aria-live="polite"></span></div>
-      </div>
+      </details>
       <button class="btn-grim" type="button" data-open="grimoire"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4.5C4 3.7 4.7 3 5.5 3H19v15H5.5C4.7 18 4 18.7 4 19.5z" fill="#24506f" stroke="#e9c77b" stroke-width="1.4"/><path d="M4 19.5C4 20.3 4.7 21 5.5 21H19v-3" fill="none" stroke="#e9c77b" stroke-width="1.4"/><circle cx="12" cy="10" r="3" fill="none" stroke="#e9c77b" stroke-width="1.3"/></svg>Ouvrir mon livre</button>
       <button class="lien-simple" type="button" data-open="chokhmah">Une envie qui naît ? Note-la dans Intuitions ›</button>
       <details class="hist-pli"><summary>Modifier ou effacer mes notes</summary>
@@ -1370,7 +1392,7 @@ body[data-moment="nuit"] #s-malkhut #geste-msg { color: #f6e2a8 !important; text
   ];
   const fresh = () => ({
     v: 5, gestes: DEFAULT_GESTES.slice(), faits: {}, notes: [], voix: [], checkins: [],
-    rappel: { on: false, min: 45 }, humeur: {}, gratitudes: {}, projets: [], refuges: [], pas: {}, souffle: "infinie", intentions: {}, ancre: {}, triReves: "commencer", eclairActif: null, qualites: [], traversee: null, traversees: [], decision: {}, condition: {}, inspirations: [], gratPhotos: []
+    rappel: { on: false, min: 45 }, humeur: {}, gratitudes: {}, projets: [], refuges: [], pas: {}, souffle: "infinie", intentions: {}, ancre: {}, triReves: "commencer", eclairActif: null, qualites: [], questions: {}, qDecal: {}, rituels: {}, traversee: null, traversees: [], decision: {}, condition: {}, inspirations: [], gratPhotos: []
   });
   const migrate = (o) => {
     const s = Object.assign(fresh(), o || {});
@@ -2531,10 +2553,10 @@ Si la pensée évoque une envie de se faire du mal ou de mourir, réponds avec d
     { k: "binah", heb: "Binah", mot: "Comprendre", x: 52, y: 108, fill: "#1f2f52", txt: "#fbf7ef" },
     { k: "daat", heb: "Daat", mot: "Traversée", x: 150, y: 170, fill: "rgba(255,248,235,.75)", txt: "#2b3440", dash: true },
     { k: "chesed", heb: "Hessed", mot: "Gratitude", x: 248, y: 236, fill: "#3f86c0", txt: "#fbf7ef" },
-    { k: "gevurah", heb: "Guevourah", mot: "Limites", x: 52, y: 236, fill: "#c4412a", txt: "#fbf7ef" },
+    { k: "gevurah", heb: "Guevourah", mot: "Force", x: 52, y: 236, fill: "#c4412a", txt: "#fbf7ef" },
     { k: "tiferet", heb: "Tiferet", mot: "Cœur", x: 150, y: 300, fill: "#e6bf35", txt: "#2b3440" },
     { k: "netzach", heb: "Netsah", mot: "Rêves", x: 248, y: 390, fill: "#2f7a45", txt: "#fbf7ef" },
-    { k: "hod", heb: "Hod", mot: "Mots", x: 52, y: 390, fill: "#d08a2c", txt: "#2b3440" },
+    { k: "hod", heb: "Hod", mot: "Reconnaissance", x: 52, y: 390, fill: "#d08a2c", txt: "#2b3440" },
     { k: "yesod", heb: "Yesod", mot: "Ancrage", x: 150, y: 452, fill: "#7a5ea8", txt: "#fbf7ef" },
     { k: "malkhut", heb: "Malkhout", mot: "Gestes", x: 150, y: 524, fill: "#a8452a", txt: "#fbf7ef", quarters: ["#c9a43a", "#5f7a3a", "#1f2f52", "#a8452a"] }
   ];
@@ -2544,14 +2566,14 @@ Si la pensée évoque une envie de se faire du mal ou de mourir, réponds avec d
   function seStatus0(k) {
     const t = dayKey(), notesToday = (type) => S.notes.some((n) => n.date && dayKey(new Date(n.date)) === t && type.includes(n.type));
     switch (k) {
-      case "keter": return !!S.intentions[t] || !!S.decision[t];
+      case "keter": return !!S.intentions[t] || !!S.decision[t] || !!(S.rituels || {})[t];
       case "chokhmah": return notesToday(["envie"]);
-      case "hod": return notesToday(["reve", "envie", "pensee"]);
-      case "binah": return notesToday(["pensee"]);
+      case "hod": return notesToday(["reve", "envie", "pensee"]) || qjFait("hod");
+      case "binah": return notesToday(["pensee"]) || qjFait("binah");
       case "chesed": return (S.gratitudes[t] || []).some((x) => x && x.trim());
-      case "gevurah": return S.checkins.some((c) => dayKey(new Date(c.date)) === t);
+      case "gevurah": return S.checkins.some((c) => dayKey(new Date(c.date)) === t) || qjFait("gevurah");
       case "tiferet": return !!S.humeur[t];
-      case "netzach": return !!S.pas[t];
+      case "netzach": return !!S.pas[t] || qjFait("netzach");
       case "yesod": return !!S.ancre[t] || (S.condition[t] || []).length > 0;
       case "malkhut": return (S.faits[t] || []).length > 0;
       default: return false;
@@ -2628,7 +2650,7 @@ Si la pensée évoque une envie de se faire du mal ou de mourir, réponds avec d
       if (n.k === "malkhut") sub = `${(S.faits[t] || []).filter((id) => S.gestes.some((z) => z.id === id)).length}/${S.gestes.length}`;
       if (n.k === "tiferet" && S.humeur[t]) sub = MOODS[S.humeur[t] - 1].label;
       const light = n.txt !== "#fbf7ef", ic = ICONS[n.k];
-      const fs = n.mot.length > 9 ? 38 : 46;
+      const fs = n.mot.length > 12 ? 29 : n.mot.length > 9 ? 38 : 46;
       g += `<g class="node" data-open="${n.k === "daat" ? "trav" : n.k}" tabindex="0" role="button" aria-label="${n.heb}, ${n.mot}${done ? ", fait aujourd'hui" : ""}">
         ${n.dash ? `<circle cx="${x}" cy="${y}" r="${r}" fill="rgba(255,246,230,.82)" stroke="#d9a33a" stroke-width="9" stroke-dasharray="20 14"/>` : ""}
         <circle class="main" cx="${x}" cy="${y}" r="${r}" fill="rgba(255,255,255,0)"/>
@@ -3222,6 +3244,8 @@ Propose 3 pistes de réflexion courtes (une ligne chacune), au tutoiement, en fr
     S.notes.forEach((n) => L.push({ date: n.date, el: n.type === "envie" ? "feu" : "eau", label: n.src === "demele" ? "Démêler" : n.type === "reve" ? "Rêve de nuit" : n.type === "envie" ? "Envie" : "Pensée", texte: n.texte }));
     Object.entries(S.gratitudes || {}).forEach(([k, arr]) => (arr || []).filter((x) => x && x.trim()).forEach((x) => L.push({ date: jour(k), el: "eau", label: "Gratitude", texte: x })));
     Object.entries(S.intentions || {}).forEach(([k, v]) => v && L.push({ date: k + "T07:00:00", el: "lumiere", label: "Intention", texte: v, main: 1 }));
+    Object.entries(S.rituels || {}).forEach(([k, r]) => { if (r.adieu) L.push({ date: k + "T06:58:00", el: "lumiere", label: "J'ai dit adieu à", texte: r.adieu }); if (r.accueil) L.push({ date: k + "T06:59:00", el: "lumiere", label: "J'ai accueilli", texte: r.accueil }); });
+    Object.entries(S.questions || {}).forEach(([k, o]) => Object.entries(o || {}).forEach(([sp, r]) => r && r.r && L.push({ date: r.date || jour(k), el: ELEMENT[sp] || "eau", label: r.q, texte: r.r })));
     (S.checkins || []).forEach((c) => { const v = VOICES[c.voix]; if (v) L.push({ date: c.date, el: "feu", label: "Ma voix", texte: v.label + (c.qui ? " (" + c.qui + ")" : "") }); });
     [S.traversee, ...(S.traversees || [])].filter(Boolean).forEach((t) => {
       TRAV.forEach((M) => {
@@ -3529,10 +3553,68 @@ Propose 3 pistes de réflexion courtes (une ligne chacune), au tutoiement, en fr
     S = migrate(o); save(); renderAll();
   }
 
+
+  /* ================= questions du jour (inspirées du sens de chaque vase) ================= */
+  const QJ = {
+    hod: { titre: "Reconnaître", qs: ["Qu'ai-je bien fait aujourd'hui, même un tout petit peu ?", "Quelle qualité ai-je montrée aujourd'hui ?", "Quel mot doux puis-je me dire ce soir ?", "Qui aimerais-je remercier, et pour quoi ?", "De quoi suis-je fière cette semaine ?", "Qu'est-ce qui était beau aujourd'hui ?", "Quel petit progrès ai-je remarqué ?", "Qu'est-ce que mon corps a fait pour moi aujourd'hui ?", "Qu'est-ce que quelqu'un a fait de bien pour moi récemment ?", "Quel moment d'aujourd'hui aimerais-je garder ?"] },
+    gevurah: { titre: "Choisir", qs: ["Quelle voix ai-je envie d'écouter aujourd'hui, et laquelle laisser passer ?", "À quoi ai-je dit non aujourd'hui pour me respecter ?", "Qu'est-ce que je peux laisser tomber cette semaine ?", "Où ai-je eu du courage aujourd'hui ?", "Qu'est-ce qui me donne de l'énergie, et qu'est-ce qui m'en prend ?", "Qui me fait du bien quand je le vois ?", "Quelle limite douce pourrais-je poser demain ?", "Qu'est-ce qui mérite vraiment mon temps ?", "Dans quelle situation me suis-je sentie forte ?", "De quoi ai-je besoin de me protéger en ce moment ?"] },
+    binah: { titre: "Comprendre", qs: ["Qu'ai-je appris aujourd'hui, et de qui ?", "Qu'est-ce que je comprends aujourd'hui que je ne comprenais pas hier ?", "Si une amie vivait ce que je vis, que lui dirais-je ?", "Qu'est-ce qui compte vraiment, là-dedans ?", "Dans un an, que penserai-je de ce moment ?", "Quelle autre façon de voir les choses est possible ?", "Qu'est-ce que cette émotion essaie de me dire ?", "Qu'est-ce qui mûrit en moi en ce moment ?", "Quelle erreur m'a fait grandir ?", "Quelle situation m'a appris quelque chose sur moi ?"] },
+    netzach: { titre: "M'élever", qs: ["Quand mon rêve sera réalisé, quelle joie ressentirai-je ?", "Quel petit pas vers mon rêve puis-je faire aujourd'hui ?", "À quoi ressemblera une journée de ma vie quand mon rêve sera là ?", "Qu'est-ce qui m'a rapprochée de mon rêve cette semaine ?", "Qui pourrait m'aider à avancer ?", "Quel obstacle pourrait se présenter, et que ferai-je alors ?", "Qu'ai-je envie de vivre cette année ?", "De quoi suis-je fière dans ce que j'ai déjà fait ?"] }
+  };
+  function qjFait(k) { const o = (S.questions || {})[dayKey()]; return !!(o && o[k] && o[k].r); }
+  function qjQuestion(k) {
+    const d = dayKey(), pool = QJ[k].qs; let h = 0;
+    for (const c of d + k) h = (h * 31 + c.charCodeAt(0)) % 9973;
+    return pool[(h + ((S.qDecal || {})[d + k] || 0)) % pool.length];
+  }
+  function renderQJ() {
+    document.querySelectorAll("[data-qj]").forEach((el) => {
+      const k = el.dataset.qj, o = ((S.questions || {})[dayKey()] || {})[k];
+      el.innerHTML = o && o.r
+        ? `<div class="eyebrow">La question du jour</div><p class="qj-q">${esc(o.q)}</p><p class="manuscrit qj-r">${esc(o.r)}</p>
+           <button class="linkbtn" type="button" data-qj-edit="${k}">Changer ma réponse</button>`
+        : `<div class="eyebrow">La question du jour</div><p class="qj-q">${esc(qjQuestion(k))}</p>
+           <label class="sr" for="qj-${k}">Ma réponse</label><input class="field" id="qj-${k}" maxlength="200" placeholder="Une phrase suffit…" value="${esc((o && o.brouillon) || "")}">
+           <div class="row"><button class="btn" type="button" data-qj-save="${k}">Garder</button><button class="linkbtn" type="button" data-qj-autre="${k}">Une autre question</button></div>`;
+    });
+  }
+  document.addEventListener("click", (e) => {
+    const sv = e.target.closest("[data-qj-save]"), au = e.target.closest("[data-qj-autre]"), ed = e.target.closest("[data-qj-edit]");
+    if (!sv && !au && !ed) return;
+    const d = dayKey(); S.questions = S.questions || {}; S.qDecal = S.qDecal || {}; S.questions[d] = S.questions[d] || {};
+    if (sv) { const k = sv.dataset.qjSave, v = $("qj-" + k).value.trim(); if (!v) { $("qj-" + k).focus(); return; }
+      S.questions[d][k] = { q: qjQuestion(k), r: v, date: new Date().toISOString() }; }
+    if (au) { const k = au.dataset.qjAutre; S.qDecal[d + k] = (S.qDecal[d + k] || 0) + 1; }
+    if (ed) { const k = ed.dataset.qjEdit, o = S.questions[d][k]; S.questions[d][k] = { brouillon: o.r }; }
+    save(); renderQJ(); renderTree();
+  });
+
+  /* ================= rituel : dire adieu, accueillir (Keter) ================= */
+  function renderRituel() {
+    const r = (S.rituels || {})[dayKey()];
+    $("rituel-form").hidden = !!r; $("rituel-show").hidden = !r;
+    if (!r) return;
+    $("rituel-show").innerHTML = `${r.adieu ? `<p class="rit-adieu">Adieu, ${esc(r.adieu)}</p>` : ""}
+      ${r.accueil ? `<p class="manuscrit rit-accueil">J'accueille ${esc(r.accueil)}</p>` : ""}
+      <div class="row">${r.accueil && !S.intentions[dayKey()] ? `<button class="lien-plume encre" type="button" id="rit-intention">En faire mon intention <span aria-hidden="true">→</span></button>` : ""}
+      <button class="linkbtn" type="button" id="rit-redo">Recommencer</button></div>`;
+  }
+  $("rit-go").onclick = () => {
+    const adieu = $("rit-adieu").value.trim(), accueil = $("rit-accueil").value.trim();
+    if (!adieu && !accueil) { $("rit-msg").textContent = "Écris au moins une des deux phrases."; return; }
+    S.rituels = S.rituels || {}; S.rituels[dayKey()] = { adieu, accueil, date: new Date().toISOString() };
+    $("rit-msg").textContent = ""; save(); renderRituel(); renderTree();
+    $("rituel-show").classList.remove("vu"); void $("rituel-show").offsetWidth; $("rituel-show").classList.add("vu");
+  };
+  $("rituel-show").addEventListener("click", (e) => {
+    const r = S.rituels[dayKey()];
+    if (e.target.closest("#rit-intention")) { const v = r.accueil.charAt(0).toUpperCase() + r.accueil.slice(1); S.intentions[dayKey()] = v; save(); renderIntention(); renderRituel(); renderTree(); }
+    if (e.target.closest("#rit-redo")) { $("rit-adieu").value = r.adieu || ""; $("rit-accueil").value = r.accueil || ""; delete S.rituels[dayKey()]; save(); renderRituel(); renderTree(); }
+  });
   function renderAll() {
     renderMoods(); renderGrat(); renderNextStep(); renderGarden(); renderGestes(); renderDreams();
     renderTypePick(); renderEntries(); renderVoices(); renderPeople(); renderRefuges(); renderBilan(); armRappel();
-    renderIntention(); renderTree(); renderCare(); renderQualites(); renderDecision(); renderCond(); renderIntu(); renderInsp(); renderGratPhotos();
+    renderIntention(); renderTree(); renderCare(); renderQualites(); renderDecision(); renderCond(); renderIntu(); renderInsp(); renderGratPhotos(); renderQJ(); renderRituel();
   }
   renderAll(); showThought(); renderSteps(); copieDuJour();
   const hash = location.hash.slice(1);
