@@ -663,6 +663,11 @@ img.tresor { object-fit: contain; filter: drop-shadow(0 2px 3px rgba(60,40,20,.2
 #s-mieux .hint { color: #f1dcaa !important; font-size: 16px; text-align: center; }
 #s-mieux .sheet-head { box-shadow: 0 6px 20px rgba(0,0,0,.25); }
 #s-mieux .care .geste { box-shadow: 0 0 18px rgba(255,190,110,.18); }
+.souffle-pli { border-top: 1px solid rgba(201,162,82,.45); padding: 8px 2px 2px; }
+.souffle-pli summary { cursor: pointer; list-style: none; font-weight: 700; color: #3a404b; }
+.souffle-pli summary::before { content: "▸ "; color: #7a5ea8; } .souffle-pli[open] summary::before { content: "▾ "; }
+.souffle-pli p { margin: 6px 0 2px; line-height: 1.5; color: #2b3440; }
+.souffle-pli p.sens { font: 500 25px/1.4 "WindSong", cursive; color: #3a2f5a; }
 </style>
 
 <div class="scene" id="scene" aria-hidden="true"></div>
@@ -1083,6 +1088,8 @@ img.tresor { object-fit: contain; filter: drop-shadow(0 2px 3px rgba(60,40,20,.2
         <h2>Respirer</h2>
         <div class="seg breath-types" id="breath-types" role="group" aria-label="Type de respiration"></div>
         <p class="hint breath-desc" id="breath-desc"></p>
+        <details class="souffle-pli"><summary>Ce qui se passe dans le corps</summary><p id="breath-sci"></p></details>
+        <details class="souffle-pli"><summary>Le sens du souffle</summary><p id="breath-sens" class="sens"></p></details>
         <svg class="inf" id="breath-svg" viewBox="0 0 300 160" aria-hidden="true"></svg>
         <div class="breath-label" id="breath-label" aria-live="polite">Suis le point du doigt</div>
         <div class="breath-timer" id="breath-timer"></div>
@@ -2005,16 +2012,22 @@ Réponds uniquement en JSON : {"etapes": ["..."], "obstacle": "...", "plan": "..
   // chaque phase : in (inspire), hold (garde), out (expire) ; la forme suit le nombre de phases (2 = ∞, 3 = triangle, 4 = carré)
   const BREATHS = {
     infinie: { nom: "Infinie", phases: [["in", 4], ["out", 6]], cycles: 6,
+      sci: "Quand l'expiration dure plus longtemps que l'inspiration, le nerf vague, le grand frein du système nerveux, se met en action : le cœur ralentit un peu à chaque expiration et le corps passe en mode repos.", sens: "Le signe de l'infini : ce qui entre et ce qui sort ne s'arrêtent jamais. Tu reçois un peu, tu donnes un peu plus. Comme la mer qui monte et se retire, tu n'as rien à retenir.",
       desc: "Inspire 4 s, expire 6 s. L'expiration longue calme le corps. Pour tous les jours." },
     coherence: { nom: "Cohérence cardiaque", phases: [["in", 5], ["out", 5]], cycles: 30,
+      sci: "À environ 6 respirations par minute, le rythme du cœur et celui du souffle se synchronisent : la variabilité cardiaque augmente, signe d'un système nerveux souple. Plusieurs études montrent une baisse du stress ressenti quand on la pratique régulièrement.", sens: "Le cœur et le souffle se mettent d'accord, comme deux musiciens qui trouvent le même tempo. C'est l'harmonie de Tiferet, le centre de l'arbre : quand le cœur est accordé, tout le reste s'aligne.",
       desc: "5 s / 5 s, 6 respirations par minute pendant 5 minutes. Idéal 3 fois par jour (matin, midi, fin d'après-midi)." },
     "478": { nom: "4-7-8", phases: [["in", 4], ["hold", 7], ["out", 8]], cycles: 4,
+      sci: "La longue rétention puis l'expiration très lente ralentissent le rythme cardiaque et freinent l'emballement des pensées. C'est une technique popularisée par le Dr Andrew Weil, utile avant de dormir. Les études sont encore peu nombreuses, mais la logique est celle de toute expiration longue.", sens: "Inspirer, c'est accueillir. Garder, c'est laisser l'instant se déposer en toi, comme une graine dans la terre. Expirer longuement, c'est rendre au monde ce qui est prêt à partir.",
       desc: "Inspire par le nez 4 s, garde 7 s poumons pleins, expire lentement par la bouche 8 s. Avant un moment difficile ou pour s'endormir. 4 cycles." },
     carre: { nom: "Carrée", phases: [["in", 4], ["hold", 4], ["out", 4], ["hold", 4]], cycles: 8,
+      sci: "Utilisée par les pompiers, les pilotes et les militaires (« box breathing »), elle occupe l'attention par le comptage et stabilise le souffle. C'est efficace pour retrouver son calme et sa concentration dans un moment tendu.", sens: "Le carré est la forme de la terre et de la stabilité : quatre côtés, quatre éléments, quatre saisons. Tu poses tes fondations, côté après côté, comme on construit une maison solide.",
       desc: "4 s pour chaque côté : inspire, garde, expire, garde poumons vides. Pour retrouver concentration et sang-froid." },
     soupir: { nom: "Soupir apaisant", phases: [["in", 2.5], ["in2", 1], ["out", 6]], cycles: 6,
+      sci: "Le double inspir réouvre les petites alvéoles des poumons qui se ferment avec le stress, et la longue expiration évacue mieux le gaz carbonique. Une étude de Stanford (2023) l'a trouvé particulièrement efficace pour améliorer l'humeur en 5 minutes par jour.", sens: "C'est le soupir que fait naturellement un enfant après avoir pleuré. Ton corps sait déjà se consoler : tu lui redonnes simplement la permission de déposer ce qui pèse.",
       desc: "Grande inspiration par le nez, puis une 2e petite pour remplir à fond, et une longue expiration par la bouche. Le plus rapide pour se calmer." },
     energie: { nom: "Énergie douce", phases: [["in", 6], ["out", 4]], cycles: 6,
+      sci: "Une inspiration plus longue que l'expiration active légèrement le système nerveux de l'éveil : le cœur accélère un peu à chaque inspiration. C'est idéal pour se réveiller en douceur, sans café.", sens: "Le souffle du matin, comme le soleil qui se lève sur la mer. Tu prends plus que tu ne rends, pour faire le plein de lumière avant la journée.",
       desc: "Inspire plus longtemps que tu n'expires (6 s / 4 s). Pour se réveiller en douceur, le matin." }
   };
   const PH = { in: ["Inspire", "#5fa8a3"], in2: ["Inspire encore un peu", "#3f8a85"], hold: ["Garde", "#7a5ea8"], out: ["Expire", "#e3b04f"] };
@@ -2029,7 +2042,7 @@ Réponds uniquement en JSON : {"etapes": ["..."], "obstacle": "...", "plan": "..
   function drawBreath() {
     const b = BREATHS[breathType], segs = shapeSegments(b.phases.length);
     $("breath-types").innerHTML = ["infinie", "coherence", "478", "carre", "soupir", "energie"].map((k) => [k, BREATHS[k]]).map(([k, v]) => `<button type="button" class="chip" style="--c:#7a5ea8;--t:#fbf7ef" data-bt="${k}" aria-pressed="${k === breathType}">${v.nom}</button>`).join("");
-    $("breath-desc").textContent = b.desc;
+    $("breath-desc").textContent = b.desc; $("breath-sci").textContent = b.sci || ""; $("breath-sens").textContent = b.sens || "";
     const tot = b.phases.reduce((a, p) => a + p[1], 0) * b.cycles;
     $("breath-go").textContent = `Commencer · ${tot >= 60 ? Math.round(tot / 60) + " min" : Math.round(tot) + " s"}`;
     $("breath-note").textContent = b.phases.some((p) => p[0] === "hold") ? "Si tu as la tête qui tourne, reprends une respiration normale. Garder l'air ne doit jamais forcer." : "";
