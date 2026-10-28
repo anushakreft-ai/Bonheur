@@ -1540,40 +1540,32 @@ body[data-moment="nuit"] .sheet[data-nuit="1"] .sheet-body .inf text { fill: #f4
     return s;
   };
   /* ================= la Traversée : données (Terre → Eau → Feu → Air → Lumière) ================= */
+  // 4 questions par monde (20 au lieu de 35) ; chaque question a 3 formulations, tirées au sort à chaque traversée (t.seed)
   const TRAV = [
     { k: "terre", de: "de la Terre", titre: "Ta quête", tresorNom: "la pierre", qt: "Qu'as-tu pris dans le monde de la Terre ?", qs: [
-      ["t1", "malkhut", "Que cherches-tu ?"],
-      ["t2", "malkhut", "Comment est né ton désir ?"],
-      ["t3", "malkhut", "Pourquoi cette quête maintenant ?"],
-      ["t4", "malkhut", "Imagine ta quête accomplie : que vois-tu ?"],
-      ["t5", "malkhut", "Qu'est-ce que cela t'apporterait ?"],
-      ["t6", "malkhut", "Qu'est-ce que cela apporterait aux autres ?"],
-      ["t7", "malkhut", "As-tu vu des signes reliés à ta quête ?"]] },
+      ["t1", "malkhut", ["Que cherches-tu ?", "Qu'est-ce que tu veux vraiment, au fond ?", "Si tu pouvais changer une chose dans ta vie, laquelle ?"]],
+      ["t3", "malkhut", ["Pourquoi cette quête maintenant ?", "Qu'est-ce qui a réveillé ce désir ces derniers temps ?", "Qu'est-ce qui te dit que c'est le moment ?"]],
+      ["t4", "malkhut", ["Imagine ta quête accomplie : que vois-tu ?", "Ta quête est réussie : raconte une journée ordinaire.", "Ferme les yeux : où es-tu, avec qui, quand c'est fait ?"]],
+      ["t6", "malkhut", ["Qu'est-ce que cela apporterait aux autres ?", "Qui d'autre que toi en serait touché, et comment ?", "Que pourrais-tu donner, une fois ta quête accomplie ?"]]] },
     { k: "eau", de: "de l'Eau", titre: "Tes ressources", tresorNom: "le coquillage", qt: "Qu'as-tu appris dans le monde de l'Eau ?", qs: [
-      ["e1", "binah", "Quelles sont tes armes ?"],
-      ["e2", "hod", "Quel est ton meilleur souvenir ?"],
-      ["e3", "hod", "Quel était ton jeu favori ?"],
-      ["e4", "binah", "Que pense de ta quête la personne qui compte le plus pour toi ?"],
-      ["e5", "chesed", "Qu'as-tu réussi dont tu es fière ?"],
-      ["e6", "chesed", "Sur quoi peux-tu compter pour réussir ta quête ?"],
-      ["e7", "chesed", "Sur qui peux-tu compter pour réussir ta quête ?"]] },
+      ["e1", "binah", ["Quelles sont tes armes ?", "Quelles forces as-tu déjà en toi pour cette quête ?", "Qu'est-ce que tu sais faire que peu de gens savent faire ?"]],
+      ["e5", "chesed", ["Qu'as-tu réussi dont tu es fière ?", "Raconte une fois où tu as tenu bon.", "Quelle épreuve passée te prouve que tu peux y arriver ?"]],
+      ["e7", "chesed", ["Sur qui peux-tu compter pour réussir ta quête ?", "Qui serait heureux de t'aider, si tu demandais ?", "À qui pourrais-tu parler de ta quête cette semaine ?"]],
+      ["e2", "hod", ["Quel est ton meilleur souvenir ?", "Quel souvenir te redonne de l'élan quand tu y penses ?", "Enfant, qu'est-ce qui te rendait vraiment heureuse ?"]]] },
     { k: "feu", de: "du Feu", titre: "Les épreuves", tresorNom: "la braise", intro: "Ici, on regarde ce qui freine, pour mieux le traverser.", qt: "Qu'as-tu pris dans le monde du Feu ?", qs: [
-      ["f1", "gevurah", "Quelles sont tes peurs ?"],
-      ["f2", "gevurah", "Qu'est-ce qui t'empêche de réussir ta quête aujourd'hui ?"],
-      ["f3", "gevurah", "Quels obstacles viennent des autres ?"],
-      ["f4", "gevurah", "Quels obstacles viennent de toi ?"],
-      ["f5", "chokhmah", "As-tu vu des signes négatifs liés à ta quête ?"],
-      ["f6", "chokhmah", "Quelles solutions as-tu déjà essayées ?"],
-      ["f7", "netzach", "Y a-t-il un risque pour toi à réussir ta quête ?"]] },
+      ["f1", "gevurah", ["Quelles sont tes peurs ?", "Qu'est-ce qui te fait hésiter, honnêtement ?", "Que craindrais-tu de perdre en réussissant ?"]],
+      ["f4", "gevurah", ["Quels obstacles viennent de toi ?", "Quelle habitude, en toi, freine ta quête ?", "Qu'est-ce que tu remets à plus tard, et pourquoi ?"]],
+      ["f6", "chokhmah", ["Quelles solutions as-tu déjà essayées ?", "Qu'est-ce qui a déjà un peu marché ?", "Si l'obstacle revient, que feras-tu cette fois ?"]],
+      ["f7", "netzach", ["Y a-t-il un risque pour toi à réussir ta quête ?", "Qu'est-ce qui changerait, et pourrait te déranger, si tu réussissais ?", "Qu'est-ce qui, dans la réussite, te fait un peu peur ?"]]] },
     { k: "air", de: "de l'Air", titre: "L'élévation", tresorNom: "la plume", qt: "Qu'as-tu pris dans le monde de l'Air ?", qs: [
-      ["a1", "tiferet", "Es-tu prête à payer le prix ?"],
-      ["a2", "tiferet", "En quoi ta quête dépasse-t-elle ta propre histoire ?"],
-      ["a3", "yesod", "Si tu concentrais toutes tes pensées sur ta quête, qu'en résulterait-il ?"],
-      ["a4", "yesod", "À quelle sorte de magie dois-tu faire appel ?"],
-      ["a5", "tiferet", "Quelle relation entretiens-tu avec l'invisible ?"],
-      ["a6", "tiferet", "Reviens à ta quête accomplie : comment as-tu surmonté les obstacles ?"],
-      ["a7", "yesod", "Quel rituel quotidien peux-tu adopter pour réussir ta quête ?"]] }
+      ["a2", "tiferet", ["En quoi ta quête dépasse-t-elle ta propre histoire ?", "À quoi de plus grand que toi ta quête est-elle reliée ?", "Que dirait de ta quête la personne que tu admires le plus ?"]],
+      ["a4", "yesod", ["À quelle sorte de magie dois-tu faire appel ?", "Quelle qualité devras-tu cultiver pour y arriver ?", "Quelle force inattendue pourrais-tu réveiller en toi ?"]],
+      ["a6", "tiferet", ["Reviens à ta quête accomplie : comment as-tu surmonté les obstacles ?", "Vue depuis la réussite, quelle a été l'étape décisive ?", "Regarde en arrière depuis le but : qu'as-tu fait de différent ?"]],
+      ["a7", "yesod", ["Quel rituel quotidien peux-tu adopter pour réussir ta quête ?", "Quel tout petit geste, chaque jour, te rapprocherait ?", "« Chaque matin, après…, je… » : complète la phrase pour ta quête."]]] }
   ];
+  // anciennes questions (traversées commencées avant le 28.10.2026), pour le récit et le livre
+  const TRAV_ANCIEN = { t2: "Comment est né ton désir ?", t5: "Qu'est-ce que cela t'apporterait ?", t7: "As-tu vu des signes reliés à ta quête ?", e3: "Quel était ton jeu favori ?", e4: "Que pense de ta quête la personne qui compte le plus pour toi ?", e6: "Sur quoi peux-tu compter pour réussir ta quête ?", f2: "Qu'est-ce qui t'empêche de réussir ta quête aujourd'hui ?", f3: "Quels obstacles viennent des autres ?", f5: "As-tu vu des signes négatifs liés à ta quête ?", a1: "Es-tu prête à payer le prix ?", a3: "Si tu concentrais toutes tes pensées sur ta quête, qu'en résulterait-il ?", a5: "Quelle relation entretiens-tu avec l'invisible ?" };
+  const qTxt = (q, t) => { const v = q[2]; if (!Array.isArray(v)) return v; const seed = t && typeof t.seed === "number" ? t.seed : 0; return v[(seed + q[0].charCodeAt(1) * 7) % v.length]; };
   const TRESOR_SVG = {
     terre: `<ellipse cx="24" cy="29" rx="17" ry="11" fill="#a68d72"/><ellipse cx="21" cy="26" rx="10" ry="5" fill="#c4ab8e"/><path d="M11 30c7 4 19 4 26-1" stroke="#7d6650" stroke-width="2" fill="none" stroke-linecap="round"/>`,
     eau: `<path d="M24 41 8 20Q24 3 40 20Z" fill="#f6d3c2" stroke="#c98a6e" stroke-width="2" stroke-linejoin="round"/><path d="M24 41 13 15M24 41 18 10M24 41V8M24 41 30 10M24 41 35 15" stroke="#c98a6e" stroke-width="1.6"/><path d="M19 41h10l-2 4h-6z" fill="#c98a6e"/>`,
@@ -3246,7 +3238,7 @@ Propose 3 pistes de réponse courtes (une ligne chacune), concrètes et personne
     const q = pend[0], draft = (t.draft || {})[q[0]] || "";
     const rappel = q[0] === "a6" && t.rep.t4 && t.rep.t4.t.trim() ? `<p class="trav-rappel">Au début, dans la Terre, tu imaginais : « ${esc(t.rep.t4.t.trim())} »</p>` : "";
     slot.innerHTML = `<div class="panel trav-card">${head}${M.intro ? `<p class="hint">${M.intro}</p>` : ""}
-      <h3 class="trav-q">${q[2]}</h3>${rappel}
+      <h3 class="trav-q">${qTxt(q, t)}</h3>${rappel}
       <label class="sr" for="trav-in-${k}">Ma réponse</label>
       <textarea class="field" id="trav-in-${k}" data-trav-draft="${q[0]}" placeholder="Écris librement…">${esc(draft)}</textarea>
       <div class="row"><button class="btn small" type="button" data-trav-save="${q[0]}">Garder</button>
@@ -3261,7 +3253,7 @@ Propose 3 pistes de réponse courtes (une ligne chacune), concrètes et personne
       if (i > t.monde) return "";
       const items = M.qs.filter((q) => travDone(t, q[0])).map((q) => {
         const r = (t.rep[q[0]] || {}).t || "";
-        return `<div class="trav-item"><b>${q[2]}</b>${edit ? `<textarea class="field" data-trav-edit="${q[0]}" placeholder="Pas encore de réponse">${esc(r)}</textarea>` : `<p>${r ? esc(r) : "<i>passée</i>"}</p>`}</div>`;
+        return `<div class="trav-item"><b>${qTxt(q, t)}</b>${edit ? `<textarea class="field" data-trav-edit="${q[0]}" placeholder="Pas encore de réponse">${esc(r)}</textarea>` : `<p>${r ? esc(r) : "<i>passée</i>"}</p>`}</div>`;
       }).join("");
       const tr = ((t.oracles || {})[M.k] ? `<div class="trav-item tr">${traitsSvg(t.oracles[M.k].traits)}<div><b>L'oracle</b><p>${esc(oracleTexte(t.oracles[M.k]))}</p></div></div>` : "")
         + (t.tresors[M.k] ? `<div class="trav-item tr">${tresorSvg(M.k)}<div><b>${M.qt}</b><p>${esc(t.tresors[M.k].t)}</p></div></div>` : "");
@@ -3304,7 +3296,7 @@ Propose 3 pistes de réponse courtes (une ligne chacune), concrètes et personne
         cur += `<div class="panel trav-card"><span class="trav-kicker">Monde ${M.de} · ${M.titre} · ${M.qs.length - all.length + 1}/${M.qs.length}</span>
           ${M.intro ? `<p class="hint">${M.intro}</p>` : ""}
           <span class="trav-sph" style="--c:${n.fill}"><i></i>${n.heb} · ${n.mot}</span>
-          <h3 class="trav-q">${q[2]}</h3>${rappel}
+          <h3 class="trav-q">${qTxt(q, t)}</h3>${rappel}
           <label class="sr" for="trav-in">Ma réponse</label>
           <textarea class="field" id="trav-in" data-trav-draft="${q[0]}" placeholder="Écris librement…">${esc(draft)}</textarea>
           <div class="row"><button class="btn small" type="button" data-trav-save="${q[0]}">Garder</button>
@@ -3351,7 +3343,7 @@ Propose 3 pistes de réponse courtes (une ligne chacune), concrètes et personne
     if (el.closest("#trav-start")) {
       const v = $("trav-titre").value.trim(); if (!v) { $("trav-msg").textContent = "Écris d'abord ce que tu cherches."; return; }
       if (t) (S.traversees = S.traversees || []).unshift(t);
-      S.traversee = { id: uid(), titre: v, reveId: $("trav-titre").dataset.reve || null, debut: new Date().toISOString(), monde: 0, rep: {}, pass: [], tresors: {}, draft: {}, decision: null, fin: null };
+      S.traversee = { id: uid(), titre: v, reveId: $("trav-titre").dataset.reve || null, debut: new Date().toISOString(), monde: 0, rep: {}, pass: [], tresors: {}, draft: {}, decision: null, fin: null, seed: Math.floor(Math.random() * 1000) };
       save(); renderTravSheet(); renderTravSlot("keter"); return;
     }
     if (!t) return;
@@ -3371,12 +3363,12 @@ Propose 3 pistes de réponse courtes (une ligne chacune), concrètes et personne
     if (ai && sampleFn) {
       const id = ai.dataset.travAi, q = travQ(id), msg = ai.parentElement.querySelector("[data-trav-aimsg]"), ta = document.querySelector(`[data-trav-draft="${id}"]`);
       ai.disabled = true; msg.textContent = "Je réfléchis…";
-      const before = TRAV.flatMap((M) => M.qs).filter((x) => t.rep[x[0]] && t.rep[x[0]].t.trim()).slice(-8).map((x) => `- ${x[2]} → ${t.rep[x[0]].t.trim()}`).join("\n");
+      const before = TRAV.flatMap((M) => M.qs).filter((x) => t.rep[x[0]] && t.rep[x[0]].t.trim()).slice(-8).map((x) => `- ${qTxt(x, t)} → ${t.rep[x[0]].t.trim()}`).join("\n");
       try {
         const r = await sampleFn(`Une personne fait « la Traversée » : un voyage intérieur à travers la Terre, l'Eau, le Feu et l'Air, autour de sa quête : « ${t.titre} ».
 Ses réponses récentes :
 ${before || "(aucune)"}
-Question actuelle : « ${q[2]} ».
+Question actuelle : « ${qTxt(q, t)} ».
 Propose 3 pistes de réflexion courtes (une ligne chacune), au tutoiement, en français de Suisse romande, ton doux et positif. Ce sont des pistes pour l'aider à trouver sa propre réponse, pas des réponses à sa place. Pas d'introduction.`);
         ta.value = (ta.value ? ta.value + "\n" : "") + r.text.trim(); t.draft[id] = ta.value; save();
         msg.textContent = "Garde ce qui te parle, efface le reste.";
@@ -3434,7 +3426,8 @@ Propose 3 pistes de réflexion courtes (une ligne chacune), au tutoiement, en fr
     (S.checkins || []).forEach((c) => { const v = VOICES[c.voix]; if (v) L.push({ date: c.date, el: "feu", label: "Ma voix", texte: v.label + (c.qui ? " (" + c.qui + ")" : "") }); });
     [S.traversee, ...(S.traversees || [])].filter(Boolean).forEach((t) => {
       TRAV.forEach((M) => {
-        M.qs.forEach((q) => { const r = t.rep[q[0]]; if (r && r.t.trim()) L.push({ date: jour(r.date), el: M.k, label: "Traversée · " + q[2], texte: r.t }); });
+        M.qs.forEach((q) => { const r = t.rep[q[0]]; if (r && r.t.trim()) L.push({ date: jour(r.date), el: M.k, label: "Traversée · " + qTxt(q, t), texte: r.t }); });
+        Object.keys(t.rep).filter((id) => id[0] === M.k[0] && TRAV_ANCIEN[id] && t.rep[id].t.trim()).forEach((id) => L.push({ date: jour(t.rep[id].date), el: M.k, label: "Traversée · " + TRAV_ANCIEN[id], texte: t.rep[id].t }));
         const or = (t.oracles || {})[M.k]; if (or) L.push({ date: jour(or.date), el: M.k, label: "Oracle · Monde " + M.de, texte: oracleTexte(or) });
         const tr = t.tresors[M.k]; if (tr) L.push({ date: jour(tr.date), el: M.k, label: "Trésor · " + M.qt, texte: tr.t });
       });
