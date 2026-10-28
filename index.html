@@ -1360,7 +1360,7 @@ body[data-moment="nuit"] .sheet[data-nuit="1"] .sheet-body .inf text { fill: #f4
     <div class="sheet-head" style="--c:#10294f;--t:#fbf7ef">
       <button class="back" type="button" data-close aria-label="Revenir à l'arbre">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Arbre</button>
-      <div class="sheet-title"><span class="heb">Terre · Eau · Feu · Air · Lumière</span><h2 id="h-trav">La Traversée</h2><p id="trav-sub"></p></div>
+      <div class="sheet-title"><span class="heb">Terre · Eau · Feu · Air · Aube</span><h2 id="h-trav">La Traversée</h2><p id="trav-sub"></p></div>
     </div>
     <div class="sheet-body"><div id="trav-body" style="display:grid;gap:16px"></div></div>
   </section>
@@ -1542,22 +1542,22 @@ body[data-moment="nuit"] .sheet[data-nuit="1"] .sheet-body .inf text { fill: #f4
   /* ================= la Traversée : données (Terre → Eau → Feu → Air → Lumière) ================= */
   // 4 questions par monde (20 au lieu de 35) ; chaque question a 3 formulations, tirées au sort à chaque traversée (t.seed)
   const TRAV = [
-    { k: "terre", de: "de la Terre", titre: "Ta quête", tresorNom: "la pierre", qt: "Qu'as-tu pris dans le monde de la Terre ?", qs: [
+    { k: "terre", de: "de la Terre", titre: "Ta quête", mythe: "Mokoch, la Terre humide", intro: "Mokoch, la Terre humide, mère des commencements. C'est ici que naît le manque qui met en route : ce que tu cherches vraiment.", tresorNom: "la pierre d'Alatyr", qt: "Quelle pierre d'Alatyr emportes-tu de la Terre ? (une chose sûre, sur laquelle tout repose)", qs: [
       ["t1", "malkhut", ["Que cherches-tu ?", "Quel manque, ou quel appel, t'a mise en route ?", "Si tu pouvais changer une chose dans ta vie, laquelle ?"]],
       ["t3", "malkhut", ["Pourquoi cette quête maintenant ?", "Qu'est-ce qui a réveillé ce désir ces derniers temps ?", "Qu'est-ce qui te dit que c'est le moment ?"]],
       ["t4", "malkhut", ["Imagine ta quête accomplie : que vois-tu ?", "Ta quête est réussie : raconte une journée ordinaire.", "Ferme les yeux : où es-tu, avec qui, quand c'est fait ?"]],
       ["t6", "malkhut", ["Qui, autour de toi, sentirait la différence ?", "Qui d'autre que toi en serait touché, et comment ?", "Que pourrais-tu donner, une fois ta quête accomplie ?"]]] },
-    { k: "eau", de: "de l'Eau", titre: "Tes ressources", tresorNom: "le coquillage", qt: "Qu'as-tu appris dans le monde de l'Eau ?", qs: [
+    { k: "eau", de: "de l'Eau", titre: "Tes ressources", mythe: "L'eau vive et l'eau morte", intro: "Dans les contes, l'eau morte referme les blessures et l'eau vive redonne la vie. Ici, tu reconnais ce qui te porte déjà.", tresorNom: "le coquillage de Bouïane", qt: "Quel coquillage ramènes-tu de l'île de Bouïane ? (une ressource que tu ne veux plus oublier)", qs: [
       ["e1", "binah", ["Quelles sont tes armes ?", "Quelles forces as-tu déjà en toi pour cette quête ?", "Qu'est-ce que tu sais faire que peu de gens savent faire ?"]],
       ["e5", "chesed", ["Qu'as-tu réussi dont tu es fière ?", "Raconte une fois où tu as tenu bon.", "Quelle épreuve passée te prouve que tu peux y arriver ?"]],
       ["e7", "chesed", ["Sur qui peux-tu compter pour réussir ta quête ?", "Qui serait heureux de t'aider, si tu demandais ?", "À qui pourrais-tu parler de ta quête cette semaine ?"]],
       ["e2", "hod", ["Quel est ton meilleur souvenir ?", "Quel souvenir te redonne de l'élan quand tu y penses ?", "Enfant, qu'est-ce qui te rendait vraiment heureuse ?"]]] },
-    { k: "feu", de: "du Feu", titre: "Les épreuves", tresorNom: "la braise", intro: "Ici, on regarde ce qui freine, pour mieux le traverser.", qt: "Qu'as-tu pris dans le monde du Feu ?", qs: [
+    { k: "feu", de: "du Feu", titre: "L'épreuve", mythe: "Vassilissa chez Baba Yaga", intro: "Comme Vassilissa envoyée chercher le feu chez Baba Yaga : l'épreuve fait peur, et c'est là qu'on grandit. On regarde ce qui freine, pour le traverser.", tresorNom: "la braise de Baba Yaga", qt: "Quelle braise rapportes-tu de chez Baba Yaga ? (ce que l'épreuve t'a appris sur ta force)", qs: [
       ["f1", "gevurah", ["Quelles sont tes peurs ?", "Qu'est-ce qui te fait hésiter, honnêtement ?", "Que craindrais-tu de perdre en réussissant ?"]],
       ["f4", "gevurah", ["Quels obstacles viennent de toi ?", "Quelle habitude, en toi, freine ta quête ?", "Qu'est-ce que tu remets à plus tard, et pourquoi ?"]],
       ["f6", "chokhmah", ["Quelles solutions as-tu déjà essayées ?", "Qu'est-ce qui a déjà un peu marché ?", "Si l'obstacle revient, que feras-tu cette fois ?"]],
       ["f7", "netzach", ["Y a-t-il un risque pour toi à réussir ta quête ?", "Qu'est-ce qui changerait, et pourrait te déranger, si tu réussissais ?", "Qu'est-ce qui, dans la réussite, te fait un peu peur ?"]]] },
-    { k: "air", de: "de l'Air", titre: "L'élévation", tresorNom: "la plume", qt: "Qu'as-tu pris dans le monde de l'Air ?", qs: [
+    { k: "air", de: "de l'Air", titre: "L'élévation", mythe: "L'Oiseau de feu", intro: "L'Oiseau de feu traverse la nuit et laisse tomber une plume qui éclaire le chemin. Ici, tu prends de la hauteur : qui tu deviens.", tresorNom: "la plume de l'Oiseau de feu", qt: "Quelle plume de l'Oiseau de feu gardes-tu ? (ce qui éclairera ta route quand il fera nuit)", qs: [
       ["a2", "tiferet", ["Quelle personne seras-tu devenue au bout de cette quête ?", "Qu'est-ce que cette quête est en train de faire de toi ?", "Que dirait de ta quête la personne que tu admires le plus ?"]],
       ["a4", "yesod", ["À quelle sorte de magie dois-tu faire appel ?", "Quelle qualité devras-tu cultiver pour y arriver ?", "Quelle force inattendue pourrais-tu réveiller en toi ?"]],
       ["a6", "tiferet", ["Reviens à ta quête accomplie : comment as-tu surmonté les obstacles ?", "Vue depuis la réussite, quelle a été l'étape décisive ?", "Regarde en arrière depuis le but : qu'as-tu fait de différent ?"]],
@@ -3202,20 +3202,20 @@ Propose 3 pistes de réponse courtes (une ligne chacune), concrètes et personne
 
   /* ================= la Traversée : affichage ================= */
   let travCadeau = null, travMsg = "";   // monde dont le trésor vient d'être reçu (petite célébration)
-  const travMonde = (t) => (t.monde > 3 ? "la Lumière" : "le monde " + TRAV[t.monde].de);
+  const travMonde = (t) => (t.monde > 3 ? "l'Aube" : "le monde " + TRAV[t.monde].de);
   function travStrip(t) {
     return `<div class="trav-strip">${TRAV.map((M, i) => `<div class="${t.tresors[M.k] ? "ok" : ""} ${t.monde === i ? "cur" : ""}">${tresorSvg(M.k)}<span>${M.de.replace(/^(de la |de l'|du )/, "")}</span></div>`).join("")}
-      <div class="${t.fin ? "ok" : ""} ${t.monde === 4 ? "cur" : ""}">${tresorSvg("lumiere")}<span>Lumière</span></div></div>`;
+      <div class="${t.fin ? "ok" : ""} ${t.monde === 4 ? "cur" : ""}">${tresorSvg("lumiere")}<span>Aube</span></div></div>`;
   }
   function keterTravCard() {
     const t = S.traversee;
     if (!t || t.fin) return `<div class="panel trav-card"><span class="trav-kicker">La Traversée</span>
       <h3>${t && t.fin ? "Ta traversée est accomplie ✨" : "Un voyage intérieur"}</h3>
-      <p class="hint">À travers la Terre, l'Eau, le Feu et l'Air, jusqu'à la Lumière. Une question à la fois, dans les sphères de chaque élément.</p>
+      <p class="hint">Un conte dont tu es l'héroïne : la Terre, l'Eau, le Feu, l'Air, jusqu'à l'aube. Une question à la fois.</p>
       <div class="row"><button class="btn small" type="button" data-open="trav">${t && t.fin ? "Voir le récit · en commencer une autre" : "Commencer ma traversée"}</button></div></div>`;
     const wait = t.monde < 4 && !travPending(t.monde).length;
     return `<div class="panel trav-card"><span class="trav-kicker">Ma traversée</span><h3>${esc(t.titre)}</h3>${travStrip(t)}
-      <p class="hint">${t.monde > 3 ? "Tu es arrivée à la Lumière : il reste une dernière question." : wait ? `Le monde ${TRAV[t.monde].de} est traversé : ${TRAV[t.monde].tresorNom} t'attend.` : `En chemin dans le monde ${TRAV[t.monde].de} · ${TRAV[t.monde].qs.length - travPending(t.monde).length}/${TRAV[t.monde].qs.length}`}</p>
+      <p class="hint">${t.monde > 3 ? "L'aube se lève, Zorya t'attend : il reste une dernière question." : wait ? `Le monde ${TRAV[t.monde].de} est traversé : ${TRAV[t.monde].tresorNom} t'attend.` : `En chemin dans le monde ${TRAV[t.monde].de} · ${TRAV[t.monde].qs.length - travPending(t.monde).length}/${TRAV[t.monde].qs.length}`}</p>
       <div class="row"><button class="btn small" type="button" data-open="trav">${wait || t.monde > 3 ? "Continuer ✨" : "Voir ma traversée"}</button></div></div>`;
   }
   function renderTravSlot(k) {
@@ -3266,14 +3266,14 @@ Propose 3 pistes de réponse courtes (une ligne chacune), concrètes et personne
     const img = ek ? elemImg(ek) : null, nuitP = ek && document.body.dataset.moment === "nuit" && ELEM_NUIT[ek]; sheet.dataset.nuit = nuitP || (!img && document.body.dataset.moment === "nuit") ? "1" : "";
     sheet.style.backgroundImage = img ? (nuitP ? `linear-gradient(rgba(10,18,46,.35), rgba(10,18,46,.15) 55%, rgba(10,18,46,.05)), url("${img}")` : `linear-gradient(rgba(251,246,241,.55), rgba(251,246,241,.3) 55%, rgba(251,246,241,.08)), url("${img}")`) : "";
     sheet.style.backgroundSize = "cover"; sheet.style.backgroundPosition = "center bottom";
-    $("trav-sub").textContent = t && !t.fin ? t.titre : "Un voyage intérieur, de la Terre à la Lumière";
+    $("trav-sub").textContent = t && !t.fin ? t.titre : "Un conte dont tu es l'héroïne, de la Terre à l'aube";
     const archives = (S.traversees || []).length ? `<div class="panel"><h3>Mes traversées passées</h3>${S.traversees.map((a) => `<details class="trav-world"><summary>${tresorSvg(a.fin ? "lumiere" : "terre")} ${esc(a.titre)} <span class="hint">· ${new Date(a.debut).toLocaleDateString("fr-CH")}</span></summary>${travRecit(a, false)}</details>`).join("")}</div>` : "";
     if (!t || t.fin) {
       const reves = S.projets.filter((p) => !p.fini);
       box.innerHTML = `${t && t.fin ? `<div class="panel trav-card"><span class="trav-kicker">Traversée accomplie</span><h3>${esc(t.titre)}</h3>${travStrip(t)}${travRecit(t, false)}</div>` : ""}
         <div class="panel trav-card"><span class="trav-kicker">Nouvelle traversée</span>
           <h3>Quelle est ta quête ?</h3>
-          <p class="hint">Tu remonteras l'arbre : la Terre (ta quête), l'Eau (tes ressources), le Feu (les épreuves), l'Air (l'élévation), jusqu'à la Lumière. Chaque monde t'offre un trésor.</p>
+          <p class="hint">Comme dans les contes slaves, tu pars avec un manque (la Terre), tu reçois des aides (l'Eau), tu traverses l'épreuve (le Feu), tu reviens transformée (l'Air), jusqu'à l'aube, Zorya, qui donne son nom à cette app. Chaque monde t'offre un trésor.</p>
           <label class="sr" for="trav-titre">Ma quête</label>
           <input class="field" id="trav-titre" maxlength="90" placeholder="Ce que je cherche…">
           ${reves.length ? `<p class="hint">Ou pars d'un de tes rêves :</p><div class="seg">${reves.map((p) => `<button type="button" class="chip" data-trav-reve="${p.id}">${esc(p.titre)}</button>`).join("")}</div>` : ""}
@@ -3285,7 +3285,7 @@ Propose 3 pistes de réponse courtes (une ligne chacune), concrètes et personne
     if (travCadeau !== null) {
       const G = TRAV[travCadeau], N = TRAV[travCadeau + 1];
       cur += `<div class="panel trav-gift">${tresorSvg(G.k, "pop")}<h3>Tu as reçu ${G.tresorNom}</h3>
-        <p class="hint">${N ? `Le monde ${N.de} s'ouvre : ${[...new Set(N.qs.map((q) => byK[q[1]].mot))].join(", ")}. Une étincelle ✦ te montre où aller sur l'arbre.` : "Tu arrives à la Lumière."}</p></div>`;
+        <p class="hint">${N ? `Le monde ${N.de} s'ouvre : ${[...new Set(N.qs.map((q) => byK[q[1]].mot))].join(", ")}. Une étincelle ✦ te montre où aller sur l'arbre.` : "Tu arrives à l'aube."}</p></div>`;
       travCadeau = null;
     }
     if (t.monde < 4) {
@@ -3293,7 +3293,7 @@ Propose 3 pistes de réponse courtes (une ligne chacune), concrètes et personne
       if (all.length) {
         const q = all[0], k = q[1], n = byK[k], draft = (t.draft || {})[q[0]] || "";
         const rappel = q[0] === "a6" && t.rep.t4 && t.rep.t4.t.trim() ? `<p class="trav-rappel">Au début, dans la Terre, tu imaginais : « ${esc(t.rep.t4.t.trim())} »</p>` : "";
-        cur += `<div class="panel trav-card"><span class="trav-kicker">Monde ${M.de} · ${M.titre} · ${M.qs.length - all.length + 1}/${M.qs.length}</span>
+        cur += `<div class="panel trav-card"><span class="trav-kicker">Monde ${M.de} · ${M.mythe || M.titre} · ${M.qs.length - all.length + 1}/${M.qs.length}</span>
           ${M.intro ? `<p class="hint">${M.intro}</p>` : ""}
           <span class="trav-sph" style="--c:${n.fill}"><i></i>${n.heb} · ${n.mot}</span>
           <h3 class="trav-q">${qTxt(q, t)}</h3>${rappel}
@@ -3315,9 +3315,9 @@ Propose 3 pistes de réponse courtes (une ligne chacune), concrètes et personne
           <div class="row"><button class="btn" type="button" id="trav-tresor-go">Recevoir ${M.tresorNom}</button><span class="hint" id="trav-msg"></span></div></div>`;
       }
     } else {
-      cur += `<div class="panel trav-card"><span class="trav-kicker">La Lumière</span>
+      cur += `<div class="panel trav-card"><span class="trav-kicker">L'Aube · Zorya</span>
         <div class="trav-tresors">${TRAV.map((M) => `<div>${tresorSvg(M.k)}<p>${esc((t.tresors[M.k] || {}).t || "")}</p></div>`).join("")}</div>
-        <h3>Que décides-tu maintenant ?</h3><label class="sr" for="trav-decision">Ma décision</label>
+        <h3>L'aube se lève. Que décides-tu maintenant ?</h3><label class="sr" for="trav-decision">Ma décision</label>
         <textarea class="field" id="trav-decision" placeholder="Je décide…">${esc((t.decision || {}).t || "")}</textarea>
         <div class="row"><button class="btn small" type="button" id="trav-finish">Terminer ma traversée ✨</button>
           <button class="btn alt small" type="button" id="trav-intent">En faire mon intention du jour</button></div><span class="hint" id="trav-msg"></span></div>`;
