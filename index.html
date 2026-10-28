@@ -782,6 +782,10 @@ body[data-moment="nuit"] .sheet[data-nuit="1"] .sheet-body hr, body[data-moment=
 body[data-moment="nuit"] .sheet[data-nuit="1"] .sheet-body .sos, body[data-moment="nuit"] .sheet[data-nuit="1"] .sheet-body .sos * { color: #2b3440 !important; text-shadow: none !important; }
 body[data-moment="nuit"] .sheet[data-nuit="1"] .sheet-body .breath-label, body[data-moment="nuit"] .sheet[data-nuit="1"] .sheet-body .breath-timer, body[data-moment="nuit"] .sheet[data-nuit="1"] .sheet-body .breath-desc { color: #f6e2a8 !important; text-shadow: 0 1px 4px rgba(8,14,30,.9) !important; }
 body[data-moment="nuit"] .sheet[data-nuit="1"] .sheet-body .inf text { fill: #f4ead6 !important; }
+
+.ciel .ciel-script { font-family: "WindSong", cursive; font-size: 22px; line-height: 1.35; color: #1f3a66; }
+.ciel label { font-size: 15px; font-weight: 700; color: #2b3440; }
+body[data-moment="nuit"] .sheet[data-nuit="1"] .ciel .ciel-script { color: #f6e2a8 !important; }
 </style>
 
 <div class="scene" id="scene" aria-hidden="true"></div>
@@ -923,6 +927,15 @@ body[data-moment="nuit"] .sheet[data-nuit="1"] .sheet-body .inf text { fill: #f4
     <div class="sheet-body">
       <div class="trav-slot"></div>
       <div class="panel qjour" data-qj="binah"></div>
+      <details class="panel tight ciel" id="ciel">
+        <summary>Me regarder depuis le ciel</summary>
+        <p class="lead ciel-script">Ferme les yeux un instant. Tu t'élèves, comme l'Oiseau de feu. Sous toi : ta maison, ta ville, ta route. Tout en bas, une femme marche. C'est toi. Regarde-la avec les yeux d'une amie.</p>
+        <p class="hint">Réponds à la troisième personne : « elle ». Se voir de loin apaise et rend les choses plus claires.</p>
+        <label for="ciel-1">Que vit-elle en ce moment ?</label><input class="field" id="ciel-1" maxlength="200" placeholder="Elle…">
+        <label for="ciel-2">Qu'est-ce qu'elle fait bien, vue d'en haut ?</label><input class="field" id="ciel-2" maxlength="200" placeholder="Elle…">
+        <label for="ciel-3">De quoi aurait-elle besoin, et que lui dirais-tu ?</label><input class="field" id="ciel-3" maxlength="200" placeholder="Je lui dirais…">
+        <div class="row"><button class="btn" id="ciel-save" type="button">Redescendre avec ces mots</button><span class="hint" id="ciel-msg" aria-live="polite"></span></div>
+      </details>
       <details class="panel tight demele">
         <summary>Démêler ce que je vis</summary>
         <p class="lead">Quatre petits pas pour y voir clair.</p>
@@ -1104,6 +1117,7 @@ body[data-moment="nuit"] .sheet[data-nuit="1"] .sheet-body .inf text { fill: #f4
         <textarea class="field" id="douceur-in" placeholder="Si une amie vivait ça, je lui dirais…"></textarea>
         <div class="row"><button class="btn" id="douceur-save" type="button">Me le dire à moi</button><span class="hint" id="douceur-msg" aria-live="polite"></span></div>
         <div id="douceur-show"></div>
+        <button class="lien-simple" type="button" id="vers-ciel">Ou prendre de la hauteur : me regarder depuis le ciel ›</button>
       </div>
       <div class="panel dodo">
         <h3>Comment as-tu dormi ?</h3>
@@ -1557,10 +1571,10 @@ body[data-moment="nuit"] .sheet[data-nuit="1"] .sheet-body .inf text { fill: #f4
       ["f4", "gevurah", ["Quels obstacles viennent de toi ?", "Quelle habitude, en toi, freine ta quête ?", "Qu'est-ce que tu remets à plus tard, et pourquoi ?"]],
       ["f6", "chokhmah", ["Quelles solutions as-tu déjà essayées ?", "Qu'est-ce qui a déjà un peu marché ?", "Si l'obstacle revient, que feras-tu cette fois ?"]],
       ["f7", "netzach", ["Y a-t-il un risque pour toi à réussir ta quête ?", "Qu'est-ce qui changerait, et pourrait te déranger, si tu réussissais ?", "Qu'est-ce qui, dans la réussite, te fait un peu peur ?"]]] },
-    { k: "air", de: "de l'Air", titre: "L'élévation", mythe: "L'Oiseau de feu", intro: "L'Oiseau de feu traverse la nuit et laisse tomber une plume qui éclaire le chemin. Ici, tu prends de la hauteur : qui tu deviens.", tresorNom: "la plume de l'Oiseau de feu", qt: "Quelle plume de l'Oiseau de feu gardes-tu ? (ce qui éclairera ta route quand il fera nuit)", qs: [
+    { k: "air", de: "de l'Air", titre: "L'élévation", mythe: "L'Oiseau de feu", intro: "L'Oiseau de feu traverse la nuit et laisse tomber une plume qui éclaire le chemin. Ici, tu prends de la hauteur : tu te regardes depuis le ciel, comme une amie, et tu vois qui tu deviens.", tresorNom: "la plume de l'Oiseau de feu", qt: "Quelle plume de l'Oiseau de feu gardes-tu ? (ce qui éclairera ta route quand il fera nuit)", qs: [
       ["a2", "tiferet", ["Quelle personne seras-tu devenue au bout de cette quête ?", "Qu'est-ce que cette quête est en train de faire de toi ?", "Que dirait de ta quête la personne que tu admires le plus ?"]],
       ["a4", "yesod", ["À quelle sorte de magie dois-tu faire appel ?", "Quelle qualité devras-tu cultiver pour y arriver ?", "Quelle force inattendue pourrais-tu réveiller en toi ?"]],
-      ["a6", "tiferet", ["Reviens à ta quête accomplie : comment as-tu surmonté les obstacles ?", "Vue depuis la réussite, quelle a été l'étape décisive ?", "Regarde en arrière depuis le but : qu'as-tu fait de différent ?"]],
+      ["a6", "tiferet", ["Monte avec l'Oiseau de feu et regarde-la d'en haut : comment cette femme a-t-elle traversé ses obstacles ?", "Vue depuis la réussite, quelle a été l'étape décisive ?", "De tout là-haut, que vois-tu qu'elle ne voit pas encore, elle, en bas sur sa route ?"]],
       ["a7", "yesod", ["Quel rendez-vous régulier avec ta quête peux-tu t'offrir ?", "À quel moment de la journée ta quête aura-t-elle sa place ?", "« Chaque matin, après…, je… » : complète la phrase pour ta quête."]]] }
   ];
   // anciennes questions (traversées commencées avant le 28.10.2026), pour le récit et le livre
@@ -1731,6 +1745,15 @@ body[data-moment="nuit"] .sheet[data-nuit="1"] .sheet-body .inf text { fill: #f4
     const b = e.target.closest("[data-dodo]"); if (!b) return;
     S.sommeil = S.sommeil || {}; S.sommeil[dayKey()] = +b.dataset.dodo; save(); renderDodo(); renderBilan();
   });
+  // vue du ciel (distanciation, Kross & Ayduk) : trois réponses à la troisième personne, gardées dans le livre
+  $("vers-ciel").onclick = () => { openSheet("binah"); $("ciel").open = true; setTimeout(() => $("ciel").scrollIntoView({ behavior: "smooth", block: "start" }), 150); };
+  $("ciel-save").onclick = () => {
+    const r = ["ciel-1", "ciel-2", "ciel-3"].map((id) => $(id).value.trim()).filter(Boolean);
+    if (!r.length) { $("ciel-1").focus(); return; }
+    S.notes.unshift({ id: uid(), type: "pensee", src: "ciel", texte: r.join(" "), date: new Date().toISOString() }); save();
+    ["ciel-1", "ciel-2", "ciel-3"].forEach((id) => { $(id).value = ""; }); $("ciel-msg").textContent = "Gardé dans ton livre, sous « Vue du ciel ».";
+    renderEntries(); renderTree();
+  };
   $("douceur-save").onclick = () => {
     const t = $("douceur-in").value.trim(); if (!t) { $("douceur-in").focus(); return; }
     S.notes.unshift({ id: uid(), type: "pensee", src: "douceur", texte: t, date: new Date().toISOString() }); save();
@@ -3416,7 +3439,7 @@ Propose 3 pistes de réflexion courtes (une ligne chacune), au tutoiement, en fr
   // tout ce qui a été écrit dans les sphères et la Traversée, du plus récent au plus ancien
   function livre() {
     const L = [];
-    S.notes.forEach((n) => L.push({ date: n.date, el: n.type === "envie" ? "feu" : "eau", label: n.src === "demele" ? "Démêler" : n.src === "douceur" ? "Douceur pour moi" : n.type === "reve" ? "Rêve de nuit" : n.type === "envie" ? "Envie" : "Pensée", texte: n.texte }));
+    S.notes.forEach((n) => L.push({ date: n.date, el: n.type === "envie" ? "feu" : "eau", label: n.src === "demele" ? "Démêler" : n.src === "douceur" ? "Douceur pour moi" : n.src === "ciel" ? "Vue du ciel" : n.type === "reve" ? "Rêve de nuit" : n.type === "envie" ? "Envie" : "Pensée", texte: n.texte }));
     Object.entries(S.gratitudes || {}).forEach(([k, arr]) => (arr || []).filter((x) => x && x.trim()).forEach((x) => L.push({ date: jour(k), el: "eau", label: "Gratitude", texte: x })));
     Object.entries(S.intentions || {}).forEach(([k, v]) => v && L.push({ date: k + "T07:00:00", el: "lumiere", label: "Intention", texte: v, main: 1 }));
     if (S.pourquoi && S.pourquoi.t) L.push({ date: S.pourquoi.date, el: "lumiere", label: "Mon pourquoi", texte: S.pourquoi.t });
@@ -3737,7 +3760,7 @@ Propose 3 pistes de réflexion courtes (une ligne chacune), au tutoiement, en fr
     // Hod (Éclat) : ce qui brille en moi ; ce qu'on reçoit des autres reste dans Gratitude
     hod: { titre: "Briller", qs: ["Qu'ai-je bien fait aujourd'hui, même un tout petit peu ?", "Quelle qualité ai-je montrée aujourd'hui ?", "Quel mot doux puis-je me dire ce soir ?", "De quoi suis-je fière cette semaine ?", "Quel petit progrès ai-je remarqué en moi ?", "Qu'est-ce que je fais bien sans même m'en rendre compte ?", "Quel compliment aurais-je envie de me faire ?", "Qu'ai-je osé aujourd'hui ?", "En quoi ai-je été moi-même aujourd'hui ?", "Qu'est-ce que j'aime chez moi en ce moment ?"] },
     gevurah: { titre: "Choisir", qs: ["Quelle voix ai-je envie d'écouter aujourd'hui, et laquelle laisser passer ?", "À quoi ai-je dit non aujourd'hui pour me respecter ?", "Qu'est-ce que je peux laisser tomber cette semaine ?", "Où ai-je eu du courage aujourd'hui ?", "Qu'est-ce qui me donne de l'énergie, et qu'est-ce qui m'en prend ?", "Qui me fait du bien quand je le vois ?", "Quelle limite douce pourrais-je poser demain ?", "Qu'est-ce qui mérite vraiment mon temps ?", "Qu'ai-je laissé passer aujourd'hui sans me laisser atteindre ?", "De quoi ai-je besoin de me protéger en ce moment ?"] },
-    binah: { titre: "Comprendre", qs: ["Qu'ai-je appris aujourd'hui, et de qui ?", "Qu'est-ce que je comprends aujourd'hui que je ne comprenais pas hier ?", "Qu'ai-je cru aujourd'hui qui n'était peut-être pas tout à fait vrai ?", "Qu'est-ce qui compte vraiment, là-dedans ?", "Dans un an, que penserai-je de ce moment ?", "Quelle autre façon de voir les choses est possible ?", "Qu'est-ce que cette émotion essaie de me dire ?", "Qu'est-ce qui mûrit en moi en ce moment ?", "Quelle erreur m'a fait grandir ?", "Quelle situation m'a appris quelque chose sur moi ?"] },
+    binah: { titre: "Comprendre", qs: ["Qu'ai-je appris aujourd'hui, et de qui ?", "Qu'est-ce que je comprends aujourd'hui que je ne comprenais pas hier ?", "Si une amie vivait ce que je vis, que lui dirais-je ?", "Vue de très haut, que dirais-tu de la femme qui a vécu cette journée ?", "Qu'est-ce qui compte vraiment, là-dedans ?", "Dans un an, que penserai-je de ce moment ?", "Quelle autre façon de voir les choses est possible ?", "Qu'est-ce que cette émotion essaie de me dire ?", "Qu'est-ce qui mûrit en moi en ce moment ?", "Quelle erreur m'a fait grandir ?", "Quelle situation m'a appris quelque chose sur moi ?"] },
     // Netsah (Rêves) : l'élan et le désir d'aujourd'hui ; le plan de la quête reste à la Traversée et à l'Éclair
     netzach: { titre: "M'élever", qs: ["Qu'est-ce qui t'a donné envie aujourd'hui ?", "Quel moment t'a fait te sentir vivante ?", "Qu'as-tu fait aujourd'hui juste pour le plaisir ?", "Quelle envie as-tu repoussée aujourd'hui, et pourquoi ?", "Qu'est-ce qui t'a fait rêver, même une seconde ?", "De quoi avais-tu envie en te réveillant ?", "Si tu avais une heure rien que pour toi demain, tu en ferais quoi ?", "Quel petit élan as-tu suivi aujourd'hui ?"] },
   };
