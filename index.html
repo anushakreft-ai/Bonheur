@@ -759,6 +759,25 @@ body.sheet-open .home-liens, body.sheet-open .home-hebdo { display: none; }
 .pq-rappel:empty, .pq-rappel[hidden] { display: none; }
 body[data-moment="nuit"] .pq-rappel { color: #f6e2a8; }
 .pq-reve { font-style: italic; }
+
+/* guide du sommeil */
+.dodo-liste { margin: 6px 0; padding-left: 20px; font-size: 15px; line-height: 1.5; display: grid; gap: 6px; }
+/* la nuit : textes clairs sur les pages sombres (sauf champs et boutons pleins) */
+body[data-moment="nuit"] .sheet .sheet-body, body[data-moment="nuit"] .sheet .sheet-body h2, body[data-moment="nuit"] .sheet .sheet-body h3, body[data-moment="nuit"] .sheet .sheet-body p,
+body[data-moment="nuit"] .sheet .sheet-body li, body[data-moment="nuit"] .sheet .sheet-body label, body[data-moment="nuit"] .sheet .sheet-body summary, body[data-moment="nuit"] .sheet .sheet-body .eyebrow,
+body[data-moment="nuit"] .sheet .sheet-body .lead, body[data-moment="nuit"] .sheet .sheet-body .hint, body[data-moment="nuit"] .sheet .sheet-body .linkbtn, body[data-moment="nuit"] .sheet .sheet-body .lien-simple,
+body[data-moment="nuit"] .sheet .sheet-body .chip, body[data-moment="nuit"] .sheet .sheet-body .mood, body[data-moment="nuit"] .sheet .sheet-body .qj-q, body[data-moment="nuit"] .sheet .sheet-body .count,
+body[data-moment="nuit"] .sheet .sheet-body .lien-plume.encre, body[data-moment="nuit"] .sheet .sheet-body .pq-rappel, body[data-moment="nuit"] .sheet .sheet-body .hebdo, body[data-moment="nuit"] .sheet .sheet-body .jar-side {
+  color: #f4ead6 !important; text-shadow: 0 1px 4px rgba(8,14,30,.85) !important; }
+body[data-moment="nuit"] .sheet .sheet-body .hint, body[data-moment="nuit"] .sheet .sheet-body .lead { color: #e6dcc8 !important; }
+body[data-moment="nuit"] .sheet .sheet-body .linkbtn, body[data-moment="nuit"] .sheet .sheet-body .lien-simple, body[data-moment="nuit"] .sheet .sheet-body .lien-plume.encre, body[data-moment="nuit"] .sheet .sheet-body summary { color: #f6e2a8 !important; }
+body[data-moment="nuit"] .sheet .sheet-body .manuscrit, body[data-moment="nuit"] .sheet .sheet-body .qj-r, body[data-moment="nuit"] .sheet .sheet-body .pq-txt, body[data-moment="nuit"] .sheet .sheet-body .rit-accueil { color: #f6e2a8 !important; text-shadow: 0 0 12px rgba(255,190,110,.4), 0 1px 4px rgba(8,14,30,.9) !important; }
+body[data-moment="nuit"] .sheet .sheet-body .chip[aria-pressed="true"] { border-color: #f6e2a8 !important; }
+body[data-moment="nuit"] .sheet .sheet-body .btn, body[data-moment="nuit"] .sheet .sheet-body .field, body[data-moment="nuit"] .sheet .sheet-body .geste, body[data-moment="nuit"] .sheet .sheet-body .papier * , body[data-moment="nuit"] .sheet .sheet-body .aide { text-shadow: none !important; }
+body[data-moment="nuit"] .sheet .sheet-body .field { color: #2b3440 !important; background: rgba(251,247,239,.92) !important; }
+body[data-moment="nuit"] .sheet .sheet-body .aide, body[data-moment="nuit"] .sheet .sheet-body .aide a { color: #2b3440 !important; }
+body[data-moment="nuit"] .sheet .sheet-body .papier .manuscrit { color: #1f3a66 !important; text-shadow: none !important; }
+body[data-moment="nuit"] .sheet .sheet-body hr, body[data-moment="nuit"] .sheet .sheet-body .panel + .panel { border-color: rgba(246,226,168,.35) !important; }
 </style>
 
 <div class="scene" id="scene" aria-hidden="true"></div>
@@ -1262,6 +1281,7 @@ body[data-moment="nuit"] .pq-rappel { color: #f6e2a8; }
       </div>
       <div class="gestes" id="gestes"></div>
       <p class="hint" id="geste-msg" aria-live="polite"></p>
+      <div id="dodo-guide"></div>
       <details class="panel tight">
         <summary>Modifier mes gestes et les rappels</summary>
         <h3>Ajouter un geste</h3>
@@ -1860,7 +1880,21 @@ body[data-moment="nuit"] .pq-rappel { color: #f6e2a8; }
       $("geste-msg").textContent = "Ton ciel brille. Pose ton téléphone, la nuit continue sans lui.";
     if (current === "moment") renderMoment();
   });
+  // préparer son sommeil : ce que les études sur l'insomnie (TCC-I) retiennent de plus efficace
+  const DODO_GUIDE = [
+    ["Même heure de lever", "chaque jour, week-end compris : c'est le réglage le plus puissant de l'horloge interne."],
+    ["Lumière douce une heure avant", "lampes basses, écran en mode nuit ou posé : la lumière vive retarde la mélatonine."],
+    ["Pas de café après 14 h", "ni d'alcool le soir : il endort vite mais fragmente la nuit."],
+    ["Un sas de 20 minutes", "toujours le même : tisane, lecture, étirements, trois respirations. Le corps apprend le signal."],
+    ["Chambre fraîche et sombre", "autour de 18 °C ; le lit sert à dormir, pas à travailler ni à défiler."],
+    ["Si je ne dors pas après 20 minutes", "je me lève, lumière basse, et je reviens quand le sommeil vient. Le lit reste associé au sommeil."]
+  ];
+  const dodoGuideHtml = (open) => `<details class="hist-pli dodo-guide"${open ? " open" : ""}><summary>Préparer mon sommeil : comment ?</summary>
+    <ol class="dodo-liste">${DODO_GUIDE.map(([t, d]) => `<li><b>${t}</b> — ${d}</li>`).join("")}</ol>
+    <p class="hint">Améliorer le sommeil améliore l'humeur, et plus le sommeil s'améliore, plus l'effet est grand (Scott et al. 2021, 65 essais). Choisis un ou deux points, pas les six.</p></details>`;
+  function renderDodoGuide() { const el = $("dodo-guide"); if (el) el.innerHTML = S.gestes.some((g) => g.id === "sommeil") ? dodoGuideHtml(false) : ""; }
   function gesteAction(id) {
+    if (id === "sommeil") { renderDodoGuide(); const d = document.querySelector("#dodo-guide details"); if (d) { d.open = true; d.scrollIntoView({ behavior: "smooth", block: "start" }); } }
     if (id === "pensee") $("geste-msg").textContent = THOUGHTS[Math.floor(Math.random() * THOUGHTS.length)];
     else if (id === "souvenir") openSheet("chesed");
     else if (id === "ici") { openSheet("yesod"); $("steps").closest("details").open = true; setTimeout(() => $("steps").scrollIntoView({ behavior: "smooth", block: "start" }), 200); }
@@ -3772,7 +3806,7 @@ Propose 3 pistes de réflexion courtes (une ligne chacune), au tutoiement, en fr
     $("m-geste").className = "panel mstep" + (faits.length ? " fait" : "");
     $("m-geste").innerHTML = `<div class="eyebrow">2 · Un geste</div>` + (faits.length
       ? `<p style="margin:0">${faits.length} geste${faits.length > 1 ? "s" : ""} aujourd'hui · c'est déjà une bonne journée. <button class="linkbtn" type="button" data-open="malkhut">Voir mon jardin ›</button></p>`
-      : g ? `<div class="suggest-geste">${svg(g.icon)}<b>${esc(g.label)}</b></div>
+      : g ? `<div class="suggest-geste">${svg(g.icon)}<b>${esc(g.label)}</b></div>${g.id === "sommeil" ? dodoGuideHtml(true) : ""}
         <div class="row"><button class="btn" type="button" data-mg="${esc(g.id)}">C'est fait</button><button class="linkbtn" type="button" id="mg-autre">Un autre</button></div>` : "");
     // 3 · un bonheur
     $("m-bonheur").className = "panel mstep" + (grat.length ? " fait" : "");
@@ -3820,7 +3854,7 @@ Propose 3 pistes de réflexion courtes (une ligne chacune), au tutoiement, en fr
   function renderAll() {
     renderMoods(); renderGrat(); renderNextStep(); renderGarden(); renderGestes(); renderDreams();
     renderTypePick(); renderEntries(); renderVoices(); renderPeople(); renderRefuges(); renderBilan(); armRappel();
-    renderIntention(); renderTree(); renderCare(); renderQualites(); renderDecision(); renderCond(); renderIntu(); renderInsp(); renderGratPhotos(); renderQJ(); renderRituel(); renderHebdo(); renderPourquoi();
+    renderIntention(); renderTree(); renderCare(); renderQualites(); renderDecision(); renderCond(); renderIntu(); renderInsp(); renderGratPhotos(); renderQJ(); renderRituel(); renderHebdo(); renderPourquoi(); renderDodoGuide();
   }
   renderAll(); showThought(); renderSteps(); copieDuJour();
   const hash = location.hash.slice(1);
