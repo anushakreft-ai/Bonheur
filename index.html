@@ -1543,10 +1543,10 @@ body[data-moment="nuit"] .sheet[data-nuit="1"] .sheet-body .inf text { fill: #f4
   // 4 questions par monde (20 au lieu de 35) ; chaque question a 3 formulations, tirées au sort à chaque traversée (t.seed)
   const TRAV = [
     { k: "terre", de: "de la Terre", titre: "Ta quête", tresorNom: "la pierre", qt: "Qu'as-tu pris dans le monde de la Terre ?", qs: [
-      ["t1", "malkhut", ["Que cherches-tu ?", "Qu'est-ce que tu veux vraiment, au fond ?", "Si tu pouvais changer une chose dans ta vie, laquelle ?"]],
+      ["t1", "malkhut", ["Que cherches-tu ?", "Quel manque, ou quel appel, t'a mise en route ?", "Si tu pouvais changer une chose dans ta vie, laquelle ?"]],
       ["t3", "malkhut", ["Pourquoi cette quête maintenant ?", "Qu'est-ce qui a réveillé ce désir ces derniers temps ?", "Qu'est-ce qui te dit que c'est le moment ?"]],
       ["t4", "malkhut", ["Imagine ta quête accomplie : que vois-tu ?", "Ta quête est réussie : raconte une journée ordinaire.", "Ferme les yeux : où es-tu, avec qui, quand c'est fait ?"]],
-      ["t6", "malkhut", ["Qu'est-ce que cela apporterait aux autres ?", "Qui d'autre que toi en serait touché, et comment ?", "Que pourrais-tu donner, une fois ta quête accomplie ?"]]] },
+      ["t6", "malkhut", ["Qui, autour de toi, sentirait la différence ?", "Qui d'autre que toi en serait touché, et comment ?", "Que pourrais-tu donner, une fois ta quête accomplie ?"]]] },
     { k: "eau", de: "de l'Eau", titre: "Tes ressources", tresorNom: "le coquillage", qt: "Qu'as-tu appris dans le monde de l'Eau ?", qs: [
       ["e1", "binah", ["Quelles sont tes armes ?", "Quelles forces as-tu déjà en toi pour cette quête ?", "Qu'est-ce que tu sais faire que peu de gens savent faire ?"]],
       ["e5", "chesed", ["Qu'as-tu réussi dont tu es fière ?", "Raconte une fois où tu as tenu bon.", "Quelle épreuve passée te prouve que tu peux y arriver ?"]],
@@ -1558,10 +1558,10 @@ body[data-moment="nuit"] .sheet[data-nuit="1"] .sheet-body .inf text { fill: #f4
       ["f6", "chokhmah", ["Quelles solutions as-tu déjà essayées ?", "Qu'est-ce qui a déjà un peu marché ?", "Si l'obstacle revient, que feras-tu cette fois ?"]],
       ["f7", "netzach", ["Y a-t-il un risque pour toi à réussir ta quête ?", "Qu'est-ce qui changerait, et pourrait te déranger, si tu réussissais ?", "Qu'est-ce qui, dans la réussite, te fait un peu peur ?"]]] },
     { k: "air", de: "de l'Air", titre: "L'élévation", tresorNom: "la plume", qt: "Qu'as-tu pris dans le monde de l'Air ?", qs: [
-      ["a2", "tiferet", ["En quoi ta quête dépasse-t-elle ta propre histoire ?", "À quoi de plus grand que toi ta quête est-elle reliée ?", "Que dirait de ta quête la personne que tu admires le plus ?"]],
+      ["a2", "tiferet", ["Quelle personne seras-tu devenue au bout de cette quête ?", "Qu'est-ce que cette quête est en train de faire de toi ?", "Que dirait de ta quête la personne que tu admires le plus ?"]],
       ["a4", "yesod", ["À quelle sorte de magie dois-tu faire appel ?", "Quelle qualité devras-tu cultiver pour y arriver ?", "Quelle force inattendue pourrais-tu réveiller en toi ?"]],
       ["a6", "tiferet", ["Reviens à ta quête accomplie : comment as-tu surmonté les obstacles ?", "Vue depuis la réussite, quelle a été l'étape décisive ?", "Regarde en arrière depuis le but : qu'as-tu fait de différent ?"]],
-      ["a7", "yesod", ["Quel rituel quotidien peux-tu adopter pour réussir ta quête ?", "Quel tout petit geste, chaque jour, te rapprocherait ?", "« Chaque matin, après…, je… » : complète la phrase pour ta quête."]]] }
+      ["a7", "yesod", ["Quel rendez-vous régulier avec ta quête peux-tu t'offrir ?", "À quel moment de la journée ta quête aura-t-elle sa place ?", "« Chaque matin, après…, je… » : complète la phrase pour ta quête."]]] }
   ];
   // anciennes questions (traversées commencées avant le 28.10.2026), pour le récit et le livre
   const TRAV_ANCIEN = { t2: "Comment est né ton désir ?", t5: "Qu'est-ce que cela t'apporterait ?", t7: "As-tu vu des signes reliés à ta quête ?", e3: "Quel était ton jeu favori ?", e4: "Que pense de ta quête la personne qui compte le plus pour toi ?", e6: "Sur quoi peux-tu compter pour réussir ta quête ?", f2: "Qu'est-ce qui t'empêche de réussir ta quête aujourd'hui ?", f3: "Quels obstacles viennent des autres ?", f5: "As-tu vu des signes négatifs liés à ta quête ?", a1: "Es-tu prête à payer le prix ?", a3: "Si tu concentrais toutes tes pensées sur ta quête, qu'en résulterait-il ?", a5: "Quelle relation entretiens-tu avec l'invisible ?" };
@@ -3069,11 +3069,11 @@ Si la pensée évoque une envie de se faire du mal ou de mourir, réponds avec d
   $("go-music").onclick = () => $("netz-music").scrollIntoView({ behavior: "smooth" });
   /* ================= le chemin de l'Éclair (Keter → Malkhout) ================= */
   const ECLAIR = [
-    { k: "keter", q: "Qu'est-ce que je veux vraiment, au fond ?", h: "La volonté première. Écris-le simplement, comme une évidence." },
+    { k: "keter", q: "En une phrase, comme une évidence : ce rêve, c'est…", h: "La volonté première. Simple, sans justification." },
     { k: "chokhmah", q: "Quelle image, quelle idée m'est venue en premier ?", h: "L'éclair d'intuition : la première image qui t'a donné envie." },
-    { k: "binah", q: "Pourquoi ce rêve compte-t-il pour moi ? À quoi ressemble-t-il concrètement ?", h: "Donne une forme à l'intuition : le sens, les contours." },
-    { k: "chesed", q: "Qu'est-ce que j'ai déjà ? Qui peut m'aider ?", h: "L'abondance : tes forces, tes ressources, les personnes autour de toi." },
-    { k: "gevurah", q: "À quoi est-ce que je dis non pour lui faire de la place ?", h: "Le discernement : ce que tu laisses de côté, avec douceur." },
+    { k: "binah", q: "À quoi ressemble-t-il concrètement : où, quand, avec qui ?", h: "Donne une forme à l'intuition : des contours précis." },
+    { k: "chesed", q: "Qu'est-ce que j'ai déjà sous la main pour ce rêve ?", h: "L'abondance : le temps, les objets, les savoirs, les lieux déjà là." },
+    { k: "gevurah", q: "Qu'est-ce que je mets en pause pour lui faire de la place ?", h: "Le discernement : ce que tu laisses de côté un moment, avec douceur." },
     { k: "tiferet", q: "Est-ce que ce rêve me rend vraiment heureuse ? Est-il juste pour moi ?", h: "Le cœur : vérifie l'harmonie entre ton envie et ce qui est bon pour toi." },
     { k: "netzach", q: "Quel petit pas vais-je répéter chaque semaine ?", h: "La persévérance : un geste simple et régulier vaut mieux qu'un grand effort." },
     { k: "hod", q: "Comment je l'écris : mon plan en quelques lignes", h: "Les mots donnent de la clarté. Quelques étapes, dans l'ordre." },
@@ -3735,10 +3735,11 @@ Propose 3 pistes de réflexion courtes (une ligne chacune), au tutoiement, en fr
   /* ================= questions du jour (inspirées du sens de chaque vase) ================= */
   const QJ = {
     // Hod (Éclat) : ce qui brille en moi ; ce qu'on reçoit des autres reste dans Gratitude
-    hod: { titre: "Briller", qs: ["Qu'ai-je bien fait aujourd'hui, même un tout petit peu ?", "Quelle qualité ai-je montrée aujourd'hui ?", "Quel mot doux puis-je me dire ce soir ?", "De quoi suis-je fière cette semaine ?", "Quel petit progrès ai-je remarqué en moi ?", "Qu'est-ce que je fais bien sans même m'en rendre compte ?", "Quel compliment aurais-je envie de me faire ?", "Quelle force ai-je utilisée aujourd'hui ?", "En quoi ai-je été moi-même aujourd'hui ?", "Qu'est-ce que j'aime chez moi en ce moment ?"] },
-    gevurah: { titre: "Choisir", qs: ["Quelle voix ai-je envie d'écouter aujourd'hui, et laquelle laisser passer ?", "À quoi ai-je dit non aujourd'hui pour me respecter ?", "Qu'est-ce que je peux laisser tomber cette semaine ?", "Où ai-je eu du courage aujourd'hui ?", "Qu'est-ce qui me donne de l'énergie, et qu'est-ce qui m'en prend ?", "Qui me fait du bien quand je le vois ?", "Quelle limite douce pourrais-je poser demain ?", "Qu'est-ce qui mérite vraiment mon temps ?", "Dans quelle situation me suis-je sentie forte ?", "De quoi ai-je besoin de me protéger en ce moment ?"] },
-    binah: { titre: "Comprendre", qs: ["Qu'ai-je appris aujourd'hui, et de qui ?", "Qu'est-ce que je comprends aujourd'hui que je ne comprenais pas hier ?", "Si une amie vivait ce que je vis, que lui dirais-je ?", "Qu'est-ce qui compte vraiment, là-dedans ?", "Dans un an, que penserai-je de ce moment ?", "Quelle autre façon de voir les choses est possible ?", "Qu'est-ce que cette émotion essaie de me dire ?", "Qu'est-ce qui mûrit en moi en ce moment ?", "Quelle erreur m'a fait grandir ?", "Quelle situation m'a appris quelque chose sur moi ?"] },
-    netzach: { titre: "M'élever", qs: ["Quand mon rêve sera réalisé, quelle joie ressentirai-je ?", "Quel petit pas vers mon rêve puis-je faire aujourd'hui ?", "À quoi ressemblera une journée de ma vie quand mon rêve sera là ?", "Qu'est-ce qui m'a rapprochée de mon rêve cette semaine ?", "Qui pourrait m'aider à avancer ?", "Quel obstacle pourrait se présenter, et que ferai-je alors ?", "Qu'ai-je envie de vivre cette année ?", "De quoi suis-je fière dans ce que j'ai déjà fait ?"] }
+    hod: { titre: "Briller", qs: ["Qu'ai-je bien fait aujourd'hui, même un tout petit peu ?", "Quelle qualité ai-je montrée aujourd'hui ?", "Quel mot doux puis-je me dire ce soir ?", "De quoi suis-je fière cette semaine ?", "Quel petit progrès ai-je remarqué en moi ?", "Qu'est-ce que je fais bien sans même m'en rendre compte ?", "Quel compliment aurais-je envie de me faire ?", "Qu'ai-je osé aujourd'hui ?", "En quoi ai-je été moi-même aujourd'hui ?", "Qu'est-ce que j'aime chez moi en ce moment ?"] },
+    gevurah: { titre: "Choisir", qs: ["Quelle voix ai-je envie d'écouter aujourd'hui, et laquelle laisser passer ?", "À quoi ai-je dit non aujourd'hui pour me respecter ?", "Qu'est-ce que je peux laisser tomber cette semaine ?", "Où ai-je eu du courage aujourd'hui ?", "Qu'est-ce qui me donne de l'énergie, et qu'est-ce qui m'en prend ?", "Qui me fait du bien quand je le vois ?", "Quelle limite douce pourrais-je poser demain ?", "Qu'est-ce qui mérite vraiment mon temps ?", "Qu'ai-je laissé passer aujourd'hui sans me laisser atteindre ?", "De quoi ai-je besoin de me protéger en ce moment ?"] },
+    binah: { titre: "Comprendre", qs: ["Qu'ai-je appris aujourd'hui, et de qui ?", "Qu'est-ce que je comprends aujourd'hui que je ne comprenais pas hier ?", "Qu'ai-je cru aujourd'hui qui n'était peut-être pas tout à fait vrai ?", "Qu'est-ce qui compte vraiment, là-dedans ?", "Dans un an, que penserai-je de ce moment ?", "Quelle autre façon de voir les choses est possible ?", "Qu'est-ce que cette émotion essaie de me dire ?", "Qu'est-ce qui mûrit en moi en ce moment ?", "Quelle erreur m'a fait grandir ?", "Quelle situation m'a appris quelque chose sur moi ?"] },
+    // Netsah (Rêves) : l'élan et le désir d'aujourd'hui ; le plan de la quête reste à la Traversée et à l'Éclair
+    netzach: { titre: "M'élever", qs: ["Qu'est-ce qui t'a donné envie aujourd'hui ?", "Quel moment t'a fait te sentir vivante ?", "Qu'as-tu fait aujourd'hui juste pour le plaisir ?", "Quelle envie as-tu repoussée aujourd'hui, et pourquoi ?", "Qu'est-ce qui t'a fait rêver, même une seconde ?", "De quoi avais-tu envie en te réveillant ?", "Si tu avais une heure rien que pour toi demain, tu en ferais quoi ?", "Quel petit élan as-tu suivi aujourd'hui ?"] },
   };
   function qjFait(k) { const o = (S.questions || {})[dayKey()]; return !!(o && o[k] && o[k].r); }
   function qjQuestion(k) {
