@@ -1759,9 +1759,11 @@ body[data-moment="nuit"] .sheet[data-nuit="1"] .ciel .ciel-script { color: #f6e2
     $("ciel-art").hidden = false; $("ciel-art").innerHTML = `<img src="${CIEL_IMG}" alt="">`;
     if (!(window.claude && window.claude.use)) fetch(CIEL_VIDEO, { method: "HEAD" }).then((r) => {
       if (!r.ok) return;
-      $("ciel-art").innerHTML = `<video src="${CIEL_VIDEO}" poster="${CIEL_IMG}" muted playsinline loop preload="metadata"></video>`;
+      $("ciel-art").innerHTML = `<video src="${CIEL_VIDEO}" poster="${CIEL_IMG}" muted playsinline preload="metadata"></video>`;
       const v = $("ciel-art").querySelector("video"), d = $("ciel");
       const joue = () => { if (d.open) { v.play().catch(() => {}); } else { v.pause(); v.currentTime = 0; } };
+      // extrait court : à la fin, une pause sur l'horizon puis on repart du début en fondu
+      v.loop = false; v.addEventListener("ended", () => { v.style.transition = "opacity .8s"; v.style.opacity = "0"; setTimeout(() => { v.currentTime = 0; v.play().catch(() => {}); v.style.opacity = "1"; }, 1600); });
       d.addEventListener("toggle", joue); joue();
       // si le navigateur ne sait pas lire la vidéo, ou bloque la lecture : l'image reste
       v.addEventListener("error", () => { $("ciel-art").innerHTML = `<img src="${CIEL_IMG}" alt="">`; });
