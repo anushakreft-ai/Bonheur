@@ -3998,8 +3998,8 @@ Propose 3 pistes de réflexion courtes (une ligne chacune), au tutoiement, en fr
   $("sans-aube").checked = !!S.sansAube; $("sans-aube").addEventListener("change", (e) => { S.sansAube = e.target.checked; save(); });
   function jouerAube() {
     const a = $("aube"); if (!a || new URLSearchParams(location.search).has("sansaube") || S.sansAube) return false;
-    if (S.aubeVue === dayKey()) return false;
-    S.aubeVue = dayKey(); save();
+    if (a.dataset.jouee) return false; // une fois par ouverture de l'app, pas par jour
+    a.dataset.jouee = "1";
     a.querySelector('[data-c="nuit"]').style.backgroundImage = `url("${BG_NUIT}")`;
     a.querySelector('[data-c="aube"]').style.backgroundImage = `url("${BG_AUBE}")`;
     a.querySelector('[data-c="jour"]').style.backgroundImage = `url("${momentDuJour() === "nuit" ? BG_NUIT : momentDuJour() === "crepuscule" ? BG_CREP : BG_SKY}")`;
