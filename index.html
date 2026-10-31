@@ -838,11 +838,30 @@ body[data-moment="nuit"] .sheet[data-nuit="1"] .ciel .ciel-script { color: #f6e2
 .sheet[data-nuit="1"] .sheet-body .lead, .sheet[data-nuit="1"] .sheet-body .hint { color: #cfc6b4 !important; }
 .sheet[data-nuit="1"] .sheet-body .btn { box-shadow: 0 0 0 1px rgba(246,226,168,.35), 0 4px 14px rgba(0,0,0,.35); }
 /* les pages sans scène propre (moment, livre, éclair) : scène = ciel du moment */
+
+/* l'aube : à l'ouverture, la nuit s'éclaire jusqu'au jour, puis l'arbre apparaît (fondus en CSS, pas de vidéo) */
+.aube { position: fixed; inset: 0; z-index: 60; background: #0f1a3a; cursor: pointer; }
+.aube[hidden] { display: none; }
+.aube-ciel { position: absolute; inset: 0; background: center bottom / cover no-repeat; opacity: 0; }
+.aube-ciel[data-c="nuit"] { opacity: 1; }
+.aube.va .aube-ciel[data-c="aube"] { animation: aube-in 2.6s ease-in-out 1.2s both; }
+.aube.va .aube-ciel[data-c="jour"] { animation: aube-in 2.6s ease-in-out 3.4s both; }
+.aube.va { animation: aube-out 1.4s ease-in-out 5.6s both; }
+.aube-mot { position: absolute; left: 0; right: 0; top: 42%; text-align: center; font: 400 64px/1 "Eagle Lake", "Philosopher", serif; color: #fbf7ef; text-shadow: 0 2px 14px rgba(8,14,30,.6); opacity: 0; letter-spacing: .04em; }
+.aube.va .aube-mot { animation: aube-mot 4.2s ease-in-out .8s both; }
+.aube-passer { position: absolute; left: 0; right: 0; bottom: max(28px, env(safe-area-inset-bottom)); text-align: center; font: 400 13px "Philosopher", serif; color: rgba(251,247,239,.7); }
+@keyframes aube-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes aube-out { from { opacity: 1; } to { opacity: 0; visibility: hidden; } }
+@keyframes aube-mot { 0% { opacity: 0; transform: translateY(8px); } 25% { opacity: 1; transform: none; } 75% { opacity: 1; } 100% { opacity: 0; } }
+.home.nait { animation: nait 1.6s ease-out 5.2s both; }
+@keyframes nait { from { opacity: 0; transform: scale(1.03); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .aube { display: none !important; } .home.nait { animation: none; } }
 </style>
 
 <div class="scene" id="scene" aria-hidden="true"></div>
 <div class="decor" aria-hidden="true" hidden><svg><path id="star-d"/></svg><svg id="dots"></svg></div>
 
+<div class="aube" id="aube" hidden aria-hidden="true"><div class="aube-ciel" data-c="nuit"></div><div class="aube-ciel" data-c="aube"></div><div class="aube-ciel" data-c="jour"></div><div class="aube-mot">Zora</div><div class="aube-passer">toucher pour passer</div></div>
 <div class="wrap home" id="home">
   <header class="home-head">
     <div>
@@ -1074,6 +1093,7 @@ body[data-moment="nuit"] .sheet[data-nuit="1"] .ciel .ciel-script { color: #f6e2
         <p class="hint" id="data-last"></p>
         <details class="hist-pli"><summary>Copies automatiques (7 derniers jours)</summary><div class="history" id="copies"></div></details>
       </div>
+      <label class="toggle hint" style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="sans-aube"> Ne plus montrer l'aube à l'ouverture</label>
       <p class="hint aide-bilan">Zora accompagne, elle ne soigne pas. Si la tristesse dure plus de deux semaines, parles-en à ton médecin. Besoin de parler maintenant ? <a href="tel:143">La Main Tendue 143</a> (24 h/24) · <a href="tel:144">Urgences 144</a>.</p>
       <div class="save-state" id="save-state"><i></i><span>Enregistré sur cet appareil</span></div>
     </div>
@@ -1571,7 +1591,7 @@ body[data-moment="nuit"] .sheet[data-nuit="1"] .ciel .ciel-script { color: #f6e2
   ];
   const fresh = () => ({
     v: 6, gestes: DEFAULT_GESTES.slice(), faits: {}, notes: [], voix: [], checkins: [],
-    rappel: { on: false, min: 45 }, humeur: {}, gratitudes: {}, projets: [], refuges: [], pas: {}, souffle: "infinie", intentions: {}, ancre: {}, triReves: "commencer", eclairActif: null, qualites: [], questions: {}, qDecal: {}, rituels: {}, sommeil: {}, momentVu: "", momentQuand: "", pourquoi: null, traversee: null, traversees: [], decision: {}, condition: {}, inspirations: [], gratPhotos: []
+    rappel: { on: false, min: 45 }, humeur: {}, gratitudes: {}, projets: [], refuges: [], pas: {}, souffle: "infinie", intentions: {}, ancre: {}, triReves: "commencer", eclairActif: null, qualites: [], questions: {}, qDecal: {}, rituels: {}, sommeil: {}, momentVu: "", momentQuand: "", pourquoi: null, aubeVue: "", sansAube: false, traversee: null, traversees: [], decision: {}, condition: {}, inspirations: [], gratPhotos: []
   });
   const migrate = (o) => {
     const s = Object.assign(fresh(), o || {});
@@ -3973,10 +3993,27 @@ Propose 3 pistes de réflexion courtes (une ligne chacune), au tutoiement, en fr
     renderIntention(); renderTree(); renderCare(); renderQualites(); renderDecision(); renderCond(); renderIntu(); renderInsp(); renderGratPhotos(); renderQJ(); renderRituel(); renderHebdo(); renderPourquoi(); renderDodoGuide();
   }
   renderAll(); showThought(); renderSteps(); copieDuJour();
+  // l'aube du jour : nuit → aurore → jour, puis l'arbre (une fois par jour, à l'ouverture sans page demandée ; un toucher passe)
+  $("sans-aube").checked = !!S.sansAube; $("sans-aube").addEventListener("change", (e) => { S.sansAube = e.target.checked; save(); });
+  function jouerAube() {
+    const a = $("aube"); if (!a || new URLSearchParams(location.search).has("sansaube") || S.sansAube) return false;
+    if (S.aubeVue === dayKey()) return false;
+    S.aubeVue = dayKey(); save();
+    a.querySelector('[data-c="nuit"]').style.backgroundImage = `url("${BG_NUIT}")`;
+    a.querySelector('[data-c="aube"]').style.backgroundImage = `url("${BG_AUBE}")`;
+    a.querySelector('[data-c="jour"]').style.backgroundImage = `url("${momentDuJour() === "nuit" ? BG_NUIT : momentDuJour() === "crepuscule" ? BG_CREP : BG_SKY}")`;
+    a.hidden = false; $("home").classList.add("nait");
+    requestAnimationFrame(() => a.classList.add("va"));
+    const fin = () => { a.hidden = true; a.classList.remove("va"); $("home").classList.remove("nait"); $("home").style.opacity = ""; };
+    a.addEventListener("animationend", (e) => { if (e.target === a) fin(); });
+    a.addEventListener("click", () => { fin(); $("home").style.animation = "none"; }, { once: true });
+    return true;
+  }
   const hash = location.hash.slice(1);
   if (hash === "mieux") openSheet("malkhut"); else if (byK[hash] || ["trav", "grimoire", "moment"].includes(hash)) openSheet(hash);
   // une fois par jour, à l'ouverture : le moment Zora (deux minutes, toujours les mêmes)
-  else if (!hash && !momentFait() && S.momentVu !== dayKey() && !new URLSearchParams(location.search).has("sansmoment")) { S.momentVu = dayKey(); save(); openSheet("moment"); }
+  else if (!hash && !momentFait() && S.momentVu !== dayKey() && !new URLSearchParams(location.search).has("sansmoment")) { S.momentVu = dayKey(); save(); const aube = jouerAube(); setTimeout(() => openSheet("moment"), aube ? 7200 : 0); }
+  else if (!hash) jouerAube();
 })();
 </script>
 
