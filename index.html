@@ -855,7 +855,7 @@ body[data-moment="nuit"] .sheet[data-nuit="1"] .ciel .ciel-script { color: #f6e2
 @keyframes aube-mot { 0% { opacity: 0; transform: translateY(8px); } 25% { opacity: 1; transform: none; } 75% { opacity: 1; } 100% { opacity: 0; } }
 .home.nait { animation: nait 1.6s ease-out 5.2s both; }
 @keyframes nait { from { opacity: 0; transform: scale(1.03); } to { opacity: 1; transform: none; } }
-@media (prefers-reduced-motion: reduce) { .aube { display: none !important; } .home.nait { animation: none; } }
+/* « réduire les animations » : l'aube reste, en fondus seulement (pas de mouvement) */
 </style>
 
 <div class="scene" id="scene" aria-hidden="true"></div>
@@ -3081,6 +3081,7 @@ Si la pensée évoque une envie de se faire du mal ou de mourir, réponds avec d
   }
   function closeSheet() {
     document.querySelectorAll(".sheet").forEach((x) => (x.hidden = true));
+    if (typeof jouerAube === "function") setTimeout(jouerAube, 50);
     document.body.classList.remove("sheet-open");
     const node = current && document.querySelector(`#tree [data-open="${current}"]`);
     current = null;
@@ -4012,8 +4013,8 @@ Propose 3 pistes de réflexion courtes (une ligne chacune), au tutoiement, en fr
   const hash = location.hash.slice(1);
   if (hash === "mieux") openSheet("malkhut"); else if (byK[hash] || ["trav", "grimoire", "moment"].includes(hash)) openSheet(hash);
   // une fois par jour, à l'ouverture : le moment Zora (deux minutes, toujours les mêmes)
-  else if (!hash && !momentFait() && S.momentVu !== dayKey() && !new URLSearchParams(location.search).has("sansmoment")) { S.momentVu = dayKey(); save(); const aube = jouerAube(); setTimeout(() => openSheet("moment"), aube ? 7200 : 0); }
-  else if (!hash) jouerAube();
+  else if ((!hash || hash === "home") && !momentFait() && S.momentVu !== dayKey() && !new URLSearchParams(location.search).has("sansmoment")) { S.momentVu = dayKey(); save(); const aube = jouerAube(); setTimeout(() => openSheet("moment"), aube ? 7200 : 0); }
+  else jouerAube(); // aussi quand l'app rouvre avec un hash vide ou inconnu
 })();
 </script>
 
