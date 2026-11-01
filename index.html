@@ -857,6 +857,74 @@ body[data-moment="nuit"] .sheet[data-nuit="1"] .ciel .ciel-script { color: #f6e2
 .home.nait { animation: nait 1.6s ease-out 5.2s both; }
 @keyframes nait { from { opacity: 0; transform: scale(1.03); } to { opacity: 1; transform: none; } }
 /* « réduire les animations » : l'aube reste, en fondus seulement (pas de mouvement) */
+
+/* ===== Mondes (2026-11-01) : une sphère = un lieu plein écran, sans défilement, un écran à la fois. Premier monde : Gratitude. ===== */
+.sheet.monde { overflow: hidden !important; background: #0f1a3a !important; color: #fbf7ef; }
+.monde-scene { position: absolute; inset: 0; background: var(--scene) center / cover no-repeat; }
+.monde-scene video { width: 100%; height: 100%; object-fit: cover; display: block; }
+.monde-scene::after { content: ""; position: absolute; inset: 0; background: linear-gradient(rgba(8,14,30,.38), rgba(8,14,30,.05) 28%, rgba(8,14,30,0) 50%, rgba(8,14,30,.28) 72%, rgba(8,14,30,.62)); pointer-events: none; transition: background .3s; }
+.monde-back { position: absolute; z-index: 6; top: calc(12px + env(safe-area-inset-top, 0px)); left: 14px; background: rgba(20,30,50,.3); color: #fbf7ef; border: 0; border-radius: 999px; padding: 6px 12px 6px 6px; font: 400 13px var(--f-body); display: inline-flex; align-items: center; gap: 2px; backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); cursor: pointer; }
+.monde-back svg { width: 18px; height: 18px; }
+.monde-etape { position: absolute; inset: 0; z-index: 3; display: grid; grid-template-rows: auto 1fr auto; padding: calc(58px + env(safe-area-inset-top, 0px)) 20px calc(16px + env(safe-area-inset-bottom, 0px)); text-shadow: 0 1px 6px rgba(8,14,30,.8), 0 0 2px rgba(8,14,30,.5); }
+.monde-etape[hidden] { display: none; }
+.monde-etape[data-etape="hub"] > .monde-bas { grid-row: 3; }
+.monde-titre .kicker { display: block; color: #f1d38a; font: 400 11px var(--f-body); letter-spacing: .22em; text-transform: uppercase; }
+.monde-titre h2 { font: 400 46px/1.05 "Eagle Lake", "Philosopher", serif; color: #fbf7ef; margin: 2px 0 4px; }
+.monde-titre p { margin: 0; font-size: 17px; line-height: 1.5; opacity: .95; }
+.monde-jar { position: absolute; z-index: 2; left: 50%; bottom: 21vh; transform: translateX(-50%); width: min(150px, 24vh); text-align: center; transition: opacity .3s; }
+.monde-jar .jar-svg { width: 100% !important; margin: 0 auto; filter: drop-shadow(0 8px 14px rgba(8,14,30,.4)); }
+.monde-jar .jar-count { font: 400 13px var(--f-body) !important; color: #fbf7ef !important; background: none !important; padding: 2px 0 0 !important; text-shadow: 0 1px 4px rgba(8,14,30,.8); }
+.monde[data-etape="ecrire"] .monde-jar, .monde[data-etape="pioche"] .monde-jar { opacity: .35; }
+.monde[data-etape="ecrire"] .monde-scene::after, .monde[data-etape="pioche"] .monde-scene::after { background: rgba(8,14,30,.45); }
+.monde-jar.plouf .jar-svg { animation: plouf .6s ease-out; }
+@keyframes plouf { 0% { transform: scale(1); } 30% { transform: scale(1.04, .95); } 60% { transform: scale(.98, 1.03); } 100% { transform: scale(1); } }
+.monde-bas { display: grid; gap: 8px; justify-items: start; }
+.monde-msg { margin: 0; min-height: 1.2em; font: 400 20px var(--f-poem); color: #f6e2a8; }
+.monde .lien-plume.encre { background: none !important; border: 0; padding: 0; white-space: normal; max-width: 100%; color: #fbf7ef !important; font: 400 27px/1.2 "WindSong", cursive !important; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 6px; text-align: left; text-shadow: 0 1px 6px rgba(8,14,30,.85) !important; cursor: pointer; }
+.monde .lien-simple { background: none; border: 0; padding: 0; color: #f1d38a; font: 400 15px var(--f-body); cursor: pointer; text-decoration: none; }
+.monde .lien-simple::after { content: " ›"; }
+.monde #jar-next { background: none !important; color: #f1d38a !important; font-size: 15px !important; padding: 0 !important; }
+.monde-liens { display: flex; gap: 18px; flex-wrap: wrap; }
+.monde-q { margin: 0; font: 400 24px/1.3 "Eagle Lake", "Philosopher", serif; color: #fbf7ef; }
+.papier-grat { position: relative; width: min(100%, 360px); margin: 10px auto 0; padding: 18px 20px 16px; border-radius: 3px; color: #1f3a66; text-shadow: none;
+  background: radial-gradient(ellipse 14px 7px at 12% 18%, rgba(63,182,200,.35), transparent 70%), radial-gradient(ellipse 12px 6px at 88% 80%, rgba(169,207,63,.35), transparent 70%), radial-gradient(circle 3px at 80% 14%, rgba(124,107,184,.4), transparent 70%), radial-gradient(ellipse 12px 6px at 20% 86%, rgba(124,107,184,.28), transparent 70%), #fbfdfc;
+  box-shadow: 0 10px 24px rgba(8,14,30,.35), 0 1px 2px rgba(8,14,30,.2); transform: rotate(-1.2deg); }
+.papier-grat textarea { width: 100%; min-height: 3.4em; background: transparent; border: 0; outline: 0; resize: none; font: 500 30px/1.25 "WindSong", cursive; color: #1f3a66; padding: 0; display: block; }
+.papier-grat textarea::placeholder { color: #9aa3b5; font-size: 24px; }
+.papier-grat .manuscrit { font-size: 30px; line-height: 1.25; color: #1f3a66; }
+.papier-grat small { display: block; margin-top: 8px; font: 400 12px var(--f-body); color: #6b6f78; }
+.papier-grat.tremble { animation: tremble .4s; }
+@keyframes tremble { 0%, 100% { transform: rotate(-1.2deg) translateX(0); } 25% { transform: rotate(-1.2deg) translateX(-6px); } 75% { transform: rotate(-1.2deg) translateX(6px); } }
+.monde-etape[data-etape="ecrire"] { grid-template-rows: auto auto auto 1fr; align-content: start; }
+.monde-actions { display: flex; justify-content: space-between; align-items: center; gap: 14px; margin-top: 16px; }
+.monde .btn { background: rgba(251,247,239,.94); color: #1f3a66; border: 0; border-radius: 14px; padding: 11px 18px; font: 400 16px var(--f-body); box-shadow: 0 4px 14px rgba(8,14,30,.3); cursor: pointer; text-shadow: none; }
+.monde-retour, .monde-retirer { justify-self: center; align-self: end; opacity: .85; }
+/* pliage : deux copies du papier, la moitié basse se rabat sur la moitié haute (3D), puis le tout se referme en losange */
+.monde-etape[data-etape="plier"] { grid-template-rows: 1fr auto; place-items: center; }
+.pli { position: relative; width: min(100%, 360px); height: 180px; perspective: 900px; }
+.pli-feuille { position: absolute; inset: 0; transform-style: preserve-3d; transition: transform .7s ease-in-out, opacity .3s; }
+.pli-feuille .papier-grat { position: absolute; left: 0; right: 0; top: 0; margin: 0; width: auto; height: 100%; transform: none; display: flex; align-items: center; justify-content: center; text-align: center; }
+.pli-haut { clip-path: inset(0 0 50% 0); }
+.pli-bas-wrap { position: absolute; inset: 0; transform-style: preserve-3d; transform-origin: 50% 50%; transition: transform .9s cubic-bezier(.5,0,.3,1); }
+.pli-bas { clip-path: inset(50% 0 0 0); backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+.pli-dos { clip-path: inset(0 0 50% 0); transform: rotateX(180deg); backface-visibility: hidden; -webkit-backface-visibility: hidden; background: #f4fbfb !important; }
+.pli-feuille.plie .pli-bas-wrap { transform: rotateX(-180deg); }
+.pli-feuille.plie2 { transform: rotate(45deg) scale(.28); }
+.pli-feuille.parti { opacity: 0; }
+.slip-libre { position: absolute; left: 50%; top: 50%; width: 44px; height: 44px; margin: -22px 0 0 -22px; transform: rotate(45deg) scale(.6); opacity: 0; border-radius: 3px; touch-action: none; cursor: grab;
+  background: radial-gradient(ellipse 8px 4px at 25% 30%, #3fb6c8, transparent 70%), radial-gradient(ellipse 7px 3px at 75% 70%, #a9cf3f, transparent 70%), radial-gradient(circle 2px at 70% 25%, #7c6bb8, transparent 70%), #fbfdfc;
+  box-shadow: inset 0 0 0 1px rgba(40,80,100,.25), 0 8px 18px rgba(8,14,30,.4); transition: transform .4s ease-out, opacity .3s; }
+.slip-libre::after { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 1px; background: rgba(40,80,100,.3); }
+.slip-libre.ne { opacity: 1; transform: rotate(45deg) scale(1); }
+.slip-libre.tenu { cursor: grabbing; box-shadow: inset 0 0 0 1px rgba(40,80,100,.25), 0 16px 28px rgba(8,14,30,.5); }
+.slip-libre.monte { opacity: 1; animation: slip-monte .75s cubic-bezier(.3,.7,.3,1) both; }
+@keyframes slip-monte { from { transform: translate(var(--x), var(--y)) rotate(45deg) scale(.35); opacity: .6; } to { transform: translate(0, 0) rotate(45deg) scale(1); opacity: 1; } }
+.monde-aide { margin: 0; font: 400 22px var(--f-poem); color: #f6e2a8; text-align: center; min-height: 1.3em; }
+.monde-etape[data-etape="pioche"] { grid-template-rows: 1fr auto auto; }
+.pioche { position: relative; display: grid; place-items: center; min-height: 200px; }
+.pioche .papier-grat { animation: ouvre .6s cubic-bezier(.3,1.2,.5,1) both; text-align: center; }
+@keyframes ouvre { from { transform: rotate(45deg) scale(.15); opacity: .4; } to { transform: rotate(-1.2deg) scale(1); opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .pli-bas-wrap, .pli-feuille, .slip-libre { transition: none; } .slip-libre.monte, .pioche .papier-grat, .monde-jar.plouf .jar-svg { animation: none; } }
 </style>
 
 <div class="scene" id="scene" aria-hidden="true"></div>
@@ -1100,34 +1168,36 @@ body[data-moment="nuit"] .sheet[data-nuit="1"] .ciel .ciel-script { color: #f6e2
     </div>
   </section>
 
-  <section class="sheet" id="s-chesed" role="dialog" aria-modal="true" aria-labelledby="h-chesed" hidden>
-    <div class="sheet-head" style="--c:#f2c3b5;--t:var(--ink)">
-      <button class="back" type="button" data-close aria-label="Revenir à l'arbre">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Arbre</button>
-      <div class="sheet-title"><span class="heb">Hessed · Bonté</span><h2 id="h-chesed">Gratitude</h2><p>Ce que je reçois et ce que je donne.</p></div>
+  <section class="sheet monde" id="s-chesed" role="dialog" aria-modal="true" aria-labelledby="h-chesed" hidden data-etape="hub">
+    <div class="monde-scene" aria-hidden="true"></div>
+    <button class="back monde-back" type="button" data-close aria-label="Revenir à l'arbre">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Arbre</button>
+    <div class="monde-jar" id="monde-jar">
+      <svg class="jar-svg" id="jar-svg" viewBox="0 0 200 230" role="img" aria-label="Mon bocal à bonheurs"></svg>
+      <div class="jar-count" id="jar-count"></div>
     </div>
-    <div class="sheet-body">
-      <div class="trav-slot"></div>
-      <div class="jarbox">
-        <svg class="jar-svg" id="jar-svg" viewBox="0 0 200 230" role="img" aria-label="Mon bocal à bonheurs"></svg>
-        <div class="jar-side">
-          <div class="jar-count" id="jar-count"></div>
-          <p class="jar-memo" id="jar-memo"></p>
-          <button class="lien-plume encre" type="button" id="jar-next" hidden>Piocher un souvenir <span aria-hidden="true">→</span></button>
-        </div>
+    <div class="monde-etape" data-etape="hub">
+      <div class="monde-titre"><span class="kicker">Hessed · Bonté</span><h2 id="h-chesed">Gratitude</h2><p>Ce que je reçois des autres et du monde.</p></div>
+      <div class="monde-bas">
+        <p class="monde-msg" id="grat-msg" aria-live="polite"></p>
+        <button class="lien-plume encre" type="button" data-etape-go="ecrire">Qu'est-ce qui t'a été donné aujourd'hui ? <span aria-hidden="true">→</span></button>
+        <div class="monde-liens"><button class="lien-simple" type="button" id="jar-next" hidden>Piocher un souvenir</button><button class="lien-simple" type="button" data-open="grimoire">Mon livre</button></div>
       </div>
-      <div class="glass">
-        <h3>Un moment agréable aujourd'hui ?</h3>
-        <div class="ideas" id="grat-ideas"></div>
-        <form class="inline-form" id="f-grat">
-          <label class="sr" for="grat-in">Mon moment agréable</label>
-          <input class="field" id="grat-in" maxlength="140" placeholder="Ou écris le tien…">
-          <button class="btn" type="submit">Dans le bocal</button>
-        </form>
-        <p class="hint" id="grat-msg" aria-live="polite"></p>
-        <div class="today-list" id="grat-today"></div>
-      </div>
-      <details class="hist-pli jours" data-hist="chesed"><summary>Les jours passés</summary><div class="history"></div></details>
+    </div>
+    <div class="monde-etape" data-etape="ecrire" hidden>
+      <p class="monde-q">Qu'est-ce qui t'a été donné aujourd'hui ?</p>
+      <div class="papier-grat" id="grat-papier"><label class="sr" for="grat-in">Mon moment agréable</label><textarea id="grat-in" maxlength="140" rows="3" placeholder="Écris-le ici, à la main…" autocomplete="off" enterkeyhint="done"></textarea></div>
+      <div class="monde-actions"><button class="lien-simple" type="button" id="grat-idee">Une idée ?</button><button class="btn" type="button" id="grat-plier">Plier le papier</button></div>
+      <button class="lien-simple monde-retour" type="button" data-etape-go="hub">Pas maintenant</button>
+    </div>
+    <div class="monde-etape" data-etape="plier" hidden>
+      <div class="pli" id="grat-pli"></div>
+      <p class="monde-aide" id="grat-aide"></p>
+    </div>
+    <div class="monde-etape" data-etape="pioche" hidden>
+      <div class="pioche" id="grat-carte"></div>
+      <div class="monde-actions"><button class="lien-simple" type="button" id="grat-encore">Un autre souvenir</button><button class="lien-simple" type="button" data-etape-go="hub">Le remettre</button></div>
+      <button class="lien-simple monde-retirer" type="button" id="grat-retirer">Retirer ce papier</button>
     </div>
   </section>
 
@@ -1865,24 +1935,96 @@ body[data-moment="nuit"] .sheet[data-nuit="1"] .ciel .ciel-script { color: #f6e2
     "Un message d'une amie", "Le soleil sur ma peau", "Une promenade", "Un câlin", "Un travail bien fait", "Une sieste", "Une fleur, un arbre, le ciel", "Un geste gentil", "Me sentir en sécurité", "Un livre", "Une odeur que j'aime", "Ma santé"];
   const GCOL = ["#e08a76", "#e3b04f", "#8fc4bb", "#f2c3b5", "#3f86c0", "#7a5ea8", "#2f7a45", "#c4412a"];
   const todayGrat = () => (S.gratitudes[dayKey()] || []).filter((x) => x && x.trim());
-  function renderGrat() {
-    const today = new Set(todayGrat().map((x) => x.toLowerCase()));
-    $("grat-ideas").innerHTML = GIDEAS.filter((x) => !today.has(x.toLowerCase())).map((x, i) => `<button type="button" style="--c:${GCOL[i % GCOL.length]}" data-gi="${esc(x)}">${esc(x)}</button>`).join("");
-    $("grat-today").innerHTML = todayGrat().map((x, i) => `<span>${esc(x)}<button type="button" data-gdel="${i}" aria-label="Retirer">×</button></span>`).join("");
-    renderJar();
+  // ----- le monde Gratitude : un écran à la fois (hub → écrire → plier/déposer → hub ; pioche) -----
+  function gratEtape(e) {
+    const sec = $("s-chesed"); sec.dataset.etape = e;
+    sec.querySelectorAll(".monde-etape").forEach((x) => { x.hidden = x.dataset.etape !== e; });
+    if (e === "ecrire") { $("grat-in").value = ""; setTimeout(() => $("grat-in").focus(), 60); }
+    if (e === "hub") renderJar();
   }
+  function renderGrat() { renderJar(); }
   function addGrat(t) {
     t = (t || "").trim(); if (!t) return;
     const k = dayKey(); S.gratitudes[k] = todayGrat().concat(t);
-    save(); renderGrat(); renderBilan();
-    $("grat-msg").textContent = "Dans le bocal ✨";
+    save(); renderJar(); renderBilan();
   }
-  $("grat-ideas").addEventListener("click", (e) => { const b = e.target.closest("[data-gi]"); if (b) addGrat(b.dataset.gi); });
-  $("f-grat").addEventListener("submit", (e) => { e.preventDefault(); addGrat($("grat-in").value); $("grat-in").value = ""; });
-  $("grat-today").addEventListener("click", (e) => {
-    const b = e.target.closest("[data-gdel]"); if (!b) return;
-    const arr = todayGrat(); arr.splice(+b.dataset.gdel, 1); S.gratitudes[dayKey()] = arr; save(); renderGrat(); renderBilan();
-  });
+  $("s-chesed").addEventListener("click", (e) => { const b = e.target.closest("[data-etape-go]"); if (b) { $("grat-msg").textContent = ""; gratEtape(b.dataset.etapeGo); } });
+  $("grat-idee").onclick = () => {
+    const today = new Set(todayGrat().map((x) => x.toLowerCase())), libres = GIDEAS.filter((x) => !today.has(x.toLowerCase()) && x !== $("grat-in").value);
+    $("grat-in").value = libres[Math.floor(Math.random() * libres.length)] || GIDEAS[0]; $("grat-in").focus();
+  };
+  $("grat-in").addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); gratPlier(); } });
+  $("grat-plier").onclick = gratPlier;
+  let gratTexte = "";
+  function gratPlier() {
+    const t = $("grat-in").value.trim();
+    if (!t) { $("grat-papier").classList.remove("tremble"); void $("grat-papier").offsetWidth; $("grat-papier").classList.add("tremble"); $("grat-in").focus(); return; }
+    gratTexte = t; $("grat-in").blur();
+    gratEtape("plier"); $("grat-aide").textContent = "";
+    const txt = `<p class="manuscrit">${esc(t)}</p>`;
+    $("grat-pli").innerHTML = `<div class="pli-feuille" id="pli-feuille">
+        <div class="pli-haut papier-grat">${txt}</div>
+        <div class="pli-bas-wrap"><div class="pli-bas papier-grat">${txt}</div><div class="pli-dos papier-grat"></div></div>
+      </div><div class="slip-libre" id="grat-slip" hidden role="button" tabindex="0" aria-label="Déposer dans le bocal"></div>`;
+    const f = $("pli-feuille");
+    setTimeout(() => f.classList.add("plie"), 350);           // 1er pli : le bas se rabat sur le haut
+    setTimeout(() => f.classList.add("plie2"), 1400);          // 2e pli : le papier se referme en losange
+    setTimeout(() => { f.classList.add("parti"); const sl = $("grat-slip"); sl.hidden = false; requestAnimationFrame(() => sl.classList.add("ne")); $("grat-aide").textContent = "Glisse le papier dans le bocal"; gratDrag(sl); }, 2100);
+  }
+  function jarBouche() { const r = $("jar-svg").getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height * 0.18, r }; }
+  function gratDrag(sl) {
+    let sx = 0, sy = 0, dx = 0, dy = 0, actif = false, bouge = false;
+    const pose = () => { sl.style.transform = `translate(${dx}px, ${dy}px) rotate(45deg)`; };
+    sl.addEventListener("pointerdown", (e) => { actif = true; bouge = false; sx = e.clientX - dx; sy = e.clientY - dy; sl.setPointerCapture(e.pointerId); sl.classList.add("tenu"); sl.style.transition = "none"; });
+    sl.addEventListener("pointermove", (e) => { if (!actif) return; dx = e.clientX - sx; dy = e.clientY - sy; if (Math.abs(dx) + Math.abs(dy) > 6) bouge = true; pose(); });
+    const lacher = () => {
+      if (!actif) return; actif = false; sl.classList.remove("tenu");
+      const c = sl.getBoundingClientRect(), b = jarBouche();
+      const cx = c.left + c.width / 2, cy = c.top + c.height / 2;
+      const dedans = Math.abs(cx - b.x) < b.r.width * 0.6 && cy > b.r.top - 40 && cy < b.r.bottom + 10;
+      if (dedans || !bouge) gratDeposer(sl, dx, dy);
+      else { sl.style.transition = "transform .5s cubic-bezier(.3,1.4,.5,1)"; dx = 0; dy = 0; pose(); $("grat-aide").textContent = "Encore un peu plus bas, dans le bocal"; }
+    };
+    sl.addEventListener("pointerup", lacher); sl.addEventListener("pointercancel", lacher);
+    sl.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); gratDeposer(sl, dx, dy); } });
+  }
+  function gratDeposer(sl, dx, dy) {
+    sl.style.pointerEvents = "none"; $("grat-aide").textContent = "";
+    const c = sl.getBoundingClientRect(), b = jarBouche();
+    const cx = c.left + c.width / 2 - dx, cy = c.top + c.height / 2 - dy;  // position de départ sans translation
+    const tx = b.x - cx, ty = b.y - cy;
+    sl.style.transition = "transform .55s cubic-bezier(.4,0,.6,1)"; sl.style.transform = `translate(${tx}px, ${ty}px) rotate(45deg) scale(.8)`;
+    setTimeout(() => { sl.style.transition = "transform .45s cubic-bezier(.5,0,.8,.6), opacity .3s .25s"; sl.style.transform = `translate(${tx}px, ${ty + b.r.height * 0.6}px) rotate(80deg) scale(.4)`; sl.style.opacity = "0"; }, 560);
+    setTimeout(() => {
+      addGrat(gratTexte); gratTexte = "";
+      $("monde-jar").classList.remove("plouf"); void $("monde-jar").offsetWidth; $("monde-jar").classList.add("plouf");
+      gratEtape("hub"); $("grat-msg").textContent = "Dans le bocal ✨";
+    }, 1050);
+  }
+  // ----- piocher un souvenir : un papier monte du bocal et se déplie -----
+  let jarPick = null;
+  function allGrat() {
+    const all = [];
+    Object.entries(S.gratitudes).sort((x, y) => x[0].localeCompare(y[0])).forEach(([k, arr]) => (arr || []).forEach((t) => { if (t && t.trim()) all.push({ k, t: t.trim() }); }));
+    return all;
+  }
+  function gratPioche(pick) {
+    const all = allGrat(); if (!all.length) return;
+    jarPick = pick || all[Math.floor(Math.random() * all.length)];
+    gratEtape("pioche");
+    const d = new Date(jarPick.k + "T12:00:00").toLocaleDateString("fr-CH", { day: "numeric", month: "long", year: "numeric" });
+    const b = jarBouche(), carte = $("grat-carte"), r = carte.getBoundingClientRect();
+    carte.innerHTML = `<div class="slip-libre monte" style="--x:${b.x - (r.left + r.width / 2)}px;--y:${b.y - (r.top + r.height / 2)}px"></div>`;
+    setTimeout(() => { carte.innerHTML = `<div class="papier-grat ouvre"><p class="manuscrit">${esc(jarPick.t)}</p><small>${d}</small></div>`; }, 750);
+  }
+  $("jar-next").onclick = () => gratPioche();
+  $("grat-encore").onclick = () => gratPioche();
+  $("jar-svg").addEventListener("click", (e) => { const g = e.target.closest("[data-slip]"); if (!g) return; const pk = allGrat()[+g.dataset.slip]; if (pk) gratPioche(pk); });
+  $("grat-retirer").onclick = () => {
+    if (!jarPick || !confirm("Retirer ce papier du bocal ?")) return;
+    const arr = (S.gratitudes[jarPick.k] || []), i = arr.indexOf(jarPick.t); if (i >= 0) arr.splice(i, 1); S.gratitudes[jarPick.k] = arr;
+    jarPick = null; save(); renderBilan(); gratEtape("hub");
+  };
 
   /* ================= jardin + gestes ================= */
   const LEAF_SPOTS = [
@@ -2009,7 +2151,7 @@ body[data-moment="nuit"] .sheet[data-nuit="1"] .ciel .ciel-script { color: #f6e2
   function gesteAction(id) {
     if (id === "sommeil") { renderDodoGuide(); const d = document.querySelector("#dodo-guide details"); if (d) { d.open = true; d.scrollIntoView({ behavior: "smooth", block: "start" }); } }
     if (id === "pensee") $("geste-msg").textContent = THOUGHTS[Math.floor(Math.random() * THOUGHTS.length)];
-    else if (id === "souvenir") openSheet("chesed");
+    else if (id === "souvenir") { openSheet("chesed"); gratPioche(); }
     else if (id === "ici") { openSheet("yesod"); $("steps").closest("details").open = true; setTimeout(() => $("steps").scrollIntoView({ behavior: "smooth", block: "start" }), 200); }
     else if (id === "musique" && S.refuges.length) { const r = S.refuges[Math.floor(Math.random() * S.refuges.length)]; openOut(r.url || spotifySearchUrl(r.nom)); $("geste-msg").textContent = "« " + r.nom + " » s'ouvre dans Spotify."; }
   }
@@ -2770,12 +2912,6 @@ Si la pensée évoque une envie de se faire du mal ou de mourir, réponds avec d
 
     renderJar();
   }
-  let jarPick = null;
-  function allGrat() {
-    const all = [];
-    Object.entries(S.gratitudes).sort((x, y) => x[0].localeCompare(y[0])).forEach(([k, arr]) => (arr || []).forEach((t) => { if (t && t.trim()) all.push({ k, t: t.trim() }); }));
-    return all;
-  }
   function renderJar() {
     const all = allGrat(), n = all.length;
     // papiers pliés à motifs, posés sur la frisure turquoise, du fond vers le haut
@@ -2811,19 +2947,12 @@ Si la pensée évoque une envie de se faire du mal ou de mourir, réponds avec d
       <ellipse cx="100" cy="38" rx="44" ry="7" fill="rgba(255,255,255,.55)" stroke="rgba(255,255,255,.95)" stroke-width="2.5"/>
       <path d="M62 37C64 24 136 24 138 37" fill="rgba(255,255,255,.45)" stroke="rgba(255,255,255,.95)" stroke-width="2.5"/>
       <path d="M76 30C88 26 104 26 116 28" fill="none" stroke="#fbf7ef" stroke-width="2.5" stroke-linecap="round" opacity=".8"/>
-      ${n ? "" : `<text x="100" y="140" text-anchor="middle" font-size="12" fill="#6b6f78" font-family="sans-serif">Encore vide</text>`}`;
-    $("jar-count").textContent = n ? `${n} bonheur${n > 1 ? "s" : ""} dans le bocal` : "Mon bocal à bonheurs";
+      ${n ? "" : `<text x="100" y="140" text-anchor="middle" font-size="12" fill="#fbf7ef" opacity=".8" font-family="Philosopher, sans-serif">Encore vide</text>`}`;
+    const auj = todayGrat().length;
+    $("jar-count").textContent = n ? `${n} bonheur${n > 1 ? "s" : ""}${auj ? ` · ${auj} aujourd'hui` : ""}` : "Encore vide";
     $("jar-next").hidden = !n;
-    if (!n) { $("jar-memo").innerHTML = "Ajoute un moment agréable : il tombe dans le bocal."; return; }
-    if (!jarPick || !all.some((x) => x.t === jarPick.t && x.k === jarPick.k)) $("jar-memo").innerHTML = "Touche un papier ou pioche un souvenir.";
-    else showPick();
   }
-  function showPick() {
-    const d = new Date(jarPick.k + "T12:00:00").toLocaleDateString("fr-CH", { day: "numeric", month: "long" });
-    $("jar-memo").innerHTML = `<span class="enveloppe"><span class="env-carte"><span class="env-txt">${esc(jarPick.t)}</span><small>${d}</small></span></span>`;
-  }
-  $("jar-next").onclick = () => { const all = allGrat(); jarPick = all[Math.floor(Math.random() * all.length)]; showPick(); };
-  $("jar-svg").addEventListener("click", (e) => { const g = e.target.closest("[data-slip]"); if (!g) return; jarPick = allGrat()[+g.dataset.slip]; if (jarPick) showPick(); });
+  function showPick() { if (jarPick) gratPioche(jarPick); }
 
   /* ================= arbre des Séphiroth ================= */
   // couleurs traditionnelles des séphiroth (échelle de la Reine)
@@ -3040,6 +3169,10 @@ Si la pensée évoque une envie de se faire du mal ou de mourir, réponds avec d
   const elemTeinte = (e) => document.body.dataset.moment === "nuit" && ELEM_NUIT[e] ? "" : (TEINTE[momentDuJour()] || "");
   // les pages sans image d'élément reposent sur le ciel (vraie nuit après 20 h) ; Gestes a son feu de camp
   function marquerNuit() { const nuit = momentDuJour() === "nuit"; document.querySelectorAll(".sheet").forEach((el) => { const k = el.id.slice(2); if (!ELEMENT[k] || k === "malkhut") el.dataset.nuit = nuit ? "1" : ""; }); }
+  // vidéos de monde (Veo), fichiers séparés présents seulement dans l'app installée : visuels/monde-<élément>.mp4
+  const MONDE_VIDEO = { chesed: "visuels/monde-eau.mp4" }, mondeVideos = {};
+  if (!(window.claude && window.claude.use)) Object.entries(MONDE_VIDEO).forEach(([k, u]) => fetch(u, { method: "HEAD" }).then((r) => { if (r.ok) { mondeVideos[k] = true; peindreScenes(); mondeVideoJoue(); } }).catch(() => {}));
+  function mondeVideoJoue() { document.querySelectorAll(".sheet .monde-scene video").forEach((v) => { if (v.closest(".sheet").hidden) { v.pause(); } else v.play().catch(() => {}); }); }
   function peindrePages() {
     marquerNuit(); peindreScenes(); return;
     const m = momentDuJour(), t = TEINTE[m] || "", v = m === "nuit" ? "226,230,244" : "251,246,241";
@@ -3061,14 +3194,16 @@ Si la pensée évoque une envie de se faire du mal ou de mourir, réponds avec d
   function peindreScenes() {
     const nuit = momentDuJour() === "nuit";
     document.querySelectorAll(".sheet").forEach((el) => {
-      const k = el.id.slice(2), e = ELEMENT[k], h = el.querySelector(".sheet-head"); if (!h) return;
+      const k = el.id.slice(2), e = ELEMENT[k], h = el.querySelector(".sheet-head, .monde-scene"); if (!h) return;
       let img = e ? elemImg(e) : null;
       if (k === "malkhut") img = nuit ? FEU_CAMP : null; // le jour, le jardin est dans la carte ; la scène reste le ciel
       if (!img) img = nuit ? BG_NUIT : momentDuJour() === "crepuscule" ? BG_CREP : momentDuJour() === "aube" ? BG_AUBE : BG_SKY;
       h.style.setProperty("--scene", `url("${img}")`);
       el.style.backgroundImage = "none";
+      if (h.classList.contains("monde-scene")) h.innerHTML = (mondeVideos[k] && !nuit) ? `<video src="${MONDE_VIDEO[k]}" poster="${img}" muted loop playsinline preload="metadata"></video>` : "";
     });
   }
+
 
   let current = null;
   function openSheet(k) {
@@ -3078,13 +3213,14 @@ Si la pensée évoque une envie de se faire du mal ou de mourir, réponds avec d
     renderHist(k); if (k === "binah") renderDemele();
     if (k === "moment") renderMoment();
     if (k === "trav") renderTravSheet(); else if (k === "grimoire") { $("grim-book").classList.remove("ouvert"); grimIdx = 0; grimPages = []; renderGrimoire(); if (document.fonts) document.fonts.ready.then(() => { if (current === "grimoire") { grimPages = []; renderGrimoire(); } }); } else renderTravSlot(k);
-    document.body.classList.add("sheet-open");
+    if (k === "chesed") gratEtape("hub");
+    document.body.classList.add("sheet-open"); mondeVideoJoue();
     try { history.replaceState(null, "", "#" + k); } catch (e) {}
   }
   function closeSheet() {
     document.querySelectorAll(".sheet").forEach((x) => (x.hidden = true));
     if (typeof jouerAube === "function") setTimeout(jouerAube, 50);
-    document.body.classList.remove("sheet-open");
+    document.body.classList.remove("sheet-open"); mondeVideoJoue();
     const node = current && document.querySelector(`#tree [data-open="${current}"]`);
     current = null;
     try { history.replaceState(null, "", location.pathname + location.search); } catch (e) {}
@@ -3749,7 +3885,7 @@ Propose 3 pistes de réflexion courtes (une ligne chacune), au tutoiement, en fr
     if (x.k === "respirer") { openSheet("yesod"); setTimeout(() => document.querySelector(".breath").scrollIntoView({ behavior: "smooth", block: "center" }), 150); if (!breathRun) $("breath-go").click(); }
     else if (x.k === "ici") { openSheet("yesod"); $("steps").closest("details").open = true; setTimeout(() => $("steps").scrollIntoView({ behavior: "smooth", block: "start" }), 200); }
     else if (x.k === "pensee") { $("care-msg").textContent = THOUGHTS[Math.floor(Math.random() * THOUGHTS.length)]; }
-    else if (x.k === "souvenir") openSheet("chesed");
+    else if (x.k === "souvenir") { openSheet("chesed"); gratPioche(); }
     else if (x.k === "baroque") {
       const m = MUSIC_MOODS.find((y) => y.k === "baroque");
       if (mcp) { openSheet("yesod"); $("music-pli").open = true; setTimeout(() => $("netz-music").scrollIntoView({ behavior: "smooth" }), 150); searchMusic(m.q, m.label, m.kw); } else openOut(spotifySearchUrl(m.kw));
