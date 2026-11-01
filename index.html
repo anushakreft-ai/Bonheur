@@ -843,7 +843,7 @@ body[data-moment="nuit"] .sheet[data-nuit="1"] .ciel .ciel-script { color: #f6e2
 /* l'aube : à l'ouverture, la nuit s'éclaire jusqu'au jour, puis l'arbre apparaît (fondus en CSS, pas de vidéo) */
 .aube { position: fixed; inset: 0; z-index: 60; background: #0f1a3a; cursor: pointer; }
 .aube[hidden] { display: none; }
-.aube-ciel { position: absolute; inset: 0; background: center bottom / cover no-repeat; opacity: 0; }
+.aube-ciel { position: absolute; inset: 0; background: 18% bottom / cover no-repeat; opacity: 0; }  /* même cadrage que .tree-wrap */
 .aube-ciel[data-c="nuit"] { opacity: 1; }
 .aube.va .aube-ciel[data-c="aube"] { animation: aube-in 2.6s ease-in-out 1.2s both; }
 .aube.va .aube-ciel[data-c="jour"] { animation: aube-in 2.6s ease-in-out 3.4s both; }
@@ -855,7 +855,7 @@ body[data-moment="nuit"] .sheet[data-nuit="1"] .ciel .ciel-script { color: #f6e2
 @keyframes aube-out { from { opacity: 1; } to { opacity: 0; visibility: hidden; } }
 @keyframes aube-mot { 0% { opacity: 0; transform: translateY(8px); } 25% { opacity: 1; transform: none; } 75% { opacity: 1; } 100% { opacity: 0; } }
 .home.nait { animation: nait 1.6s ease-out 5.2s both; }
-@keyframes nait { from { opacity: 0; transform: scale(1.03); } to { opacity: 1; transform: none; } }
+@keyframes nait { from { opacity: 0; } to { opacity: 1; } }  /* pas de transform : il ferait du fond fixe un cadre dans l'accueil */
 /* « réduire les animations » : l'aube reste, en fondus seulement (pas de mouvement) */
 
 /* ===== Mondes (2026-11-01) : une sphère = un lieu plein écran, sans défilement, un écran à la fois. Premier monde : Gratitude. ===== */
