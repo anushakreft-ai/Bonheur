@@ -946,6 +946,14 @@ body[data-moment="nuit"] .sheet[data-nuit="1"] .ciel .ciel-script { color: #f6e2
 .monde #binah-qj .qj-q { margin: 0 0 4px; font: 400 15px var(--f-body); color: #fbf7ef; opacity: .85; }
 .monde #binah-trav:empty, .monde #dm-trav:empty { display: none; }
 .monde #binah-trav .btn-grim, .monde #dm-trav .linkbtn { color: #f6e2a8; background: none; border: 0; padding: 0; font: 400 22px "WindSong", cursive; cursor: pointer; }
+
+/* ===== Pilier de la Rigueur (2026-11-11) : acte du jour, engagement de Force, revue du dimanche ===== */
+.acte-txt, .eng-txt, .revue-txt { font-size: 28px !important; line-height: 1.2 !important; margin: 4px 0 8px !important; color: #1f3a66; }
+.acte-fait { font: 400 20px var(--f-poem); color: #b8862a; }
+.acte-bilan:empty { display: none; }
+.eng-verif { background: rgba(184,134,42,.1); border-radius: 14px; padding: 10px 12px; margin-bottom: 10px; }
+.eng-verif .hint i { font-style: italic; color: #2b3440; }
+#home-hebdo button { background: none; border: 0; padding: 0; font: inherit; color: #b8862a; cursor: pointer; }
 </style>
 
 <div class="scene" id="scene" aria-hidden="true"></div>
@@ -1138,6 +1146,7 @@ body[data-moment="nuit"] .sheet[data-nuit="1"] .ciel .ciel-script { color: #f6e2
         <h2>Mon bilan</h2>
         <p class="lead">Tes 7 derniers jours, pour voir ce qui te fait du bien.</p>
       </div>
+      <div class="panel" id="revue"></div>
       <button class="btn-eclair" type="button" data-open="trav">Le récit de ma traversée ›</button>
       <div class="stats" id="stats"></div>
       <div class="panel">
@@ -1221,6 +1230,7 @@ body[data-moment="nuit"] .sheet[data-nuit="1"] .ciel .ciel-script { color: #f6e2
     <div class="sheet-body">
       <div class="trav-slot"></div>
       <div class="panel qjour" data-qj="gevurah"></div>
+      <div class="panel" id="engagement"></div>
       <details class="panel tight">
         <summary>Là, maintenant, j'écoute…</summary>
         <div class="seg" id="voices" role="group" aria-label="Quelle voix"></div>
@@ -1345,6 +1355,7 @@ body[data-moment="nuit"] .sheet[data-nuit="1"] .ciel .ciel-script { color: #f6e2
     <div class="sheet-body">
       <div class="trav-slot"></div>
       <div class="panel qjour" data-qj="hod"></div>
+      <div class="panel" id="dire-reve"></div>
       <details class="panel tight">
         <summary>Écrire librement : rêves de nuit, pensées</summary>
         <div class="seg" id="type-pick" role="group" aria-label="Type de note"></div>
@@ -1448,6 +1459,7 @@ body[data-moment="nuit"] .sheet[data-nuit="1"] .ciel .ciel-script { color: #f6e2
           <button class="lien-plume encre" id="random" type="button">Un geste au hasard <span aria-hidden="true">→</span></button>
         </div>
       </div>
+      <div class="panel" id="acte-reve"></div>
       <div class="title-block">
         <h2>Les petits gestes</h2>
         <p class="lead" id="gestes-lead">Touche un geste quand tu l'as fait. Une plante pousse dans ton jardin.</p>
@@ -1673,7 +1685,7 @@ body[data-moment="nuit"] .sheet[data-nuit="1"] .ciel .ciel-script { color: #f6e2
   ];
   const fresh = () => ({
     v: 6, gestes: DEFAULT_GESTES.slice(), faits: {}, notes: [], voix: [], checkins: [],
-    rappel: { on: false, min: 45 }, humeur: {}, gratitudes: {}, projets: [], refuges: [], pas: {}, souffle: "infinie", intentions: {}, ancre: {}, triReves: "commencer", eclairActif: null, qualites: [], questions: {}, qDecal: {}, rituels: {}, sommeil: {}, momentVu: "", momentQuand: "", pourquoi: null, aubeVue: "", sansAube: false, traversee: null, traversees: [], decision: {}, condition: {}, inspirations: [], gratPhotos: []
+    rappel: { on: false, min: 45 }, humeur: {}, gratitudes: {}, projets: [], refuges: [], pas: {}, actes: {}, engagements: {}, revues: {}, souffle: "infinie", intentions: {}, ancre: {}, triReves: "commencer", eclairActif: null, qualites: [], questions: {}, qDecal: {}, rituels: {}, sommeil: {}, momentVu: "", momentQuand: "", pourquoi: null, aubeVue: "", sansAube: false, traversee: null, traversees: [], decision: {}, condition: {}, inspirations: [], gratPhotos: []
   });
   const migrate = (o) => {
     const s = Object.assign(fresh(), o || {});
@@ -2127,6 +2139,7 @@ body[data-moment="nuit"] .sheet[data-nuit="1"] .ciel .ciel-script { color: #f6e2
         ${editing ? `<span class="del" aria-label="Retirer ${esc(g.label)}" data-del="${esc(g.id)}">×</span>` : ""}
       </button>`).join("");
     $("edit-gestes").textContent = editing ? "Terminé" : "Retirer des gestes";
+    if (typeof renderActe === "function") renderActe();
   }
   $("gestes").addEventListener("click", (e) => {
     const del = e.target.closest("[data-del]");
@@ -2986,7 +2999,7 @@ Si la pensée évoque une envie de se faire du mal ou de mourir, réponds avec d
       case "hod": return notesToday(["reve", "envie", "pensee"]) || qjFait("hod");
       case "binah": return notesToday(["pensee"]) || qjFait("binah");
       case "chesed": return (S.gratitudes[t] || []).some((x) => x && x.trim());
-      case "gevurah": return S.checkins.some((c) => dayKey(new Date(c.date)) === t) || qjFait("gevurah");
+      case "gevurah": return S.checkins.some((c) => dayKey(new Date(c.date)) === t) || qjFait("gevurah") || engagementDuJour();
       case "tiferet": return !!S.humeur[t];
       case "netzach": return !!S.pas[t] || qjFait("netzach");
       case "yesod": return !!S.ancre[t] || (S.condition[t] || []).length > 0;
@@ -3220,6 +3233,7 @@ Si la pensée évoque une envie de se faire du mal ou de mourir, réponds avec d
     if (k === "moment") renderMoment();
     if (k === "trav") renderTravSheet(); else if (k === "grimoire") { $("grim-book").classList.remove("ouvert"); grimIdx = 0; grimPages = []; renderGrimoire(); if (document.fonts) document.fonts.ready.then(() => { if (current === "grimoire") { grimPages = []; renderGrimoire(); } }); } else renderTravSlot(k);
     if (k === "chesed") gratEtape("hub"); if (k === "binah") binahEtape("hub");
+    if (k === "gevurah") renderEngagement(); if (k === "daat") renderRevue(); if (k === "hod") renderDire(); if (k === "malkhut") renderActe();
     document.body.classList.add("sheet-open"); mondeVideoJoue();
     try { history.replaceState(null, "", "#" + k); } catch (e) {}
   }
@@ -3696,6 +3710,8 @@ Propose 3 pistes de réflexion courtes (une ligne chacune), au tutoiement, en fr
     (S.pourquoi && S.pourquoi.anciens || []).forEach((a) => L.push({ date: a.date, el: "lumiere", label: "Mon pourquoi", texte: a.t }));
     Object.entries(S.rituels || {}).forEach(([k, r]) => { if (r.adieu) L.push({ date: k + "T06:58:00", el: "lumiere", label: "J'ai dit adieu à", texte: r.adieu }); if (r.accueil) L.push({ date: k + "T06:59:00", el: "lumiere", label: "J'ai accueilli", texte: r.accueil }); });
     Object.entries(S.questions || {}).forEach(([k, o]) => Object.entries(o || {}).forEach(([sp, r]) => r && r.r && L.push({ date: r.date || jour(k), el: ELEMENT[sp] || "eau", label: r.q, texte: r.r })));
+    Object.values(S.engagements || {}).forEach((e) => e && e.t && L.push({ date: e.date, el: "feu", label: "Engagement de Force", texte: ENG_MODES[e.mode] + " " + e.t + (e.tenu == null ? "" : e.tenu ? " (tenu)" : " (pas tenu cette fois)") }));
+    Object.values(S.revues || {}).forEach((r) => { if (!r) return; [["essaye", "J'ai essayé"], ["appris", "J'ai appris"], ["change", "Je vais changer"], ["personne", "Dire mon rêve à"]].forEach(([id, lab]) => r[id] && L.push({ date: r.date, el: "lumiere", label: lab, texte: r[id] })); });
     (S.checkins || []).forEach((c) => { const v = VOICES[c.voix]; if (v) L.push({ date: c.date, el: "feu", label: "Ma voix", texte: v.label + (c.qui ? " (" + c.qui + ")" : "") }); });
     [S.traversee, ...(S.traversees || [])].filter(Boolean).forEach((t) => {
       TRAV.forEach((M) => {
@@ -4099,6 +4115,110 @@ Propose 3 pistes de réflexion courtes (une ligne chacune), au tutoiement, en fr
     renderTree(); binahEtape("hub"); $("binah-msg").textContent = "Gardé dans ton livre ✨";
   }
 
+  /* ================= le pilier de la Rigueur : acte du jour, engagement de Force, revue du dimanche ================= */
+  // clé de semaine = le lundi (AAAA-MM-JJ)
+  function semaineKey(d) { const x = new Date(d || Date.now()); x.setHours(12, 0, 0, 0); const j = (x.getDay() + 6) % 7; x.setDate(x.getDate() - j); return dayKey(x); }
+  const semainePassee = () => { const x = new Date(semaineKey() + "T12:00:00"); x.setDate(x.getDate() - 7); return dayKey(x); };
+  S.actes = S.actes || {}; S.engagements = S.engagements || {}; S.revues = S.revues || {};
+
+  // ----- 1 · l'acte du jour pour mon rêve (Netsah + Malkhout) -----
+  function reveActif() { return S.projets.find((p) => p.id === S.eclairActif && !p.fini) || S.projets.find((p) => !p.fini) || null; }
+  function acteDuReve(p) {
+    if (!p) return "";
+    const e = p.eclair || {}; const et = (p.etapes || []).find((s) => !s.ok);
+    return (e.netzach || "").trim() || (e.malkhut || "").trim() || (et && et.txt || "").trim();
+  }
+  function constance() {
+    const j = [...Array(28)].map((_, i) => dayKey(daysAgo(i)));
+    const faits = j.filter((k) => S.actes[k]).length, sem = j.slice(0, 7).filter((k) => S.actes[k]).length;
+    const premier = Object.keys(S.actes).sort()[0]; const depuis = premier ? Math.min(28, Math.round((Date.now() - new Date(premier + "T12:00:00")) / 864e5) + 1) : 0;
+    return { faits, sem, depuis };
+  }
+  function renderActe() {
+    const el = $("acte-reve"); if (!el) return;
+    const p = reveActif(), t = dayKey(), fait = S.actes[t];
+    if (!p) { el.innerHTML = `<div class="eyebrow">L'acte du jour pour mon rêve</div><p class="hint">Aucun rêve en route. <button class="linkbtn" type="button" data-open="netzach">Planter un rêve ›</button></p>`; return; }
+    const acte = (fait && fait.t) || acteDuReve(p);
+    if (!acte) { el.innerHTML = `<div class="eyebrow">L'acte du jour pour mon rêve</div><p class="hint">« ${esc(p.titre || p.nom || "Mon rêve")} » n'a pas encore de petit pas. <button class="linkbtn" type="button" data-eclair-open="${esc(p.id)}">Tracer son chemin de l'Éclair ›</button></p>`; return; }
+    const c = constance(), hier = S.actes[dayKey(daysAgo(1))];
+    let bilan = "";
+    if (c.depuis >= 2) bilan = `Fait ${c.sem} jour${c.sem > 1 ? "s" : ""} sur les 7 derniers${c.depuis > 7 ? ` · ${c.faits} sur ${c.depuis}` : ""}.`;
+    if (!fait && c.depuis >= 2 && !hier) bilan += " Hier, pas fait. Aujourd'hui compte.";
+    el.innerHTML = `<div class="eyebrow">L'acte du jour pour mon rêve</div>
+      <p class="hint" style="margin:0">${esc(p.titre || p.nom || "Mon rêve")}</p>
+      <p class="manuscrit acte-txt">${esc(acte)}</p>
+      <div class="row">${fait ? `<span class="acte-fait">Fait aujourd'hui ✦</span><button class="linkbtn" type="button" id="acte-undo">Annuler</button>` : `<button class="btn" type="button" id="acte-ok">C'est fait</button>`}
+        <button class="linkbtn" type="button" data-eclair-open="${esc(p.id)}">Changer l'acte ›</button></div>
+      <p class="hint acte-bilan">${esc(bilan)}</p>`;
+  }
+  document.addEventListener("click", (e) => {
+    const ok = e.target.closest("#acte-ok"), un = e.target.closest("#acte-undo"), op = e.target.closest("[data-eclair-open]");
+    if (op) { openEclair(op.dataset.eclairOpen); return; }
+    if (!ok && !un) return;
+    const t = dayKey(), p = reveActif();
+    if (ok && p) { S.actes[t] = { pid: p.id, t: acteDuReve(p), date: new Date().toISOString() }; S.pas[t] = (S.pas[t] || 0) + 1; }
+    if (un) { delete S.actes[t]; if (S.pas[t]) S.pas[t] = Math.max(0, S.pas[t] - 1); }
+    save(); renderActe(); renderBilan(); renderTree();
+  });
+
+  // ----- 2 · l'engagement de Force : une chose à laquelle je renonce, ou à laquelle je dis non, cette semaine (Guevourah) -----
+  const ENG_MODES = { renonce: "Je renonce à", non: "Je dis non à" };
+  function renderEngagement() {
+    const el = $("engagement"); if (!el) return;
+    const k = semaineKey(), e = S.engagements[k], pk = semainePassee(), pe = S.engagements[pk];
+    let h = `<div class="eyebrow">Mon engagement de la semaine</div>`;
+    if (pe && pe.tenu == null) h += `<div class="eng-verif"><p class="hint">La semaine passée : <i>${esc(ENG_MODES[pe.mode])} ${esc(pe.t)}</i>. Tenu ?</p><div class="row"><button class="btn small" type="button" data-eng-tenu="${pk}|1">Oui, tenu</button><button class="btn alt small" type="button" data-eng-tenu="${pk}|0">Pas cette fois</button></div></div>`;
+    if (e) {
+      h += `<p class="manuscrit eng-txt">${esc(ENG_MODES[e.mode])} ${esc(e.t)}</p>`;
+      h += e.tenu == null ? `<p class="hint">Jusqu'à dimanche. Choisir, c'est renoncer : c'est ta force.</p><div class="row"><button class="linkbtn" type="button" id="eng-change">Changer</button></div>`
+        : `<p class="hint">${e.tenu ? "Tenu ✦ Tu as choisi, et tu as tenu." : "Pas tenu cette fois. Tu le sais, c'est déjà de la lucidité. On recommence lundi."}</p>`;
+    } else {
+      h += `<p class="hint">Une seule chose, précise, pour cette semaine.</p>
+        <div class="seg"><button type="button" class="chip" data-eng-mode="renonce" aria-pressed="true">Je renonce à…</button><button type="button" class="chip" data-eng-mode="non" aria-pressed="false">Je dis non à…</button></div>
+        <label class="sr" for="eng-in">Mon engagement</label><input class="field" id="eng-in" maxlength="120" placeholder="Ex. regarder mon téléphone au réveil">
+        <div class="row"><button class="btn" type="button" id="eng-ok">M'engager</button></div>`;
+    }
+    el.innerHTML = h;
+  }
+  document.addEventListener("click", (e) => {
+    const m = e.target.closest("[data-eng-mode]"), ok = e.target.closest("#eng-ok"), ch = e.target.closest("#eng-change"), tv = e.target.closest("[data-eng-tenu]");
+    if (m) { m.closest(".seg").querySelectorAll("[data-eng-mode]").forEach((x) => x.setAttribute("aria-pressed", x === m)); return; }
+    if (ok) { const t = $("eng-in").value.trim(); if (!t) { $("eng-in").focus(); return; }
+      const mode = (document.querySelector('[data-eng-mode][aria-pressed="true"]') || {}).dataset.engMode || "renonce";
+      S.engagements[semaineKey()] = { t, mode, date: new Date().toISOString(), tenu: null }; save(); renderEngagement(); renderTree(); renderHebdo(); }
+    if (ch) { delete S.engagements[semaineKey()]; save(); renderEngagement(); }
+    if (tv) { const [k, v] = tv.dataset.engTenu.split("|"); if (S.engagements[k]) { S.engagements[k].tenu = v === "1"; S.engagements[k].dateVerif = new Date().toISOString(); } save(); renderEngagement(); renderHebdo(); if (current === "moment") renderMoment(); }
+  });
+  const engagementDuJour = () => { const e = S.engagements[semaineKey()]; return !!(e && dayKey(new Date(e.date)) === dayKey()); };
+
+  // ----- 3 · la revue du dimanche : essayé, appris, changé, et une personne à qui dire mon rêve (Daat + Hod) -----
+  const REVUE_Q = [["essaye", "Qu'ai-je essayé cette semaine ?"], ["appris", "Qu'ai-je appris ?"], ["change", "Que vais-je changer la semaine prochaine ?"], ["personne", "À qui vais-je dire mon rêve, cette semaine ?"]];
+  function renderRevue() {
+    const el = $("revue"); if (!el) return;
+    const k = semaineKey(), r = S.revues[k], dim = new Date().getDay() === 0;
+    el.innerHTML = `<div class="eyebrow">Ma revue de la semaine</div>` + (r
+      ? REVUE_Q.map(([id, q]) => r[id] ? `<p class="hint" style="margin:0">${esc(q)}</p><p class="manuscrit revue-txt">${esc(r[id])}</p>` : "").join("") + `<div class="row"><button class="linkbtn" type="button" id="revue-edit">Modifier</button></div>`
+      : `<p class="hint">${dim ? "C'est dimanche : trois questions pour apprendre de ta semaine." : "Chaque dimanche, trois questions pour apprendre de ta semaine. Tu peux la faire dès maintenant."}</p>` +
+        REVUE_Q.map(([id, q]) => `<label class="hint" for="revue-${id}">${esc(q)}</label><input class="field" id="revue-${id}" maxlength="200" placeholder="${id === "personne" ? "Un prénom, et quand" : "Une phrase suffit…"}">`).join("") +
+        `<div class="row"><button class="btn" type="button" id="revue-ok">Garder ma revue</button></div>`);
+    renderDire();
+  }
+  function renderDire() {
+    const el = $("dire-reve"); if (!el) return;
+    const k = semaineKey(), r = S.revues[k] || S.revues[semainePassee()];
+    if (!r || !r.personne) { el.innerHTML = `<div class="eyebrow">Dire mon rêve</div><p class="hint">Un rêve dit à quelqu'un devient réel. <button class="linkbtn" type="button" data-open="daat">Choisir à qui, dans ma revue ›</button></p>`; return; }
+    el.innerHTML = `<div class="eyebrow">Dire mon rêve</div><p class="manuscrit revue-txt">À ${esc(r.personne)}</p>` + (r.dit ? `<p class="hint">Dit ✦ Il existe maintenant hors de toi.</p>` : `<div class="row"><button class="btn small" type="button" id="dire-ok">Je l'ai dit</button></div>`);
+  }
+  document.addEventListener("click", (e) => {
+    if (e.target.closest("#revue-ok")) {
+      const r = {}; REVUE_Q.forEach(([id]) => { r[id] = $("revue-" + id).value.trim(); });
+      if (!r.essaye && !r.appris && !r.change && !r.personne) { $("revue-essaye").focus(); return; }
+      r.date = new Date().toISOString(); S.revues[semaineKey()] = r; save(); renderRevue(); renderHebdo(); renderEntries();
+    }
+    if (e.target.closest("#revue-edit")) { const r = S.revues[semaineKey()]; delete S.revues[semaineKey()]; renderRevue(); if (r) REVUE_Q.forEach(([id]) => { $("revue-" + id).value = r[id] || ""; }); }
+    if (e.target.closest("#dire-ok")) { const k = S.revues[semaineKey()] ? semaineKey() : semainePassee(); if (S.revues[k]) { S.revues[k].dit = true; save(); renderDire(); renderTree(); } }
+  });
+
   /* ================= rituel : dire adieu, accueillir (Keter) ================= */
   function renderRituel() {
     const r = (S.rituels || {})[dayKey()];
@@ -4130,7 +4250,9 @@ Propose 3 pistes de réflexion courtes (une ligne chacune), au tutoiement, en fr
     $("moment-sub").textContent = S.momentQuand ? `${S.momentQuand.charAt(0).toUpperCase() + S.momentQuand.slice(1)}, j'ouvre Zora.` : "Le même petit rituel, chaque jour.";
     $("moment-quand").value = S.momentQuand || "";
     const dim = new Date().getDay() === 0, mh = messageHebdo();
-    $("moment-hebdo").innerHTML = dim && mh ? `<div class="panel"><div class="eyebrow">Le message du dimanche</div><p class="hebdo">${esc(mh)}</p></div>` : "";
+    const eng = S.engagements[semaineKey()], rev = S.revues[semaineKey()];
+    const liens = dim ? (eng && eng.tenu == null ? `<p style="margin:6px 0 0"><button class="linkbtn" type="button" data-open="gevurah">Ton engagement de Force : tenu ? ›</button></p>` : "") + (rev ? "" : `<p style="margin:6px 0 0"><button class="linkbtn" type="button" data-open="daat">Ma revue de la semaine ›</button></p>`) : "";
+    $("moment-hebdo").innerHTML = dim && (mh || liens) ? `<div class="panel"><div class="eyebrow">Le message du dimanche</div><p class="hebdo">${esc(mh)}</p>${liens}</div>` : "";
     // 1 · météo
     $("m-meteo").className = "panel mstep" + (cur ? " fait" : "");
     $("m-meteo").innerHTML = `<div class="eyebrow">1 · Ma météo</div>` + (cur
@@ -4164,7 +4286,11 @@ Propose 3 pistes de réflexion courtes (une ligne chacune), au tutoiement, en fr
   $("s-moment").addEventListener("keydown", (e) => { if (e.key === "Enter" && e.target.id === "mm-grat") { e.preventDefault(); addGrat(e.target.value); renderMoment(); renderTree(); } });
   function renderHebdo() {
     const dim = new Date().getDay() === 0, mh = messageHebdo();
-    $("home-hebdo").hidden = !(dim && mh); $("home-hebdo").textContent = mh;
+    const e = S.engagements[semaineKey()], r = S.revues[semaineKey()];
+    let extra = "";
+    if (dim && e && e.tenu == null) extra = ` <button type="button" data-open="gevurah">Ton engagement : tenu ? ›</button>`;
+    else if (dim && !r) extra = ` <button type="button" data-open="daat">Ma revue de la semaine ›</button>`;
+    $("home-hebdo").hidden = !(dim && (mh || extra)); $("home-hebdo").innerHTML = esc(mh) + extra;
   }
 
   /* ================= mon pourquoi (Keter) : une phrase qui tient des semaines ================= */
@@ -4192,7 +4318,7 @@ Propose 3 pistes de réflexion courtes (une ligne chacune), au tutoiement, en fr
   function renderAll() {
     renderMoods(); renderGrat(); renderNextStep(); renderGarden(); renderGestes(); renderDreams();
     renderTypePick(); renderEntries(); renderVoices(); renderPeople(); renderRefuges(); renderBilan(); armRappel();
-    renderIntention(); renderTree(); renderCare(); renderQualites(); renderDecision(); renderCond(); renderIntu(); renderInsp(); renderGratPhotos(); renderQJ(); renderRituel(); renderHebdo(); renderPourquoi(); renderDodoGuide();
+    renderIntention(); renderTree(); renderCare(); renderQualites(); renderDecision(); renderCond(); renderIntu(); renderInsp(); renderGratPhotos(); renderQJ(); renderRituel(); renderHebdo(); renderPourquoi(); renderDodoGuide(); renderActe(); renderEngagement(); renderRevue();
   }
   renderAll(); showThought(); renderSteps(); copieDuJour();
   // l'aube du jour : nuit → aurore → jour, puis l'arbre (une fois par jour, à l'ouverture sans page demandée ; un toucher passe)
