@@ -958,6 +958,50 @@ body[data-moment="nuit"] .sheet[data-nuit="1"] .ciel .ciel-script { color: #f6e2
 .eng-verif { background: rgba(184,134,42,.1); border-radius: 14px; padding: 10px 12px; margin-bottom: 10px; }
 .eng-verif .hint i { font-style: italic; color: #2b3440; }
 #home-hebdo button { background: none; border: 0; padding: 0; font: inherit; color: #b8862a; cursor: pointer; }
+
+/* ===== Monde Gestes (2026-11-16) : le jardin plein écran, les gestes sur un écran à part ===== */
+.garden-scene { position: absolute; inset: 0; z-index: 1; overflow: hidden; transition: filter .3s; background: none !important; border-radius: 0 !important; aspect-ratio: auto !important; box-shadow: none !important; }
+.garden-scene svg { width: 100%; height: 100%; display: block; }
+.garden-scene.nuit svg { position: absolute; left: 0; right: 0; top: 9vh; height: 46vh; width: 100%; }
+.garden-scene .plante { transform-box: fill-box; transform-origin: 50% 100%; animation: pousse .8s cubic-bezier(.3,1.4,.5,1) both; filter: saturate(.82) sepia(.14) brightness(1.03) drop-shadow(0 2px 2px rgba(60,40,20,.25)); }
+.garden-scene .plante.pend { transform-origin: 50% 0; animation-name: pend; }
+.garden-scene .trait { stroke: #f6e2a8; stroke-width: 1.4; stroke-opacity: .55; stroke-dasharray: 300; animation: trace 1.6s ease both; }
+.garden-scene .cnom { font: 400 26px "WindSong", cursive; fill: #f6e2a8; text-anchor: middle; opacity: .9; animation: braise 1.4s ease both; }
+.garden-scene .astre { animation: brille 3.2s ease-in-out infinite; }
+.garden-scene::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(rgba(8,14,30,.42), rgba(8,14,30,.06) 24%, rgba(8,14,30,0) 50%, rgba(8,14,30,.3) 70%, rgba(8,14,30,.74)); }
+.garden-scene.nuit::after { background: linear-gradient(rgba(8,14,30,.25), rgba(8,14,30,0) 30%, rgba(8,14,30,0) 60%, rgba(8,14,30,.55)); }
+#s-malkhut .monde-scene { z-index: 0; }
+#s-malkhut:not([data-etape="hub"]) .garden-scene { filter: brightness(.45) saturate(.8); }
+#s-malkhut .monde-etape { z-index: 3; }
+.monde #geste-msg { color: #f6e2a8 !important; font: 400 22px var(--f-poem) !important; text-shadow: 0 1px 6px rgba(8,14,30,.85); }
+.monde-compte { font: 400 15px var(--f-body); color: #fbf7ef; opacity: .9; }
+.monde-compte b { font: 400 22px var(--f-num); color: #f6e2a8; }
+.monde #acte-reve .eyebrow { color: #f1d38a; font-size: 10px; }
+.monde #acte-reve .hint { color: #fbf7ef !important; opacity: .85; font-size: 13px; }
+.monde #acte-reve .manuscrit { color: #f6e2a8; font-size: 25px !important; margin: 0 0 4px !important; }
+.monde #acte-reve .row { gap: 12px; align-items: center; }
+.monde #acte-reve .btn { padding: 8px 14px; font-size: 14px; }
+.monde #acte-reve .linkbtn { color: #f1d38a; background: none; border: 0; padding: 0; font: 400 14px var(--f-body); cursor: pointer; }
+.monde #acte-reve .acte-fait { color: #f6e2a8; }
+.monde #acte-reve .acte-bilan { font-size: 12px; margin: 2px 0 0; }
+.monde-etape[data-etape="gestes"], .monde-etape[data-etape="guide"], .monde-etape[data-etape="reglages"] { grid-template-rows: auto minmax(0, 1fr) auto; }
+.gestes-pane { min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 6px 2px 10px; -webkit-mask-image: linear-gradient(#000 92%, transparent); mask-image: linear-gradient(#000 92%, transparent); }
+#s-malkhut .gestes { grid-template-columns: repeat(4, 1fr) !important; gap: 10px 8px !important; }
+#s-malkhut .gestes .geste { min-height: 84px !important; padding: 8px 4px 6px !important; gap: 3px !important; font-size: 11px !important; line-height: 1.15; text-shadow: none; }
+#s-malkhut .gestes .geste svg { width: 26px; height: 26px; }
+#s-malkhut .gestes .geste span { font-size: 11px; }
+#s-malkhut .gestes .geste .del { font-size: 14px; }
+body[data-moment="nuit"] #s-malkhut .gestes .geste { min-height: 86px !important; }
+body[data-moment="nuit"] #s-malkhut .gestes .geste span { font-size: 11px !important; color: #f4ead6 !important; }
+.gestes-pane.reglages { color: #fbf7ef; display: grid; gap: 14px; align-content: start; }
+.gestes-pane.reglages .field { background: rgba(251,247,239,.92); color: #1f3a66; border: 0; border-radius: 14px; padding: 11px 14px; font-size: 16px; text-shadow: none; }
+.gestes-pane.reglages .toggle { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; font-size: 15px; }
+.gestes-pane.reglages .hint { color: #fbf7ef !important; opacity: .85; }
+#dodo-guide .dodo-guide { color: #fbf7ef; }
+#dodo-guide .dodo-guide summary { color: #f6e2a8; font: 400 18px var(--f-body); list-style: none; }
+#dodo-guide .dodo-liste { padding-left: 18px; font-size: 14px; line-height: 1.45; }
+#dodo-guide .dodo-liste b { color: #f6e2a8; }
+#dodo-guide .hint { color: #fbf7ef !important; opacity: .8; font-size: 12px; }
 </style>
 
 <div class="scene" id="scene" aria-hidden="true"></div>
@@ -1448,38 +1492,41 @@ body[data-moment="nuit"] .sheet[data-nuit="1"] .ciel .ciel-script { color: #f6e2
     </div>
   </section>
 
-  <section class="sheet" id="s-malkhut" role="dialog" aria-modal="true" aria-labelledby="h-malkhut" hidden>
-    <div class="sheet-head" style="--c:#b97a57;--t:#fbf7ef">
-      <button class="back" type="button" data-close aria-label="Revenir à l'arbre">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Arbre</button>
-      <div class="sheet-title"><span class="heb">Malkhout · Royaume</span><h2 id="h-malkhut">Gestes</h2><p>Le corps, le concret, les petits gestes.</p></div>
+  <section class="sheet monde" id="s-malkhut" role="dialog" aria-modal="true" aria-labelledby="h-malkhut" hidden data-etape="hub">
+    <div class="monde-scene" aria-hidden="true"></div>
+    <div class="garden-scene" id="garden" aria-hidden="true"></div>
+    <button class="back monde-back" type="button" data-close aria-label="Revenir à l'arbre">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Arbre</button>
+    <div class="trav-slot" hidden></div>
+    <div class="monde-etape" data-etape="hub">
+      <div class="monde-titre"><span class="kicker">Malkhout · Royaume</span><h2 id="h-malkhut">Gestes</h2><p>Le corps, le concret, les petits gestes.</p></div>
+      <div class="monde-bas">
+        <p class="monde-msg" id="geste-msg" aria-live="polite"></p>
+        <div class="monde-compte" id="count"></div>
+        <div id="acte-reve"></div>
+        <button class="lien-plume encre" type="button" data-etape-go="gestes">Un geste maintenant <span aria-hidden="true">→</span></button>
+        <div class="monde-liens"><button class="lien-simple" type="button" id="random">Un geste au hasard</button><button class="lien-simple" type="button" data-etape-go="reglages">Mes gestes</button><button class="lien-simple" type="button" data-open="grimoire">Mon livre</button></div>
+      </div>
     </div>
-    <div class="sheet-body">
-      <div class="trav-slot"></div>
-      <div class="panel">
-        <div class="garden-art" id="garden"></div>
-        <div class="row between">
-          <div class="count" id="count"></div>
-          <button class="lien-plume encre" id="random" type="button">Un geste au hasard <span aria-hidden="true">→</span></button>
-        </div>
-      </div>
-      <div class="panel" id="acte-reve"></div>
-      <div class="title-block">
-        <h2>Les petits gestes</h2>
-        <p class="lead" id="gestes-lead">Touche un geste quand tu l'as fait. Une plante pousse dans ton jardin.</p>
-      </div>
-      <div class="gestes" id="gestes"></div>
-      <p class="hint" id="geste-msg" aria-live="polite"></p>
-      <div id="dodo-guide"></div>
-      <details class="panel tight">
-        <summary>Modifier mes gestes et les rappels</summary>
-        <h3>Ajouter un geste</h3>
+    <div class="monde-etape" data-etape="gestes" hidden>
+      <p class="monde-q" id="gestes-lead"></p>
+      <div class="gestes-pane"><div class="gestes" id="gestes"></div></div>
+      <button class="lien-simple monde-retour" type="button" data-etape-go="hub">Retour au jardin</button>
+    </div>
+    <div class="monde-etape" data-etape="guide" hidden>
+      <p class="monde-q">Préparer mon sommeil</p>
+      <div class="gestes-pane" id="dodo-guide"></div>
+      <button class="lien-simple monde-retour" type="button" data-etape-go="hub">Retour</button>
+    </div>
+    <div class="monde-etape" data-etape="reglages" hidden>
+      <p class="monde-q">Mes gestes et mes rappels</p>
+      <div class="gestes-pane reglages">
         <form class="inline-form" id="f-geste">
           <label class="sr" for="geste-new">Nouveau geste</label>
           <input class="field" id="geste-new" maxlength="40" placeholder="Ex. ouvrir la fenêtre">
           <button class="btn" type="submit">Ajouter</button>
         </form>
-        <div class="row"><button class="linkbtn" id="edit-gestes" type="button">Retirer des gestes</button></div>
+        <div class="row"><button class="lien-simple" id="edit-gestes" type="button">Retirer des gestes</button></div>
         <div class="toggle">
           <input type="checkbox" id="rappel-on">
           <label for="rappel-on">Me souffler un geste toutes les
@@ -1487,9 +1534,9 @@ body[data-moment="nuit"] .sheet[data-nuit="1"] .ciel .ciel-script { color: #f6e2
               <option value="20">20</option><option value="45">45</option><option value="60">60</option><option value="90">90</option>
             </select> minutes</label>
         </div>
-        <p class="hint">Les rappels apparaissent tant que l'app est ouverte.</p>
-      </details>
-      <details class="hist-pli jours" data-hist="malkhut"><summary>Les jours passés</summary><div class="history"></div></details>
+        <p class="hint">Les rappels apparaissent tant que l'app est ouverte. Pour retirer un geste, touche « Retirer des gestes » puis la croix sur le geste, dans l'écran des gestes.</p>
+      </div>
+      <button class="lien-simple monde-retour" type="button" data-etape-go="hub">Retour</button>
     </div>
   </section>
 
@@ -2116,13 +2163,14 @@ body[data-moment="nuit"] .sheet[data-nuit="1"] .ciel .ciel-script { color: #f6e2
     const meteo = S.humeur[dayKey()];
     $("gestes-lead").textContent = meteo && meteo <= 2 ? "Aujourd'hui, en douceur : commence par le corps. Un seul geste, c'est déjà une bonne journée."
       : nuit ? "Touche un geste quand tu l'as fait. Une étoile s'allume dans ton ciel." : "Touche un geste quand tu l'as fait. Une plante pousse dans ton jardin.";
+    $("garden").classList.toggle("nuit", nuit);
     if (nuit) {
       $("garden").innerHTML = renderCiel(n);
       $("count").innerHTML = n === 0 ? "Ton ciel attend sa première étoile." : `<b>${n}</b> étoile${n > 1 ? "s" : ""} allumée${n > 1 ? "s" : ""} ce soir · <b>${gestesSemaine()}</b> gestes cette semaine`;
       return;
     }
-    $("garden").innerHTML = `<svg viewBox="0 0 1024 1536" role="img" aria-label="Jardin du jour : ${n} plante${n > 1 ? "s" : ""}">
-      <image href="${JARDIN_P}" x="0" y="0" width="1024" height="1536" preserveAspectRatio="xMidYMid slice"/>${fl}${jardinMoment()}</svg>`;
+    $("garden").innerHTML = `<svg viewBox="0 0 1024 1536" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Jardin du jour : ${n} plante${n > 1 ? "s" : ""}">
+      <image href="${JARDIN_P}" x="0" y="0" width="1024" height="1536" preserveAspectRatio="xMidYMid slice"/>${fl}<g transform="scale(1.7067 3.84)">${jardinMoment()}</g></svg>`;
     $("count").innerHTML = n === 0 ? "Ton jardin attend sa première plante." :
       `<b>${n}</b> geste${n > 1 ? "s" : ""} aujourd'hui${n === 1 ? " · c'est déjà une bonne journée" : ""} · <b>${gestesSemaine()}</b> cette semaine`;
   }
@@ -2152,6 +2200,7 @@ body[data-moment="nuit"] .sheet[data-nuit="1"] .ciel .ciel-script { color: #f6e2
     const id = b.dataset.id, avant = (S.faits[dayKey()] || []).includes(id);
     toggleGeste(id);
     $("geste-msg").textContent = "";
+    if (!avant && !editing) { malkhutEtape("hub"); $("geste-msg").textContent = document.body.dataset.moment === "nuit" ? "Une étoile s'allume." : "Une plante pousse dans ton jardin."; }
     if (!avant) gesteAction(id);
     // le soir, une étoile allumée est une invitation à poser l'écran
     if (!avant && document.body.dataset.moment === "nuit" && (MOMENT_TEST || new Date().getHours() >= 21) && !$("geste-msg").textContent)
@@ -2172,7 +2221,7 @@ body[data-moment="nuit"] .sheet[data-nuit="1"] .ciel .ciel-script { color: #f6e2
     <p class="hint">Améliorer le sommeil améliore l'humeur, et plus le sommeil s'améliore, plus l'effet est grand (Scott et al. 2021, 65 essais). Choisis un ou deux points, pas les six.</p></details>`;
   function renderDodoGuide() { const el = $("dodo-guide"); if (el) el.innerHTML = S.gestes.some((g) => g.id === "sommeil") ? dodoGuideHtml(false) : ""; }
   function gesteAction(id) {
-    if (id === "sommeil") { renderDodoGuide(); const d = document.querySelector("#dodo-guide details"); if (d) { d.open = true; d.scrollIntoView({ behavior: "smooth", block: "start" }); } }
+    if (id === "sommeil") { if (current === "malkhut") malkhutEtape("guide"); else { renderDodoGuide(); const d = document.querySelector("#dodo-guide details"); if (d) d.open = true; } }
     if (id === "pensee") $("geste-msg").textContent = THOUGHTS[Math.floor(Math.random() * THOUGHTS.length)];
     else if (id === "souvenir") { openSheet("chesed"); gratPioche(); }
     else if (id === "ici") { openSheet("yesod"); $("steps").closest("details").open = true; setTimeout(() => $("steps").scrollIntoView({ behavior: "smooth", block: "start" }), 200); }
@@ -2201,6 +2250,14 @@ body[data-moment="nuit"] .sheet[data-nuit="1"] .ciel .ciel-script { color: #f6e2
     return src[Math.floor(Math.random() * src.length)];
   };
   $("random").onclick = () => { const g = pickGeste(); if (g) showToast(g); };
+  /* ================= monde Gestes : le jardin plein écran, un écran de gestes ================= */
+  function malkhutEtape(e) {
+    const sec = $("s-malkhut"); sec.dataset.etape = e;
+    sec.querySelectorAll(".monde-etape").forEach((x) => { x.hidden = x.dataset.etape !== e; });
+    if (e === "guide") { renderDodoGuide(); const d = document.querySelector("#dodo-guide details"); if (d) d.open = true; }
+    if (e === "reglages") armRappel();
+  }
+  $("s-malkhut").addEventListener("click", (e) => { const b = e.target.closest("[data-etape-go]"); if (b) { if (b.dataset.etapeGo === "gestes") $("geste-msg").textContent = ""; malkhutEtape(b.dataset.etapeGo); } });
   function showToast(g) {
     const host = $("toast-host");
     host.innerHTML = `<div class="toast" role="status"><p>Et si tu prenais un instant pour : <b>${esc(g.label.toLowerCase())}</b> ?</p>
@@ -3239,7 +3296,7 @@ Si la pensée évoque une envie de se faire du mal ou de mourir, réponds avec d
     if (k === "moment") renderMoment();
     if (k === "trav") renderTravSheet(); else if (k === "grimoire") { $("grim-book").classList.remove("ouvert"); grimIdx = 0; grimPages = []; renderGrimoire(); if (document.fonts) document.fonts.ready.then(() => { if (current === "grimoire") { grimPages = []; renderGrimoire(); } }); } else renderTravSlot(k);
     if (k === "chesed") gratEtape("hub"); if (k === "binah") binahEtape("hub");
-    if (k === "gevurah") renderEngagement(); if (k === "daat") renderRevue(); if (k === "hod") renderDire(); if (k === "malkhut") renderActe();
+    if (k === "gevurah") renderEngagement(); if (k === "daat") renderRevue(); if (k === "hod") renderDire(); if (k === "malkhut") { malkhutEtape("hub"); renderGarden(); renderActe(); }
     document.body.classList.add("sheet-open"); mondeVideoJoue();
     try { history.replaceState(null, "", "#" + k); } catch (e) {}
   }
