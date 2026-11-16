@@ -864,6 +864,8 @@ body[data-moment="nuit"] .sheet[data-nuit="1"] .ciel .ciel-script { color: #f6e2
 .monde-scene video { width: 100%; height: 100%; object-fit: cover; display: block; }
 .sheet-head .scene-video { position: absolute !important; inset: 0; z-index: 0 !important; overflow: hidden; }
 .sheet-head .scene-video video { width: 100%; height: 100%; object-fit: cover; object-position: center 30%; display: block; }
+.sheet-head:has(.scene-video) { min-height: 64vh; }
+#s-netzach .scene-video video { object-position: center 68%; }  /* la proue de la barque reste visible, le soleil aussi */
 .monde-scene::after { content: ""; position: absolute; inset: 0; background: linear-gradient(rgba(8,14,30,.38), rgba(8,14,30,.05) 28%, rgba(8,14,30,0) 50%, rgba(8,14,30,.28) 72%, rgba(8,14,30,.62)); pointer-events: none; transition: background .3s; }
 .monde-back { position: absolute; z-index: 6; top: calc(12px + env(safe-area-inset-top, 0px)); left: 14px; background: rgba(20,30,50,.3); color: #fbf7ef; border: 0; border-radius: 999px; padding: 6px 12px 6px 6px; font: 400 13px var(--f-body); display: inline-flex; align-items: center; gap: 2px; backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); cursor: pointer; }
 .monde-back svg { width: 18px; height: 18px; }
@@ -3191,7 +3193,7 @@ Si la pensée évoque une envie de se faire du mal ou de mourir, réponds avec d
   // les pages sans image d'élément reposent sur le ciel (vraie nuit après 20 h) ; Gestes a son feu de camp
   function marquerNuit() { const nuit = momentDuJour() === "nuit"; document.querySelectorAll(".sheet").forEach((el) => { const k = el.id.slice(2); if (!ELEMENT[k] || k === "malkhut") el.dataset.nuit = nuit ? "1" : ""; }); }
   // vidéos de monde (Veo), fichiers séparés présents seulement dans l'app installée : visuels/monde-<élément>.mp4
-  const MONDE_VIDEO = { chesed: "visuels/monde-eau.mp4", binah: "visuels/monde-eau.mp4", netzach: "visuels/monde-reves.mp4" }, mondeVideos = {};
+  const MONDE_VIDEO = { chesed: "visuels/monde-eau.mp4", binah: "visuels/monde-eau.mp4", netzach: "visuels/monde-reves.mp4" }, MONDE_POSTER = { netzach: "visuels/monde-reves-poster.jpg" }, mondeVideos = {};
   if (!(window.claude && window.claude.use)) Object.entries(MONDE_VIDEO).forEach(([k, u]) => fetch(u, { method: "HEAD" }).then((r) => { if (r.ok) { mondeVideos[k] = true; peindreScenes(); mondeVideoJoue(); } }).catch(() => {}));
   function mondeVideoJoue() { document.querySelectorAll(".sheet .monde-scene video, .sheet .scene-video video").forEach((v) => { if (v.closest(".sheet").hidden) { v.pause(); } else v.play().catch(() => {}); }); }
   function peindrePages() {
@@ -3221,7 +3223,7 @@ Si la pensée évoque une envie de se faire du mal ou de mourir, réponds avec d
       if (!img) img = nuit ? BG_NUIT : momentDuJour() === "crepuscule" ? BG_CREP : momentDuJour() === "aube" ? BG_AUBE : BG_SKY;
       h.style.setProperty("--scene", `url("${img}")`);
       el.style.backgroundImage = "none";
-      const vid = (mondeVideos[k] && !nuit) ? `<video src="${MONDE_VIDEO[k]}" poster="${img}" muted loop playsinline preload="metadata"></video>` : "";
+      const vid = (mondeVideos[k] && !nuit) ? `<video src="${MONDE_VIDEO[k]}" poster="${MONDE_POSTER[k] || img}" muted loop playsinline preload="metadata"></video>` : "";
       if (h.classList.contains("monde-scene")) h.innerHTML = vid;
       else { const old = h.querySelector(":scope > .scene-video"); if (old) old.remove(); if (vid) { const w = document.createElement("div"); w.className = "scene-video"; w.innerHTML = vid; h.prepend(w); } }
     });
