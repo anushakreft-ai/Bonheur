@@ -1007,6 +1007,18 @@ body[data-moment="nuit"] #s-malkhut .gestes .geste span { font-size: 11px !impor
 #dodo-guide .dodo-liste { padding-left: 18px; font-size: 14px; line-height: 1.45; }
 #dodo-guide .dodo-liste b { color: #f6e2a8; }
 #dodo-guide .hint { color: #fbf7ef !important; opacity: .8; font-size: 12px; }
+
+/* ===== Retourner une croyance (Comprendre, 2026-11-19) ===== */
+.cr-aide { margin: 10px 0 0; font: 400 14px/1.45 var(--f-body); color: #fbf7ef; opacity: .88; }
+.cr-choix { display: grid; gap: 10px; margin-top: 12px; }
+.cr-prop { text-align: left; background: rgba(251,247,239,.14); color: #fbf7ef; border: 1px solid rgba(251,247,239,.35); border-radius: 14px; padding: 12px 14px; font: 500 22px/1.25 "WindSong", cursive; cursor: pointer; text-shadow: 0 1px 4px rgba(8,14,30,.7); }
+.cr-prop.choisi { background: rgba(251,247,239,.92); color: #1f3a66; border-color: #f1d38a; box-shadow: 0 0 0 2px #f1d38a; text-shadow: none; }
+.cr-choix textarea { width: 100%; background: rgba(251,247,239,.9); color: #1f3a66; border: 0; border-radius: 12px; padding: 10px 12px; font: 500 22px/1.25 "WindSong", cursive; text-shadow: none; resize: none; }
+.cr-choix textarea::placeholder { color: #9aa3b5; }
+.cr-contre { font-size: 30px !important; line-height: 1.2 !important; color: #f6e2a8 !important; margin: 0 !important; }
+.cr-opt { display: flex; gap: 8px; align-items: center; margin-top: 12px; font: 400 14px var(--f-body); color: #fbf7ef; }
+.cr-opt input { width: 18px; height: 18px; }
+.monde .croyance .papier-grat textarea { font-size: 26px; }
 </style>
 
 <div class="scene" id="scene" aria-hidden="true"></div>
@@ -1150,7 +1162,7 @@ body[data-moment="nuit"] #s-malkhut .gestes .geste span { font-size: 11px !impor
       <div class="monde-bas">
         <p class="monde-msg" id="binah-msg" aria-live="polite"></p>
         <div id="binah-qj"></div>
-        <div class="monde-liens"><button class="lien-simple" type="button" data-etape-go="ciel">Me regarder depuis le ciel</button><button class="lien-simple" type="button" data-etape-go="demele">Démêler ce que je vis</button><button class="lien-simple" type="button" data-open="grimoire">Mon livre</button></div>
+        <div class="monde-liens"><button class="lien-simple" type="button" data-etape-go="ciel">Me regarder depuis le ciel</button><button class="lien-simple" type="button" data-etape-go="demele">Démêler ce que je vis</button><button class="lien-simple" type="button" data-etape-go="croyance">Retourner une croyance</button><button class="lien-simple" type="button" data-open="grimoire">Mon livre</button></div>
         <div id="binah-trav"></div>
       </div>
     </div>
@@ -1180,6 +1192,15 @@ body[data-moment="nuit"] #s-malkhut .gestes .geste span { font-size: 11px !impor
       </div>
       <div class="monde-actions"><button class="lien-simple" type="button" id="dm-prev">Retour</button><button class="btn" type="button" id="dm-next">Suivant</button></div>
       <p class="monde-msg" id="dm-msg" aria-live="polite"></p>
+    </div>
+    <div class="monde-etape saisie croyance" data-etape="croyance" hidden data-sous="1">
+      <p class="monde-q" id="cr-titre">Quelle croyance te limite en ce moment ?</p>
+      <div class="sous-bloc">
+        <div class="sous" data-s="1"><div class="papier-grat"><label class="sr" for="cr-in">Ma croyance</label><textarea id="cr-in" rows="3" maxlength="160" placeholder="J'ai l'impression que… J'ai peur de… Je n'arrive pas à…"></textarea></div><p class="cr-aide">Écris-la telle qu'elle vient, même maladroite.</p></div>
+        <div class="sous" data-s="2"><p class="cr-aide">Choisis la phrase que tu peux croire aujourd'hui, pas la plus belle. Tu peux aussi écrire la tienne.</p><div class="cr-choix" id="cr-choix"></div></div>
+        <div class="sous" data-s="3"><p class="manuscrit cr-contre" id="cr-contre"></p><p class="cr-aide">Une fois où la vieille croyance n'était pas tout à fait vraie ?</p><div class="papier-grat"><label class="sr" for="cr-preuve">La preuve</label><textarea id="cr-preuve" rows="2" maxlength="200" placeholder="Le jour où…"></textarea></div><label class="cr-opt"><input type="checkbox" id="cr-intention"> En faire mon intention du jour</label></div>
+      </div>
+      <div class="monde-actions"><button class="lien-simple" type="button" id="cr-prev">Pas maintenant</button><button class="btn" type="button" id="cr-next">Retourner</button></div>
     </div>
     <div hidden>
       <p class="thought" id="thought"></p><button id="thought-next" type="button"></button><textarea id="thought-answer"></textarea><button id="thought-save" type="button"></button><span id="thought-msg"></span>
@@ -3775,7 +3796,7 @@ Propose 3 pistes de réflexion courtes (une ligne chacune), au tutoiement, en fr
   // tout ce qui a été écrit dans les sphères et la Traversée, du plus récent au plus ancien
   function livre() {
     const L = [];
-    S.notes.forEach((n) => L.push({ date: n.date, el: n.type === "envie" ? "feu" : "eau", label: n.src === "demele" ? "Démêler" : n.src === "douceur" ? "Douceur pour moi" : n.src === "ciel" ? "Vue du ciel" : n.type === "reve" ? "Rêve de nuit" : n.type === "envie" ? "Envie" : "Pensée", texte: n.texte }));
+    S.notes.forEach((n) => L.push({ date: n.date, el: n.type === "envie" ? "feu" : "eau", label: n.src === "demele" ? "Démêler" : n.src === "douceur" ? "Douceur pour moi" : n.src === "ciel" ? "Vue du ciel" : n.src === "croyance" ? "Retourner une croyance" : n.type === "reve" ? "Rêve de nuit" : n.type === "envie" ? "Envie" : "Pensée", texte: n.texte }));
     Object.entries(S.gratitudes || {}).forEach(([k, arr]) => (arr || []).filter((x) => x && x.trim()).forEach((x) => L.push({ date: jour(k), el: "eau", label: "Gratitude", texte: x })));
     Object.entries(S.intentions || {}).forEach(([k, v]) => v && L.push({ date: k + "T07:00:00", el: "lumiere", label: "Intention", texte: v, main: 1 }));
     if (S.pourquoi && S.pourquoi.t) L.push({ date: S.pourquoi.date, el: "lumiere", label: "Mon pourquoi", texte: S.pourquoi.t });
@@ -4144,6 +4165,7 @@ Propose 3 pistes de réflexion courtes (une ligne chacune), au tutoiement, en fr
     if (e === "question") setTimeout(() => $("qj-binah").focus(), 60);
     if (e === "ciel") cielSous(0);
     if (e === "demele") dmSous(1);
+    if (e === "croyance") croyanceSous(1);
     if (typeof cielJoue === "function") cielJoue();
   }
   $("s-binah").addEventListener("click", (e) => {
@@ -4295,6 +4317,90 @@ Propose 3 pistes de réflexion courtes (une ligne chacune), au tutoiement, en fr
     if (e.target.closest("#revue-edit")) { const r = S.revues[semaineKey()]; delete S.revues[semaineKey()]; renderRevue(); if (r) REVUE_Q.forEach(([id]) => { $("revue-" + id).value = r[id] || ""; }); }
     if (e.target.closest("#dire-ok")) { const k = S.revues[semaineKey()] ? semaineKey() : semainePassee(); if (S.revues[k]) { S.revues[k].dit = true; save(); renderDire(); renderTree(); } }
   });
+
+  /* ================= retourner une croyance (Comprendre) : trois retournements crédibles, une preuve, une intention ================= */
+  S.croyances = S.croyances || [];
+  // nettoie l'entrée : enlève « j'ai l'impression que/de », « je crois que », etc. ; renvoie une phrase à la 1re personne
+  function croyanceNoyau(t) {
+    let x = t.trim().replace(/\s+/g, " ").replace(/[.!…]+$/, "");
+    x = x.replace(/^(j'ai (l'impression|le sentiment|peur|honte) (que|de|d')\s*|je (crois|pense|me dis|sens|trouve) (que|qu')\s*|il me semble (que|qu')\s*)/i, (m) => /peur|honte/i.test(m) ? m : "");
+    x = x.replace(/^qu'/i, "").replace(/^que /i, "");
+    return x.charAt(0).toLowerCase() + x.slice(1);
+  }
+  const maj = (s) => s.charAt(0).toUpperCase() + s.slice(1);
+  // miroir simple : enlève la négation, adoucit les absolus
+  function miroir(x) {
+    return x.replace(/\bne\s+(\S+)\s+(pas|jamais|rien|plus)\b/g, "$1").replace(/\bn'(\S+)\s+(pas|jamais|rien|plus)\b/g, "$1")
+      .replace(/\bjamais\b/g, "de plus en plus souvent").replace(/\btoujours mal\b/g, "de mieux en mieux").replace(/\bpas assez\b/g, "assez")
+      .replace(/\bnulle?\b/g, "en chemin").replace(/\btrop (\S+)/g, "$1 à ma façon");
+  }
+  // trois retournements crédibles selon la forme de la croyance (jamais de « je suis capable » à sec)
+  function retournements(t) {
+    const x = croyanceNoyau(t); let m;
+    if ((m = x.match(/^(?:j'ai peur|j'ai honte)\s+(?:de|d')\s*(.+)/i))) { const a = m[1]; return [`Je peux ${a}, même avec le trac.`, `La peur monte, et je peux ${a} quand même.`, `Chaque fois que je choisis de ${a}, la peur perd un peu de place.`]; }
+    if ((m = x.match(/^je n'?arrive pas (?:à|a)\s*(.+)/i))) { const a = m[1]; return [`J'apprends à ${a}.`, `Je n'y arrive pas encore comme je voudrais, et j'avance.`, `Il m'est déjà arrivé de ${a}, au moins un peu.`]; }
+    if ((m = x.match(/^je ne sais pas\s*(.+)/i))) { const a = m[1]; return [`Je sais ${a} un peu mieux chaque jour.`, `Je ne sais pas encore ${a} : ça s'apprend.`, `Je sais ${a} à ma façon, et c'est un début.`]; }
+    if ((m = x.match(/^je ne suis pas assez\s+(.+)/i))) { const a = m[1]; return [`Je suis assez ${a} pour les gens qui comptent.`, `Je suis ${a} à ma façon, et ça suffit.`, `Assez pour qui ? Pour moi, aujourd'hui, c'est oui.`]; }
+    if ((m = x.match(/^je ne (?:me sens|suis) pas (?:capable|à la hauteur|douée|assez bien|assez forte)(?:\s+(?:de|d'|pour)\s*(.+))?/i))) { const a = m[1]; return [a ? `Je suis capable de ${a}, à mon rythme.` : `Je suis capable, à mon rythme.`, `Je suis assez, telle que je suis aujourd'hui, et je progresse.`, a ? `J'ai déjà réussi des choses plus difficiles que ${a}.` : `J'ai déjà traversé plus difficile que ça.`]; }
+    if ((m = x.match(/^je (\S+) (?:très )?mal(?:\s+(.+))?/i)) && !/^(ne|n')$/.test(m[1])) { const v = m[1], c = m[2] ? " " + m[2] : ""; return [`Je ${v}${c} à ma façon, et ça compte.`, `Je ${v}${c} de mieux en mieux.`, `Personne ne ${v} parfaitement : je ${v}${c}, et j'apprends.`]; }
+    if ((m = x.match(/^je ne mérite pas\s*(.+)/i))) { const a = m[1]; return [`Je mérite ${a}, comme n'importe qui.`, `Je n'ai pas à le mériter pour le recevoir : ça s'appelle un cadeau.`, `Quelqu'un qui m'aime dirait que je mérite ${a}.`]; }
+    if ((m = x.match(/^(?:personne ne|on ne) (?:m'|me |m)(\S+)\s*(.*)/i))) { const v = m[1], r = m[2] ? " " + m[2] : ""; const pl = { voit: "voient", croit: "croient", comprend: "comprennent", entend: "entendent", répond: "répondent", attend: "attendent", soutient: "soutiennent" }[v] || (/e$/.test(v) ? v + "nt" : v); return [`Certaines personnes m'${pl}${r}, et je choisis de les voir.`, `Je peux demander à être ${v.replace(/e$/, "ée")}${r}.`, `Je m'${v}${r} moi-même, c'est déjà quelqu'un.`]; }
+    if ((m = x.match(/^je suis (?:trop|tellement)\s+(.+)/i))) { const a = m[1]; return [`Je suis ${a}, et c'est aussi une force à certains moments.`, `Je suis ${a} parfois, pas tout le temps, et pas toute entière.`, `Je choisis où je veux être moins ${a}, un pas à la fois.`]; }
+    if ((m = x.match(/^je suis (nulle?|mauvaise?|incapable)(?:\s+(?:en|pour|à|de)\s*(.+))?/i))) { const a = m[2]; return [a ? `Je débute en ${a}, et je progresse.` : `Je suis en chemin, pas au bout.`, a ? `Je m'y mets à ma façon, et je peux apprendre.` : `Je fais à ma façon, et je peux apprendre.`, `Une chose ratée ne fait pas de moi une personne ratée.`]; }
+    if ((m = x.match(/^(?:ça|cela|tout) (?:va|ira) mal|^je n'y arriverai (?:jamais|pas)|^c'est (?:foutu|trop tard|impossible)/i))) return ["Ce n'est pas réglé aujourd'hui, et ce n'est pas fini.", "Je ne vois pas encore comment, et je trouve souvent un chemin.", "Je peux faire un seul petit pas, et regarder après."];
+    const mi = miroir(x);
+    return [`${maj(mi)}, un peu plus chaque jour.`, "Ce n'est pas tout à fait vrai, et ce n'est pas tout moi.", `Je ne sais pas encore comment, et je choisis de croire : ${mi}.`];
+  }
+  let croyanceEnCours = null;
+  function croyanceSous(n) {
+    const el = document.querySelector('#s-binah [data-etape="croyance"]'); el.dataset.sous = n;
+    $("cr-titre").textContent = n === 1 ? "Quelle croyance te limite en ce moment ?" : n === 2 ? "Et si c'était autrement ?" : "Une preuve, même petite";
+    $("cr-next").textContent = n === 1 ? "Retourner" : n === 2 ? "Garder cette phrase" : "Garder dans mon livre";
+    $("cr-prev").textContent = n === 1 ? "Pas maintenant" : "Retour";
+    if (n === 1) setTimeout(() => $("cr-in").focus(), 60);
+    if (n === 3) setTimeout(() => $("cr-preuve").focus(), 60);
+  }
+  function croyanceProposer() {
+    const t = $("cr-in").value.trim(); if (!t) { $("cr-in").focus(); return; }
+    croyanceEnCours = { t, date: new Date().toISOString() };
+    const props = retournements(t);
+    $("cr-choix").innerHTML = props.map((p, i) => `<button type="button" class="cr-prop${i === 0 ? " choisi" : ""}" data-cr="${i}">${esc(p)}</button>`).join("") +
+      `<label class="sr" for="cr-perso">Ma propre formulation</label><textarea id="cr-perso" rows="2" placeholder="Ou écris la tienne…"></textarea>` +
+      (sampleFn ? `<button class="lien-simple" type="button" id="cr-claude">Affiner avec Claude</button>` : "");
+    croyanceSous(2);
+  }
+  $("s-binah").addEventListener("click", async (e) => {
+    const b = e.target.closest(".cr-prop"); if (b) { b.parentElement.querySelectorAll(".cr-prop").forEach((x) => x.classList.toggle("choisi", x === b)); $("cr-perso").value = ""; return; }
+    if (e.target.closest("#cr-claude") && sampleFn) {
+      const btn = $("cr-claude"); btn.textContent = "Je réfléchis…"; btn.disabled = true;
+      try {
+        const r = await sampleFn(`Une personne écrit cette croyance qui la limite : « ${croyanceEnCours.t} ».
+Propose exactement 3 phrases de remplacement, une par ligne, sans numéro ni tiret, en français de Suisse romande, à la première personne, au présent, courtes (max 14 mots).
+Règles : crédibles (jamais une affirmation plate du contraire), formulées positivement, avec des mots comme « pas encore », « à ma façon », « même avec », « j'apprends », « je peux » ; pas de jargon, pas de mièvrerie.`);
+        const lignes = r.text.split(/\n+/).map((l) => l.replace(/^[\d\-•.)\s]+/, "").trim()).filter(Boolean).slice(0, 3);
+        if (lignes.length) { $("cr-choix").querySelectorAll(".cr-prop").forEach((x, i) => { if (lignes[i]) x.textContent = lignes[i]; }); }
+        btn.textContent = "Affiné ✦";
+      } catch (err) { btn.textContent = "Claude n'a pas répondu"; btn.disabled = false; }
+    }
+  });
+  $("cr-next").onclick = () => {
+    const el = document.querySelector('#s-binah [data-etape="croyance"]'), n = +el.dataset.sous;
+    if (n === 1) { croyanceProposer(); return; }
+    if (n === 2) {
+      const perso = ($("cr-perso") || {}).value || "", ch = $("cr-choix").querySelector(".cr-prop.choisi");
+      croyanceEnCours.contre = (perso.trim() || (ch ? ch.textContent : "")).trim(); if (!croyanceEnCours.contre) return;
+      $("cr-contre").textContent = croyanceEnCours.contre; croyanceSous(3); return;
+    }
+    croyanceEnCours.preuve = $("cr-preuve").value.trim();
+    S.croyances.unshift(croyanceEnCours);
+    S.notes.unshift({ id: uid(), type: "pensee", src: "croyance", texte: `J'ai cru : « ${croyanceEnCours.t} ». Je choisis de croire : « ${croyanceEnCours.contre} »` + (croyanceEnCours.preuve ? ` La preuve : ${croyanceEnCours.preuve}` : ""), date: croyanceEnCours.date });
+    if ($("cr-intention").checked) { S.intentions[dayKey()] = croyanceEnCours.contre; if (typeof renderIntention === "function") renderIntention(); }
+    save(); renderEntries(); renderTree();
+    $("cr-in").value = ""; $("cr-preuve").value = ""; $("cr-intention").checked = false;
+    binahEtape("hub"); $("binah-msg").textContent = "Gardé dans ton livre ✨";
+  };
+  $("cr-prev").onclick = () => { const el = document.querySelector('#s-binah [data-etape="croyance"]'), n = +el.dataset.sous; if (n > 1) croyanceSous(n - 1); else binahEtape("hub"); };
+  $("cr-in").addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); croyanceProposer(); } });
 
   /* ================= rituel : dire adieu, accueillir (Keter) ================= */
   function renderRituel() {
