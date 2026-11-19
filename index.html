@@ -1011,7 +1011,7 @@ body[data-moment="nuit"] #s-malkhut .gestes .geste span { font-size: 11px !impor
 /* ===== Retourner une croyance (Comprendre, 2026-11-19) ===== */
 .cr-aide { margin: 10px 0 0; font: 400 14px/1.45 var(--f-body); color: #fbf7ef; opacity: .88; }
 .cr-choix { display: grid; gap: 10px; margin-top: 12px; }
-.cr-prop { text-align: left; background: rgba(251,247,239,.14); color: #fbf7ef; border: 1px solid rgba(251,247,239,.35); border-radius: 14px; padding: 12px 14px; font: 500 22px/1.25 "WindSong", cursive; cursor: pointer; text-shadow: 0 1px 4px rgba(8,14,30,.7); }
+.cr-prop { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; text-align: left; background: rgba(251,247,239,.14); color: #fbf7ef; border: 1px solid rgba(251,247,239,.35); border-radius: 14px; padding: 12px 14px; font: 500 22px/1.25 "WindSong", cursive; cursor: pointer; text-shadow: 0 1px 4px rgba(8,14,30,.7); }
 .cr-prop.choisi { background: rgba(251,247,239,.92); color: #1f3a66; border-color: #f1d38a; box-shadow: 0 0 0 2px #f1d38a; text-shadow: none; }
 .cr-choix textarea { width: 100%; background: rgba(251,247,239,.9); color: #1f3a66; border: 0; border-radius: 12px; padding: 10px 12px; font: 500 22px/1.25 "WindSong", cursive; text-shadow: none; resize: none; }
 .cr-choix textarea::placeholder { color: #9aa3b5; }
@@ -4322,7 +4322,8 @@ Propose 3 pistes de réflexion courtes (une ligne chacune), au tutoiement, en fr
   S.croyances = S.croyances || [];
   // nettoie l'entrée : enlève « j'ai l'impression que/de », « je crois que », etc. ; renvoie une phrase à la 1re personne
   function croyanceNoyau(t) {
-    let x = t.trim().replace(/\s+/g, " ").replace(/[.!…]+$/, "");
+    let x = t.trim().replace(/[’‘`´]/g, "'").replace(/\s+/g, " ").replace(/[.!…]+$/, "");
+    x = x.replace(/^(j'ai (l'impression|le sentiment) (d'être|de)\s+)/i, "je suis ");
     x = x.replace(/^(j'ai (l'impression|le sentiment|peur|honte) (que|de|d')\s*|je (crois|pense|me dis|sens|trouve) (que|qu')\s*|il me semble (que|qu')\s*)/i, (m) => /peur|honte/i.test(m) ? m : "");
     x = x.replace(/^qu'/i, "").replace(/^que /i, "");
     return x.charAt(0).toLowerCase() + x.slice(1);
@@ -4336,7 +4337,14 @@ Propose 3 pistes de réflexion courtes (une ligne chacune), au tutoiement, en fr
   }
   // trois retournements crédibles selon la forme de la croyance (jamais de « je suis capable » à sec)
   function retournements(t) {
-    const x = croyanceNoyau(t); let m;
+    const membres = croyanceNoyau(t).split(/\s*(?:,|;| et | mais )\s*(?=(?:je |j'|on |personne |ça |c'))/i).map((m) => m.trim()).filter(Boolean);
+    if (membres.length > 1) { const a = retournementsUn(membres[0]), b = retournementsUn(membres[1]); return a.map((p, i) => p + " " + b[i]); }
+    return retournementsUn(membres[0] || croyanceNoyau(t));
+  }
+  function retournementsUn(x) {
+    let m;
+    if ((m = x.match(/^je suis (?:une |un )?(?:mauvaise|méchante|horrible|nulle|minable)(?: (personne|mère|maman|fille|amie|femme|collègue|sœur|épouse|compagne))?$/i))) { const r = m[1] || "personne"; return [`Je suis une ${r} qui doute d'elle, et ça n'arrive qu'à celles qui veulent bien faire.`, "J'ai fait des erreurs ; je ne suis pas une erreur.", `Une mauvaise ${r} ne se poserait pas cette question.`]; }
+    if ((m = x.match(/^je ne mérite pas qu'on m'aime$/i))) return ["Je mérite qu'on m'aime, comme n'importe qui.", "L'amour n'a pas à se mériter : il se reçoit.", "Quelqu'un m'aime déjà, et ce n'est pas une erreur de sa part."];
     if ((m = x.match(/^(?:j'ai peur|j'ai honte)\s+(?:de|d')\s*(.+)/i))) { const a = m[1]; return [`Je peux ${a}, même avec le trac.`, `La peur monte, et je peux ${a} quand même.`, `Chaque fois que je choisis de ${a}, la peur perd un peu de place.`]; }
     if ((m = x.match(/^je n'?arrive pas (?:à|a)\s*(.+)/i))) { const a = m[1]; return [`J'apprends à ${a}.`, `Je n'y arrive pas encore comme je voudrais, et j'avance.`, `Il m'est déjà arrivé de ${a}, au moins un peu.`]; }
     if ((m = x.match(/^je ne sais pas\s*(.+)/i))) { const a = m[1]; return [`Je sais ${a} un peu mieux chaque jour.`, `Je ne sais pas encore ${a} : ça s'apprend.`, `Je sais ${a} à ma façon, et c'est un début.`]; }
