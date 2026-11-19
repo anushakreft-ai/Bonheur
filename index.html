@@ -1998,7 +1998,7 @@ body[data-moment="nuit"] #s-malkhut .gestes .geste span { font-size: 11px !impor
     $("douceur-in").value = ""; $("douceur-msg").textContent = "Gardé dans ton livre.";
     $("douceur-show").innerHTML = `<p class="manuscrit">${esc(t)}</p>`; renderEntries(); renderTree();
   };
-  function pickMood(v) { S.humeur[dayKey()] = v; save(); renderMoods(); renderBilan(); renderTree(); if (current === "moment") renderMoment(); }
+  function pickMood(v) { S.humeur[dayKey()] = v; save(); renderMoods(); renderBilan(); renderTree(); if (typeof renderQJ === "function") renderQJ(); if (current === "moment") renderMoment(); }
   $("moods").addEventListener("click", (e) => {
     const b = e.target.closest("[data-m]"); if (!b) return;
     pickMood(+b.dataset.m);
