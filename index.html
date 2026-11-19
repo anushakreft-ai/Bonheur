@@ -855,6 +855,11 @@ body[data-moment="nuit"] .sheet[data-nuit="1"] .ciel .ciel-script { color: #f6e2
 @keyframes aube-out { from { opacity: 1; } to { opacity: 0; visibility: hidden; } }
 @keyframes aube-mot { 0% { opacity: 0; transform: translateY(8px); } 25% { opacity: 1; transform: none; } 75% { opacity: 1; } 100% { opacity: 0; } }
 .home.nait { animation: nait 1.6s ease-out 5.2s both; }
+.aube.video .aube-ciel { display: none; }
+.aube.video.va { animation: none; opacity: 1; transition: opacity .9s ease-out; }
+.aube.video.sort { opacity: 0; }
+.aube-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center bottom; display: block; background: #0f1a3a; }
+.aube.video.va .aube-mot { animation: aube-mot 8s ease-in-out 1.4s both; }
 @keyframes nait { from { opacity: 0; } to { opacity: 1; } }  /* pas de transform : il ferait du fond fixe un cadre dans l'accueil */
 /* « réduire les animations » : l'aube reste, en fondus seulement (pas de mouvement) */
 
@@ -4386,10 +4391,13 @@ Propose 3 pistes de réflexion courtes (une ligne chacune), au tutoiement, en fr
   renderAll(); showThought(); renderSteps(); copieDuJour();
   // l'aube du jour : nuit → aurore → jour, puis l'arbre (une fois par jour, à l'ouverture sans page demandée ; un toucher passe)
   $("sans-aube").checked = !!S.sansAube; $("sans-aube").addEventListener("change", (e) => { S.sansAube = e.target.checked; save(); });
+  // vidéo de l'aube (Veo : nuit → aurore → soleil qui se lève) : seulement dans l'app installée, build_pwa.py remplace null par le chemin
+  const AUBE_VIDEO = "visuels/aube.mp4";
   function jouerAube() {
     const a = $("aube"); if (!a || new URLSearchParams(location.search).has("sansaube") || S.sansAube) return false;
     if (a.dataset.jouee) return false; // une fois par ouverture de l'app, pas par jour
     a.dataset.jouee = "1";
+    if (AUBE_VIDEO && !(window.claude && window.claude.use)) return jouerAubeVideo(a);
     a.querySelector('[data-c="nuit"]').style.backgroundImage = `url("${BG_NUIT}")`;
     a.querySelector('[data-c="aube"]').style.backgroundImage = `url("${BG_AUBE}")`;
     a.querySelector('[data-c="jour"]').style.backgroundImage = `url("${momentDuJour() === "nuit" ? BG_NUIT : momentDuJour() === "crepuscule" ? BG_CREP : BG_SKY}")`;
@@ -4398,12 +4406,26 @@ Propose 3 pistes de réflexion courtes (une ligne chacune), au tutoiement, en fr
     const fin = () => { a.hidden = true; a.classList.remove("va"); $("home").classList.remove("nait"); $("home").style.opacity = ""; };
     a.addEventListener("animationend", (e) => { if (e.target === a) fin(); });
     a.addEventListener("click", () => { fin(); $("home").style.animation = "none"; }, { once: true });
-    return true;
+    return 7200;
+  }
+  function jouerAubeVideo(a) {
+    const home = $("home");
+    a.classList.add("video"); a.hidden = false; home.style.opacity = "0";
+    const v = document.createElement("video"); v.className = "aube-video"; v.src = AUBE_VIDEO; v.poster = "visuels/aube-poster.jpg"; v.muted = true; v.playsInline = true; v.preload = "auto"; v.setAttribute("playsinline", "");
+    a.prepend(v); requestAnimationFrame(() => a.classList.add("va"));
+    let fini = false;
+    const fin = () => { if (fini) return; fini = true; a.classList.add("sort"); home.style.transition = "opacity 1.4s ease-out"; home.style.opacity = "1";
+      setTimeout(() => { a.hidden = true; a.classList.remove("va", "video", "sort"); v.remove(); home.style.transition = ""; home.style.opacity = ""; }, 1500); };
+    v.addEventListener("ended", fin); v.addEventListener("error", fin);
+    a.addEventListener("click", fin, { once: true });
+    v.play().catch(fin);
+    setTimeout(fin, 13000); // sécurité si la vidéo ne finit jamais
+    return 10800;
   }
   const hash = location.hash.slice(1);
   if (hash === "mieux") openSheet("malkhut"); else if (byK[hash] || ["trav", "grimoire", "moment"].includes(hash)) openSheet(hash);
   // une fois par jour, à l'ouverture : le moment Zora (deux minutes, toujours les mêmes)
-  else if ((!hash || hash === "home") && !momentFait() && S.momentVu !== dayKey() && !new URLSearchParams(location.search).has("sansmoment")) { S.momentVu = dayKey(); save(); const aube = jouerAube(); setTimeout(() => openSheet("moment"), aube ? 7200 : 0); }
+  else if ((!hash || hash === "home") && !momentFait() && S.momentVu !== dayKey() && !new URLSearchParams(location.search).has("sansmoment")) { S.momentVu = dayKey(); save(); const aube = jouerAube(); setTimeout(() => openSheet("moment"), aube || 0); }
   else jouerAube(); // aussi quand l'app rouvre avec un hash vide ou inconnu
 })();
 </script>
