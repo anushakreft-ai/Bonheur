@@ -1,5 +1,5 @@
-// Zora — fonctionne hors ligne. Version 57fae90ebe
-const CACHE = "bonheur-57fae90ebe";
+// Zora — fonctionne hors ligne. Version 94f42d6781
+const CACHE = "bonheur-94f42d6781";
 const FICHIERS = ["./", "index.html", "manifest.webmanifest", "icons/icon-180.png", "icons/icon-192.png", "icons/icon-512.png"];
 
 self.addEventListener("install", (e) => {
