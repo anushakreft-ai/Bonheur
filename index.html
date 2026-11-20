@@ -4323,16 +4323,28 @@ Propose 3 pistes de réflexion courtes (une ligne chacune), au tutoiement, en fr
   // nettoie l'entrée : enlève « j'ai l'impression que/de », « je crois que », etc. ; renvoie une phrase à la 1re personne
   function croyanceNoyau(t) {
     let x = t.trim().replace(/[’‘`´]/g, "'").replace(/\s+/g, " ").replace(/[.!…]+$/, "");
-    x = x.replace(/^(j'ai (l'impression|le sentiment) (d'être|de)\s+)/i, "je suis ");
+    x = x.replace(/^j'ai (?:l'impression|le sentiment) (?:de|d')\s*(ne (?:pas|jamais|plus|rien) |pas |jamais )?((?:me |m'|en |y )*)(\S+)\s*(.*)$/i, (m, neg, pr, inf, reste) => {
+      const v = conjug(inf.toLowerCase()); if (!v) return m;
+      const nw = neg ? (neg.match(/pas|jamais|plus|rien/i) || ["pas"])[0].toLowerCase() : "";
+      const ne = neg ? (/^[aeiouéèêhy]/i.test(pr + v) ? "n'" : "ne ") : "";
+      return "je " + ne + pr + v + (nw ? " " + nw : "") + (reste ? " " + reste : "");
+    });
     x = x.replace(/^(j'ai (l'impression|le sentiment|peur|honte) (que|de|d')\s*|je (crois|pense|me dis|sens|trouve) (que|qu')\s*|il me semble (que|qu')\s*)/i, (m) => /peur|honte/i.test(m) ? m : "");
     x = x.replace(/^qu'/i, "").replace(/^que /i, "");
+    x = x.replace(/^(je|j')\s*((?:me |m'|en |y )*)(\S+)\s+(pas|jamais)\b/i, (m, s0, pr, v, n) => /^(ne\b|n')/i.test(v) || /\bne$/i.test(pr.trim()) ? m : "je " + (/^[aeiouéèêhy]/i.test(pr + v) ? "n'" : "ne ") + pr + v + " " + n);
     return x.charAt(0).toLowerCase() + x.slice(1);
   }
   const maj = (s) => s.charAt(0).toUpperCase() + s.slice(1);
+  const CONJ = { "être": "suis", faire: "fais", avoir: "ai", aller: "vais", pouvoir: "peux", savoir: "sais", devoir: "dois", vouloir: "veux", dire: "dis", prendre: "prends", comprendre: "comprends", apprendre: "apprends", mettre: "mets", voir: "vois", tenir: "tiens", venir: "viens", dormir: "dors", vivre: "vis", suivre: "suis", plaire: "plais", valoir: "vaux", servir: "sers", sortir: "sors", partir: "pars", sentir: "sens", croire: "crois", lire: "lis", écrire: "écris", connaître: "connais", réussir: "réussis", finir: "finis", grandir: "grandis", choisir: "choisis", perdre: "perds", attendre: "attends", répondre: "réponds", rendre: "rends", vendre: "vends", recevoir: "reçois", convaincre: "convaincs" };
+  function conjug(inf) { if (CONJ[inf]) return CONJ[inf]; if (/er$/.test(inf)) return inf.replace(/er$/, "e").replace(/ce$/, "ce").replace(/([^aeiouéèê])ele$/, "$1èle"); if (/ir$/.test(inf)) return inf.replace(/ir$/, "is"); return null; }
+  // enlève la négation en gardant les pronoms (ne me sens pas → me sens ; n'en fais jamais → en fais ; n'y arriverai jamais → y arriverai)
+  function sansNeg(x) {
+    return x.replace(/\b(?:ne\s+|n')((?:me |m'|te |se |s'|en |y |le |la |les |lui |leur )*)(\S+)\s+(?:pas|jamais|rien|plus|point)\b\s*/gi, "$1$2 ").replace(/\bje (?=[aeiouéèêhy])/gi, "j'").replace(/\s+/g, " ").trim();
+  }
   // miroir simple : enlève la négation, adoucit les absolus
   function miroir(x) {
     x = x.replace(/\b(mauvaise|mauvais|méchante|méchant|nulle|nul|incapable|moche|laide|bête|stupide|idiote|faible|lente|inutile|fragile|ennuyeuse|ridicule|folle|égoïste|paresseuse|lâche|minable|horrible|insupportable|invisible|seule|perdue|bloquée|nerveuse|timide|vieille|grosse|pauvre)\b/gi, (w) => ANTONYMES[w.toLowerCase()] || w);
-    return x.replace(/\bne\s+(\S+)\s+(pas|jamais|rien|plus)\b/g, "$1").replace(/\bn'(\S+)\s+(pas|jamais|rien|plus)\b/g, "$1")
+    return sansNeg(x)
       .replace(/\bjamais\b/g, "de plus en plus souvent").replace(/\btoujours mal\b/g, "de mieux en mieux").replace(/\bpas assez\b/g, "assez")
       .replace(/\bnulle?\b/g, "en chemin").replace(/\btrop (\S+)/g, "$1 à ma façon");
   }
@@ -4342,16 +4354,17 @@ Propose 3 pistes de réflexion courtes (une ligne chacune), au tutoiement, en fr
   function contraire(x) {
     let m;
     if ((m = x.match(/^(?:j'ai peur|j'ai honte)\s+(?:de|d')\s*(.+)/i))) return `Je suis à l'aise pour ${m[1]}.`;
+    if ((m = x.match(/^(?:j'ai peur|j'ai honte)\s+((?:en|devant|quand|avec|dans|au|aux|des|du) .+)/i))) return `Je suis à l'aise ${m[1]}.`;
     if ((m = x.match(/^je n'?arrive pas (?:à|a)\s*(.+)/i))) return `J'arrive à ${m[1]}.`;
     if ((m = x.match(/^je ne sais pas\s*(.+)/i))) return `Je sais ${m[1]}.`;
     if ((m = x.match(/^je ne mérite pas\s*(.+)/i))) return `Je mérite ${m[1]}.`;
     if ((m = x.match(/^je ne (?:me sens|suis) pas\s*(.+)/i))) return `Je suis ${m[1]}.`;
-    if ((m = x.match(/^je ne (?:serai|peux|pourrai|vais)\s+(?:jamais|pas)\s*(.+)/i))) return `Je ${x.match(/^je ne (\S+)/i)[1]} ${m[1]}.`;
+    if ((m = x.match(/^je ne (\S+)\s+(?:jamais|pas)\s*(.+)/i)) && !/^(me|m'|suis|sais|mérite|arrive)$/i.test(m[1])) return `Je ${m[1]} ${m[2]}.`;
     if ((m = x.match(/^(?:personne ne|on ne) (?:m'|me |m)(\S+)\s*(.*)/i))) { const r = m[2].replace(/^(pas|jamais|plus)\b\s*/i, "").trim(); const v = m[1]; return `On ${/^[aeiouéèêh]/i.test(v) ? "m'" : "me "}${v}${r ? " " + r : ""}.`; }
     if ((m = x.match(/^je (\S+) (?:très )?mal(?:\s+(.+))?/i)) && !/^(ne|n')$/.test(m[1])) return `Je ${m[1]} bien${m[2] ? " " + m[2] : ""}.`;
     if ((m = x.match(/^je suis (?:trop|tellement)\s+(.+)/i))) return `Je suis juste comme il faut.`;
     let y = x.replace(/\b(mauvaise|mauvais|méchante|méchant|nulle|nul|incapable|moche|laide|bête|stupide|idiote|faible|lente|inutile|fragile|ennuyeuse|ridicule|folle|égoïste|paresseuse|lâche|minable|horrible|insupportable|invisible|seule|perdue|bloquée|nerveuse|timide|vieille|grosse|pauvre)\b/gi, (w) => ANTONYMES[w.toLowerCase()] || w);
-    y = y.replace(/\bne\s+(\S+)\s+(pas|jamais|rien|plus)\b/g, "$1").replace(/\bn'(\S+)\s+(pas|jamais|rien|plus)\b/g, "$1").replace(/\bjamais\b/g, "toujours").replace(/\btoujours mal\b/g, "toujours bien").replace(/\bmal\b/g, "bien").replace(/\btrop\b/g, "assez");
+    y = sansNeg(y).replace(/\bjamais\b/g, "toujours").replace(/\btoujours mal\b/g, "toujours bien").replace(/\bmal\b/g, "bien").replace(/\btrop\b/g, "assez");
     return maj(y) + ".";
   }
   function retournements(t) {
@@ -4364,11 +4377,19 @@ Propose 3 pistes de réflexion courtes (une ligne chacune), au tutoiement, en fr
     let m;
     if ((m = x.match(/^je suis (?:une |un )?(?:mauvaise|méchante|horrible|nulle|minable)(?: (personne|mère|maman|fille|amie|femme|collègue|sœur|épouse|compagne))?$/i))) { const r = m[1] || "personne"; return [`Je suis une ${r} qui doute d'elle, et ça n'arrive qu'à celles qui veulent bien faire.`, "J'ai fait des erreurs ; je ne suis pas une erreur.", `Une mauvaise ${r} ne se poserait pas cette question.`]; }
     if ((m = x.match(/^je ne mérite pas qu'on m'aime$/i))) return ["Je mérite qu'on m'aime, comme n'importe qui.", "L'amour n'a pas à se mériter : il se reçoit.", "Quelqu'un m'aime déjà, et ce n'est pas une erreur de sa part."];
+    if ((m = x.match(/^(?:j'ai peur|j'ai honte)\s+((?:en|devant|quand|avec|dans|au|aux|des|du) .+)/i))) { const a = m[1]; return [`Je peux être moi-même ${a}, même avec le trac.`, `La peur monte ${a}, et je reste debout.`, `Chaque fois que je reste ${a}, la peur perd un peu de place.`]; }
     if ((m = x.match(/^(?:j'ai peur|j'ai honte)\s+(?:de|d')\s*(.+)/i))) { const a = m[1]; return [`Je peux ${a}, même avec le trac.`, `La peur monte, et je peux ${a} quand même.`, `Chaque fois que je choisis de ${a}, la peur perd un peu de place.`]; }
     if ((m = x.match(/^je n'?arrive pas (?:à|a)\s*(.+)/i))) { const a = m[1]; return [`J'apprends à ${a}.`, `Je n'y arrive pas encore comme je voudrais, et j'avance.`, `Il m'est déjà arrivé de ${a}, au moins un peu.`]; }
     if ((m = x.match(/^je ne sais pas\s*(.+)/i))) { const a = m[1]; return [`Je sais ${a} un peu mieux chaque jour.`, `Je ne sais pas encore ${a} : ça s'apprend.`, `Je sais ${a} à ma façon, et c'est un début.`]; }
+    if ((m = x.match(/^je ne me sens pas assez(?: bien)?$/i))) return ["Je me sens assez bien pour aujourd'hui, et c'est déjà ça.", "Assez pour qui ? Pour les gens qui comptent, je le suis.", "Je suis assez, telle que je suis ce soir."];
+    if ((m = x.match(/^je ne (?:suis|me sens) pas (?:une |un )?bonne (amie|partenaire|mère|maman|fille|femme|compagne|épouse|collègue|sœur|personne)$/i))) { const r = m[1]; return [`Je suis une ${r} qui fait de son mieux, et ça se voit.`, `Une mauvaise ${r} ne s'inquiéterait pas d'être une bonne ${r}.`, `Je suis une bonne ${r} à ma façon, pas une parfaite.`]; }
+    if ((m = x.match(/^je ne travaille pas assez$/i))) return ["Je travaille assez : c'est le repos qui me manque.", "Ce que je fais compte, même quand personne ne le compte.", "Je travaille assez pour aujourd'hui."];
+    if ((m = x.match(/^je n'(?:avance|trace|progresse) (?:pas|plus)$/i))) return ["J'avance à mon rythme, et c'est le bon.", "Un pas par jour, c'est avancer.", "J'avance, même quand je ne le vois pas."];
+    if ((m = x.match(/^je n'en fais (?:jamais|pas) assez$/i))) return ["Ce que je fais aujourd'hui suffit pour aujourd'hui.", "J'en fais beaucoup, et j'ai aussi le droit de me reposer.", "Ce que je fais compte, même sans applaudissements."];
+    if ((m = x.match(/^je ne ferai (?:jamais|pas) (?:la |de )?différence.*/i))) return ["Je fais déjà une différence pour quelqu'un, même sans le savoir.", "La différence se fait un geste à la fois, et j'en fais.", "Je fais la différence pour ceux qui me connaissent."];
     if ((m = x.match(/^je ne suis pas assez\s+(.+)/i))) { const a = m[1]; return [`Je suis assez ${a} pour les gens qui comptent.`, `Je suis ${a} à ma façon, et ça suffit.`, `Assez pour qui ? Pour moi, aujourd'hui, c'est oui.`]; }
     if ((m = x.match(/^je ne (?:me sens|suis) pas (?:capable|à la hauteur|douée|assez bien|assez forte)(?:\s+(?:de|d'|pour)\s*(.+))?/i))) { const a = m[1]; return [a ? `Je suis capable de ${a}, à mon rythme.` : `Je suis capable, à mon rythme.`, `Je suis assez, telle que je suis aujourd'hui, et je progresse.`, a ? `J'ai déjà réussi des choses plus difficiles que ${a}.` : `J'ai déjà traversé plus difficile que ça.`]; }
+    if ((m = x.match(/^je ne (?:suis|me sens) pas (?!assez|capable|à la hauteur|douée)(?:une |un )?(.+)$/i))) { const a = m[1]; return [`Je suis ${a}, plus souvent que je ne le crois.`, `Je suis ${a} aux yeux de gens qui comptent, même les jours où je ne le sens pas.`, `Je choisis de voir les fois où je suis ${a}.`]; }
     if ((m = x.match(/^je (\S+) (?:très )?mal(?:\s+(.+))?/i)) && !/^(ne|n')$/.test(m[1])) { const v = m[1], c = m[2] ? " " + m[2] : ""; return [`Je ${v}${c} à ma façon, et ça compte.`, `Je ${v}${c} de mieux en mieux.`, `Personne ne ${v} parfaitement : je ${v}${c}, et j'apprends.`]; }
     if ((m = x.match(/^je ne mérite pas\s*(.+)/i))) { const a = m[1]; return [`Je mérite ${a}, comme n'importe qui.`, `Je n'ai pas à le mériter pour le recevoir : ça s'appelle un cadeau.`, `Quelqu'un qui m'aime dirait que je mérite ${a}.`]; }
     if ((m = x.match(/^(?:personne ne|on ne) (?:m'|me |m)(\S+)\s*(.*)/i))) { const v = m[1], r = m[2].replace(/^(pas|jamais|plus)\b\s*/i, "").trim(), rr = r ? " " + r : ""; const pl = { voit: "voient", croit: "croient", comprend: "comprennent", entend: "entendent", répond: "répondent", attend: "attendent", soutient: "soutiennent", lit: "lisent" }[v] || (/e$/.test(v) ? v + "nt" : v); const pp = { voit: "vue", croit: "crue", comprend: "comprise", entend: "entendue", répond: "répondue", attend: "attendue", soutient: "soutenue", lit: "lue" }[v] || (/e$/.test(v) ? v.replace(/e$/, "ée") : v); const je = { voit: "vois", croit: "crois", comprend: "comprends", entend: "entends", répond: "réponds", attend: "attends", soutient: "soutiens", lit: "lis" }[v] || v; const el = (w) => (/^[aeiouéèêh]/i.test(w) ? "m'" : "me ") + w; return [`Certaines personnes ${el(pl)}${rr}, et je choisis de les voir.`, `Je peux demander à être ${pp}${rr}.`, `Je ${el(je)}${rr} moi-même, c'est déjà quelqu'un.`]; }
