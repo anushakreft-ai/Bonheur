@@ -894,6 +894,27 @@ body[data-moment="nuit"] .sheet[data-nuit="1"] .ciel .ciel-script { color: #f6e2
 .monde .lien-simple::after { content: " ›"; }
 .monde #jar-next { background: none !important; color: #f1d38a !important; font-size: 15px !important; padding: 0 !important; }
 .monde-liens { display: flex; gap: 18px; flex-wrap: wrap; }
+/* ===== Bulles flottantes (Comprendre, 2026-11-20) : une bulle de savon par geste, dessin dedans, un mot dessous ===== */
+.monde-etape[data-etape="hub"] > .bulles { grid-row: 2; position: relative; min-height: 0; margin: 4px -8px 0; }
+.bulle { position: absolute; left: var(--x); top: var(--y); width: var(--d); height: var(--d); margin: 0; padding: 0; border: 0; background: none; color: #fbf7ef; cursor: pointer; transform: translate(-50%, -30%); animation: flotte var(--t, 8s) ease-in-out var(--dl, 0s) infinite; -webkit-tap-highlight-color: transparent; text-shadow: none; }
+.bulle-verre { position: absolute; inset: 0; border-radius: 50%;
+  background: radial-gradient(circle at 32% 28%, rgba(255,255,255,.55), rgba(255,255,255,.14) 28%, rgba(255,255,255,.03) 50%, rgba(255,255,255,.06) 76%, rgba(255,255,255,.34) 100%);
+  box-shadow: inset 0 0 16px rgba(255,255,255,.28), inset -10px -12px 22px rgba(140,205,255,.22), inset 10px 8px 18px rgba(255,190,220,.14), 0 14px 26px rgba(8,14,30,.28);
+  backdrop-filter: blur(1.5px) saturate(1.15); -webkit-backdrop-filter: blur(1.5px) saturate(1.15); }
+.bulle-verre::before { content: ""; position: absolute; inset: 0; border-radius: 50%; padding: 2px;
+  background: conic-gradient(from 210deg, rgba(255,170,200,.75), rgba(255,235,160,.7), rgba(160,255,220,.7), rgba(150,200,255,.8), rgba(220,170,255,.75), rgba(255,170,200,.75));
+  -webkit-mask: radial-gradient(circle, transparent calc(50% - 4px), #000 calc(50% - 2px), #000 50%, transparent 51%); mask: radial-gradient(circle, transparent calc(50% - 4px), #000 calc(50% - 2px), #000 50%, transparent 51%); opacity: .85; }
+.bulle-verre::after { content: ""; position: absolute; left: 20%; top: 12%; width: 30%; height: 16%; border-radius: 50%; background: radial-gradient(ellipse at center, rgba(255,255,255,.9), rgba(255,255,255,0) 70%); transform: rotate(-28deg); }
+.bulle svg { position: absolute; left: 50%; top: 50%; width: 44%; height: 44%; transform: translate(-50%, -54%); color: #fbf7ef; filter: drop-shadow(0 1px 3px rgba(8,14,30,.7)); }
+.bulle-mot { position: absolute; left: 50%; top: 100%; transform: translateX(-50%); width: max-content; max-width: 150px; margin-top: 2px; font: 500 20px/1.1 "WindSong", cursive; color: #fbf7ef; text-shadow: 0 1px 5px rgba(8,14,30,1), 0 0 10px rgba(8,14,30,.9), 0 0 2px rgba(8,14,30,.9); text-align: center; }
+.bulle:active { animation-play-state: paused; }
+.bulle:active .bulle-verre { transform: scale(.94); transition: transform .12s; }
+.bulle[data-fait="1"] .bulle-verre { box-shadow: inset 0 0 18px rgba(246,226,168,.45), inset -10px -12px 22px rgba(246,226,168,.25), 0 0 26px rgba(246,226,168,.55), 0 14px 26px rgba(8,14,30,.28); }
+.bulle[data-fait="1"] .bulle-verre::before { background: conic-gradient(rgba(246,226,168,.95), rgba(255,250,230,.8), rgba(246,226,168,.95)); }
+.bulle[data-fait="1"] svg { color: #f6e2a8; }
+@keyframes flotte { 0% { transform: translate(-50%, -30%) translateY(0) rotate(0); } 30% { transform: translate(-50%, -30%) translate(5px, -11px) rotate(2deg); } 60% { transform: translate(-50%, -30%) translate(-6px, -4px) rotate(-2deg); } 100% { transform: translate(-50%, -30%) translateY(0) rotate(0); } }
+@media (prefers-reduced-motion: reduce) { .bulle { animation: none; } }
+@media (max-height: 700px) { .bulle { --d: calc(var(--d) * .82); } .bulle-mot { font-size: 17px; } }
 .monde-q { margin: 0; font: 400 24px/1.3 "Eagle Lake", "Philosopher", serif; color: #fbf7ef; }
 .papier-grat { position: relative; width: min(100%, 360px); margin: 10px auto 0; padding: 18px 20px 16px; border-radius: 3px; color: #1f3a66; text-shadow: none;
   background: radial-gradient(ellipse 14px 7px at 12% 18%, rgba(63,182,200,.35), transparent 70%), radial-gradient(ellipse 12px 6px at 88% 80%, rgba(169,207,63,.35), transparent 70%), radial-gradient(circle 3px at 80% 14%, rgba(124,107,184,.4), transparent 70%), radial-gradient(ellipse 12px 6px at 20% 86%, rgba(124,107,184,.28), transparent 70%), #fbfdfc;
@@ -1161,9 +1182,15 @@ body[data-moment="nuit"] #s-malkhut .gestes .geste span { font-size: 11px !impor
       <div class="monde-titre"><span class="kicker">Binah · Compréhension</span><h2 id="h-binah">Comprendre</h2><p>Regarder ce qui se passe, avec douceur.</p></div>
       <div class="monde-bas">
         <p class="monde-msg" id="binah-msg" aria-live="polite"></p>
-        <div id="binah-qj"></div>
-        <div class="monde-liens"><button class="lien-simple" type="button" data-etape-go="ciel">Me regarder depuis le ciel</button><button class="lien-simple" type="button" data-etape-go="demele">Démêler ce que je vis</button><button class="lien-simple" type="button" data-etape-go="croyance">Retourner une croyance</button><button class="lien-simple" type="button" data-open="grimoire">Mon livre</button></div>
+        <div id="binah-qj" hidden></div>
         <div id="binah-trav"></div>
+      </div>
+      <div class="bulles" aria-label="Que veux-tu faire ?">
+        <button class="bulle b-qj" type="button" data-etape-go="question" id="bulle-qj" style="--x:50%;--y:30%;--d:118px;--t:7.5s"><span class="bulle-verre"></span><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M17 18c0-4.2 3.2-7 7.2-7 4 0 6.8 2.6 6.8 6 0 5.6-6.6 5.4-6.6 11" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><circle cx="24.4" cy="35.5" r="1.9" fill="currentColor"/></svg><span class="bulle-mot">La question du jour</span></button>
+        <button class="bulle" type="button" data-etape-go="ciel" style="--x:24%;--y:10%;--d:92px;--t:8.6s;--dl:-2s"><span class="bulle-verre"></span><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M4 22c6-6 12-8 18-6 2-3 5-5 9-5 6 0 10 3 13 8-4-1-7 0-9 2 1 4-1 8-5 10 0-3-1-5-3-7-3 3-8 4-12 3 2-1 3-3 3-5-5 1-9 1-14 0z" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/></svg><span class="bulle-mot">Me regarder depuis le ciel</span></button>
+        <button class="bulle" type="button" data-etape-go="demele" style="--x:80%;--y:16%;--d:88px;--t:9.4s;--dl:-4s"><span class="bulle-verre"></span><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M8 34c6-10 10-16 18-16 6 0 10 4 10 8s-4 7-8 7-8-3-8-8c0-7 6-13 14-16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><path d="M36 9l4 2-2 4" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="bulle-mot">Démêler ce que je vis</span></button>
+        <button class="bulle" type="button" data-etape-go="croyance" style="--x:22%;--y:62%;--d:96px;--t:8.1s;--dl:-5.5s"><span class="bulle-verre"></span><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 8c4 0 8 3 10 7M24 40c-4 0-8-3-10-7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><path d="M33 9l1.5 6-6 .5M15 39l-1.5-6 6-.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 24c3-3 6-4 10-4s7 1 10 4c-3 3-6 4-10 4s-7-1-10-4z" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/><circle cx="24" cy="24" r="2.2" fill="currentColor"/></svg><span class="bulle-mot">Retourner une croyance</span></button>
+        <button class="bulle" type="button" data-open="grimoire" style="--x:78%;--y:66%;--d:84px;--t:10s;--dl:-1s"><span class="bulle-verre"></span><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 14c-4-3-9-4-14-3v24c5-1 10 0 14 3 4-3 9-4 14-3V11c-5-1-10 0-14 3zM24 14v24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linejoin="round"/></svg><span class="bulle-mot">Mon livre</span></button>
       </div>
     </div>
     <div class="monde-etape saisie" data-etape="question" hidden>
@@ -4180,6 +4207,7 @@ Propose 3 pistes de réflexion courtes (une ligne chacune), au tutoiement, en fr
     $("binah-qj").innerHTML = o && o.r
       ? `<p class="qj-q">${esc(o.q)}</p><p class="manuscrit">${esc(o.r)}</p><button class="lien-simple" type="button" data-qj-edit="binah">Changer ma réponse</button>`
       : `<button class="lien-plume encre" type="button" data-etape-go="question">${esc(q)} <span aria-hidden="true">→</span></button>`;
+    const bq = $("bulle-qj"); if (bq) { const fait = !!(o && o.r); bq.dataset.fait = fait ? "1" : ""; bq.querySelector(".bulle-mot").textContent = fait ? "Ma réponse du jour" : "La question du jour"; if (fait) { bq.removeAttribute("data-etape-go"); bq.setAttribute("data-qj-edit", "binah"); } else { bq.setAttribute("data-etape-go", "question"); bq.removeAttribute("data-qj-edit"); } }
     if (o && o.r && $("s-binah").dataset.etape === "question") { binahEtape("hub"); $("binah-msg").textContent = "Gardé dans ton livre ✨"; }
   }
   $("qj-binah").addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); $('[data-qj-save="binah"]').click(); } });
